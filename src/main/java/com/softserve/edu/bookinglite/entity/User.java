@@ -3,6 +3,7 @@ package com.softserve.edu.bookinglite.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,14 +16,19 @@ public class User {
 
     @Column(unique = true)
     @Email
+    @NotNull
     private String email;
 
+    @NotNull
     private String first_name;
 
+    @NotNull
     private String last_name;
 
+    @NotNull
     private String password;
 
+    @NotNull
     private String phone_number;
 
 
