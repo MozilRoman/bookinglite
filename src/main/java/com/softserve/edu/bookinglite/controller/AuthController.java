@@ -6,7 +6,6 @@ import com.softserve.edu.bookinglite.security.JwtTokenProvider;
 import com.softserve.edu.bookinglite.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,17 +19,17 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class AuthController {
     @Autowired
-    private UserService userService;
+    UserService userService;
     @Autowired
-    private AuthenticationManager authenticationManager;
+    AuthenticationManager authenticationManager;
     @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto){
+    public ResponseEntity login(@Valid @RequestBody LoginDto loginDto){
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -47,15 +46,15 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@Valid @RequestBody RegisterDto registerDto){
+    public ResponseEntity register(@Valid @RequestBody RegisterDto registerDto){
         if(userService.existsByEmail(registerDto.getEmail())){
-           return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+           return ResponseEntity.badRequest().body("User already exists");
         }
         if (userService.registerUser(registerDto)){
-            return new ResponseEntity<Void>(HttpStatus.OK);
+            return ResponseEntity.ok().body("");
         }
         else {
-            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body("Something went wrong");
         }
     }
 
