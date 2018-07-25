@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api")
 public class AuthController {
     @Autowired
     UserService userService;
@@ -27,6 +27,13 @@ public class AuthController {
     AuthenticationManager authenticationManager;
     @Autowired
     JwtTokenProvider jwtTokenProvider;
+
+
+    @GetMapping("/hello")
+    public String hello(){
+       return "Hello world";
+    }
+
 
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody LoginDto loginDto){

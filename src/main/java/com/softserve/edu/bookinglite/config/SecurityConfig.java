@@ -1,5 +1,6 @@
 package com.softserve.edu.bookinglite.config;
 
+import com.softserve.edu.bookinglite.security.JwtAuthenticationEntryPoint;
 import com.softserve.edu.bookinglite.security.JwtAuthorizationFilter;
 import com.softserve.edu.bookinglite.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     UserService userService;
     @Autowired
     JwtAuthorizationFilter jwtAuthorizationFilter;
-
+    @Autowired
+    JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     public AuthenticationManager customAuthenticationManager() throws Exception {
@@ -36,11 +38,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf()
                 .disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/auth/login","/api/auth/register").permitAll()
+                .antMatchers("/api/login","/api/register").permitAll()
                 .anyRequest().authenticated();
         http.addFilterBefore(jwtAuthorizationFilter,UsernamePasswordAuthenticationFilter.class);
     }
