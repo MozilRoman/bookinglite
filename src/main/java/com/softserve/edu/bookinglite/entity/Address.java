@@ -2,6 +2,8 @@ package com.softserve.edu.bookinglite.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "addresses")
@@ -16,6 +18,9 @@ public class Address {
     @ManyToOne(cascade=CascadeType.PERSIST)
     @JoinColumn(name = "city_id")
     private City city;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Property>properties=new HashSet<>();
 
     public Address() {
     }
