@@ -18,12 +18,7 @@ public class Amenity {
     @NotNull
     private String name;
 
-    @ManyToMany(cascade = {
-            CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(name = "apartment_amenities",
-            joinColumns = @JoinColumn(name = "amenity_id"),
-            inverseJoinColumns = @JoinColumn(name = "apartment_id"))
+    @ManyToMany(mappedBy = "amenities")
     private Set<Apartment> apartments = new HashSet<>();
 
     public Long getId() {
