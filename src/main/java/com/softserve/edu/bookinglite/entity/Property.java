@@ -22,7 +22,7 @@ import javax.persistence.Table;
 public class Property {
 	
 	public Property() {
-	}
+	} 
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
