@@ -6,6 +6,7 @@ import com.softserve.edu.bookinglite.security.JwtTokenProvider;
 import com.softserve.edu.bookinglite.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,12 +22,9 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api")
 public class AuthController {
-    @Autowired
-    UserService userService;
-    @Autowired
-    AuthenticationManager authenticationManager;
-    @Autowired
-    JwtTokenProvider jwtTokenProvider;
+    @Autowired private UserService userService;
+    @Autowired private AuthenticationManager authenticationManager;
+    @Autowired private JwtTokenProvider jwtTokenProvider;
 
 
     @GetMapping("/hello")
@@ -53,15 +51,16 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@Valid @RequestBody RegisterDto registerDto){
+    public ResponseEntity<Void> register(@Valid @RequestBody RegisterDto registerDto){
         if(userService.existsByEmail(registerDto.getEmail())){
-           return ResponseEntity.badRequest().body("User already exists");
+        	return new ResponseEntity<Void>(HttpStatus.ALREADY_REPORTED);
+        	//return ResponseEntity.badRequest().body("User already exists");
         }
         if (userService.registerUser(registerDto)){
-            return ResponseEntity.ok().body("");
+            return new ResponseEntity<Void>(HttpStatus.OK);
         }
         else {
-            return ResponseEntity.badRequest().body("Something went wrong");
+            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
         }
     }
 
