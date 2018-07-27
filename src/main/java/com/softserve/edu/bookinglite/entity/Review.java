@@ -9,6 +9,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 public class Review {
+	
+	public Review() {
+		super();
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -22,4 +27,37 @@ public class Review {
 	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="booking_id")
 	private Booking booking;
+
+	public Long getId() {
+		return id;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public Integer getRating() {
+		return rating;
+	}
+
+	public Booking getBooking() {
+		return booking;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public void setRating(Integer rating) {
+		this.rating = rating;
+	}
+
+	public void setBooking(Booking booking) {
+		this.booking = booking;
+	}
+	
 }
