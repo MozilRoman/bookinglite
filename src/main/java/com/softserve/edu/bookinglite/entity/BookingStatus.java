@@ -1,6 +1,8 @@
 package com.softserve.edu.bookinglite.entity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -25,7 +27,7 @@ public class BookingStatus {
     private String name;
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY )
-	private  Set<Booking> booking = new HashSet<>(); 
+	private  List<Booking> bookings = new ArrayList<>(); 
 
 	public Long getId() {
 		return id;
