@@ -32,7 +32,7 @@ public class Apartment {
 
     @ManyToMany(cascade = {
             CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
+            CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(name = "apartment_amenities",
             joinColumns = @JoinColumn(name = "apartment_id"),
             inverseJoinColumns = @JoinColumn(name = "amenity_id"))
@@ -43,6 +43,10 @@ public class Apartment {
 //			CascadeType.PERSIST, CascadeType.REFRESH})
 //    @JoinColumn(name = "property_id")
 //    private Property property;
+
+
+    public Apartment() {
+    }
 
     public Long getId() {
         return id;

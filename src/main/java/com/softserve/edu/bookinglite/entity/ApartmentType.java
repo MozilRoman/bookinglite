@@ -13,6 +13,7 @@ public class ApartmentType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     @NotNull
     private String name;
 
@@ -22,6 +23,9 @@ public class ApartmentType {
             CascadeType.PERSIST,
             CascadeType.REFRESH })
     private Set<Apartment> apartments = new HashSet<>();
+
+    public ApartmentType() {
+    }
 
     public Long getId() {
         return id;

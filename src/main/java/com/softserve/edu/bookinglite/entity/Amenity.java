@@ -15,11 +15,15 @@ public class Amenity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     @NotNull
     private String name;
 
     @ManyToMany(mappedBy = "amenities")
     private Set<Apartment> apartments = new HashSet<>();
+
+    public Amenity() {
+    }
 
     public Long getId() {
         return id;
