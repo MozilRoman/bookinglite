@@ -57,9 +57,10 @@ public class Property {
 	@JoinColumn(name = "address_id")
 	private Address address;
 	
+	// Change CascadeType
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "owner_id")
-	private User user;
+	private User user; 
 
 	@ManyToMany(cascade = {
 			CascadeType.DETACH, CascadeType.MERGE,

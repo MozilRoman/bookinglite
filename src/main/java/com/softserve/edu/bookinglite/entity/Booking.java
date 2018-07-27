@@ -3,9 +3,7 @@ package com.softserve.edu.bookinglite.entity;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -63,7 +61,6 @@ public class Booking {
 			CascadeType.PERSIST, CascadeType.REFRESH
 			}, fetch = FetchType.LAZY )
 	private  List<Review> reviews = new ArrayList<>();
-
 
 	public Long getId() {
 		return id;
@@ -135,14 +132,13 @@ public class Booking {
 	}
 
 
-	public Set<Review> getReview() {
-		return review;
+	public List<Review> getReviews() {
+		return reviews;
 	}
 
 
-	public void setReview(Set<Review> review) {
-		this.review = review;
-	} 
-	
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews ;
+	}
 	
 }
