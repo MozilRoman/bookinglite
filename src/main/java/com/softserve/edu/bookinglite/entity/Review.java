@@ -19,7 +19,7 @@ public class Review {
 	@Column(name="rating", nullable = false)
 	private Integer rating;
 	
-	@ManyToOne(cascade=CascadeType.ALL)
+	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="booking_id")
 	private Booking booking;
 }
