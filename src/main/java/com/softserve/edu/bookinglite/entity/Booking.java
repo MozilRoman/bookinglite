@@ -138,7 +138,7 @@ public class Booking {
 
 
 	public void setReviews(List<Review> reviews) {
-		this.reviews = reviews;
+		this.reviews = reviews ;
 	}
 	
 }
