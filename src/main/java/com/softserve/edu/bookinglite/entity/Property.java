@@ -1,6 +1,8 @@
 package com.softserve.edu.bookinglite.entity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -14,8 +16,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.apache.tomcat.jni.Address;
 
 @Entity
 @Table(name = "properties")
@@ -65,6 +69,10 @@ public class Property {
 			joinColumns = @JoinColumn(name = "property_id"),
 			inverseJoinColumns = @JoinColumn(name = "facility_id"))
 	private Set<Facility> facilities = new HashSet<>();
+	
+	
+	@OneToMany(mappedBy = "property" , cascade = CascadeType.ALL)
+	private List<Photo> photos = new ArrayList<>();
 
 	public Long getId() {
 		return id;
@@ -145,4 +153,12 @@ public class Property {
 	public void setFacilities(Set<Facility> facilities) {
 		this.facilities = facilities;
 	}
+
+	public List<Photo> getPhotos() {
+		return photos;
+	}
+
+	public void setPhotos(List<Photo> photos) {
+		this.photos = photos;
+	} 
 }
