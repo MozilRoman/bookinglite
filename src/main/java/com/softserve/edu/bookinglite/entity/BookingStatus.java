@@ -24,23 +24,13 @@ public class BookingStatus {
 	private Long id;
 	
 	@NotNull
-    private String name;
+    	private String name;
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY )
-	private  List<Booking> bookings = new ArrayList<>(); 
-
+	
 	public Long getId() {
 		return id;
 	}
-
-	public Set<Booking> getBooking() {
-		return booking;
-	}
-
-	public void setBooking(Set<Booking> booking) {
-		this.booking = booking;
-	}
-
+	
 	public void setId(Long id) {
 		this.id = id;
 	}
