@@ -64,7 +64,6 @@ public class Booking {
 			}, fetch = FetchType.LAZY )
 	private  List<Review> reviews = new ArrayList<>();
 
-
 	public Long getId() {
 		return id;
 	}
@@ -135,14 +134,13 @@ public class Booking {
 	}
 
 
-	public Set<Review> getReview() {
-		return review;
+	public List<Review> getReviews() {
+		return reviews;
 	}
 
 
-	public void setReview(Set<Review> review) {
-		this.review = review;
-	} 
-	
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
+	}
 	
 }
