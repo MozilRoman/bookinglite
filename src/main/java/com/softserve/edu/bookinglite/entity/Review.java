@@ -1,13 +1,15 @@
 package com.softserve.edu.bookinglite.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "reviews")
 public class Review {
 	
 	public Review() {
@@ -24,10 +26,11 @@ public class Review {
 	@Column(name="rating", nullable = false)
 	private Integer rating;
 	
-	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="booking_id")
+	//
+	@OneToOne(mappedBy = "review")
 	private Booking booking;
-
+	
+	
 	public Long getId() {
 		return id;
 	}
@@ -40,10 +43,6 @@ public class Review {
 		return rating;
 	}
 
-	public Booking getBooking() {
-		return booking;
-	}
-
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -54,6 +53,10 @@ public class Review {
 
 	public void setRating(Integer rating) {
 		this.rating = rating;
+	}
+
+	public Booking getBooking() {
+		return booking;
 	}
 
 	public void setBooking(Booking booking) {
