@@ -13,11 +13,9 @@ public class Country {
     @NotNull
     @Column(unique = true)
     private String name;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "country")
     private Set<City> cities=new HashSet<City>();
 
-    public Country() {
-    }
 
     public Long getId() {
         return id;

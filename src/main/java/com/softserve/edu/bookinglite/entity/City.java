@@ -16,7 +16,7 @@ public class City {
     @ManyToOne(cascade=CascadeType.PERSIST)
     @JoinColumn(name = "country_id")
     private Country country;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "city")
     private Set<Address> addresses=new HashSet<Address>();
 
     public City() {

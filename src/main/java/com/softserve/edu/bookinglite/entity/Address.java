@@ -19,7 +19,7 @@ public class Address {
     @JoinColumn(name = "city_id")
     private City city;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "address")
     private Set<Property>properties=new HashSet<>();
 
     public Address() {
