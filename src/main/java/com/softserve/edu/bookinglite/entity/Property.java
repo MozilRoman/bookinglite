@@ -19,7 +19,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.apache.tomcat.jni.Address;
 
 @Entity
 @Table(name = "properties")

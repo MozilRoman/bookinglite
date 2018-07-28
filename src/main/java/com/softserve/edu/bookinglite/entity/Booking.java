@@ -1,9 +1,7 @@
 package com.softserve.edu.bookinglite.entity;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,7 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -55,37 +53,31 @@ public class Booking {
     @JoinColumn(name="status_id", referencedColumnName = "id") 
 	private BookingStatus bookingstatus;
 	
+	//
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "review_id")
+	private Review review;
 	
-	@OneToMany(mappedBy = "booking_id", cascade = {
-			CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.PERSIST, CascadeType.REFRESH
-			}, fetch = FetchType.LAZY )
-	private  List<Review> reviews = new ArrayList<>();
-
+	
 	public Long getId() {
 		return id;
 	}
-
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-
 	public Apartment getApartment() {
 		return apartment;
 	}
-
 
 	public void setApartment(Apartment apartment) {
 		this.apartment = apartment;
 	}
 
-
 	public User getUser() {
 		return user;
 	}
-
 
 	public void setUser(User user) {
 		this.user = user;
@@ -96,7 +88,6 @@ public class Booking {
 		return check_in;
 	}
 
-
 	public void setCheck_in(Date check_in) {
 		this.check_in = check_in;
 	}
@@ -106,16 +97,13 @@ public class Booking {
 		return check_out;
 	}
 
-
 	public void setCheck_out(Date check_out) {
 		this.check_out = check_out;
 	}
 
-
 	public BigDecimal getTotal_price() {
 		return total_price;
 	}
-
 
 	public void setTotal_price(BigDecimal total_price) {
 		this.total_price = total_price;
@@ -126,19 +114,16 @@ public class Booking {
 		return bookingstatus;
 	}
 
-
 	public void setBookingstatus(BookingStatus bookingstatus) {
 		this.bookingstatus = bookingstatus;
 	}
 
-
-	public List<Review> getReviews() {
-		return reviews;
+	public Review getReview() {
+		return review;
 	}
 
-
-	public void setReviews(List<Review> reviews) {
-		this.reviews = reviews ;
+	public void setReview(Review review) {
+		this.review = review;
 	}
 	
 }
