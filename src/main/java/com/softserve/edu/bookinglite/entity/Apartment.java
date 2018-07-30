@@ -38,11 +38,11 @@ public class Apartment {
             inverseJoinColumns = @JoinColumn(name = "amenity_id"))
     private Set<Amenity> amenities = new HashSet<>();
 
-//    @ManyToOne(cascade = {
-//			CascadeType.DETACH, CascadeType.MERGE,
-//			CascadeType.PERSIST, CascadeType.REFRESH})
-//    @JoinColumn(name = "property_id")
-//    private Property property;
+    @ManyToOne(cascade = {
+			CascadeType.DETACH, CascadeType.MERGE,
+			CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "property_id")
+    private Property property;
 
 
     public Apartment() {
@@ -96,4 +96,11 @@ public class Apartment {
         this.amenities = amenities;
     }
 
+    public Property getProperty() {
+        return property;
+    }
+
+    public void setProperty(Property property) {
+        this.property = property;
+    }
 }
