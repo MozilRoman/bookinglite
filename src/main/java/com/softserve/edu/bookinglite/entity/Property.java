@@ -61,7 +61,7 @@ public class Property {
 			CascadeType.MERGE,
 			CascadeType.PERSIST,
 			CascadeType.REFRESH })
-	private Set<Apartment> apartments = new HashSet<>();
+	private List<Apartment> apartments = new ArrayList<>();
 	
 	// Change CascadeType
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -169,11 +169,11 @@ public class Property {
 		this.photos = photos;
 	}
 
-	public Set<Apartment> getApartments() {
+	public List<Apartment> getApartments() {
 		return apartments;
 	}
 
-	public void setApartments(Set<Apartment> apartments) {
+	public void setApartments(List<Apartment> apartments) {
 		this.apartments = apartments;
 	}
 }
