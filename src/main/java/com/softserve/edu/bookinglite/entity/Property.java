@@ -55,6 +55,13 @@ public class Property {
 			}, fetch = FetchType.LAZY)
 	@JoinColumn(name = "address_id")
 	private Address address;
+
+	@OneToMany(mappedBy = "property", cascade = {
+			CascadeType.DETACH,
+			CascadeType.MERGE,
+			CascadeType.PERSIST,
+			CascadeType.REFRESH })
+	private Set<Apartment> apartments = new HashSet<>();
 	
 	// Change CascadeType
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -160,5 +167,13 @@ public class Property {
 
 	public void setPhotos(List<Photo> photos) {
 		this.photos = photos;
-	} 
+	}
+
+	public Set<Apartment> getApartments() {
+		return apartments;
+	}
+
+	public void setApartments(Set<Apartment> apartments) {
+		this.apartments = apartments;
+	}
 }
