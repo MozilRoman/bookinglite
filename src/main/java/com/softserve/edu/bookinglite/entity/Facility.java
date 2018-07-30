@@ -19,7 +19,7 @@ public class Facility {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "name" ,length = 50, nullable = false)
+	@Column(length = 50, nullable = false)
 	private String name;
 
 	public Long getId() {

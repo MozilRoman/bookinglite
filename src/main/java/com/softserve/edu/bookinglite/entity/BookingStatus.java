@@ -1,11 +1,8 @@
 package com.softserve.edu.bookinglite.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "booking_statuses")
@@ -15,8 +12,11 @@ public class BookingStatus {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull
-    	private String name;
+	@Column(nullable = false)
+	private String name;
+
+	@OneToMany(mappedBy = "bookingstatus")
+	List<Booking> bookingList = new ArrayList<>();
 	
 	public Long getId() {
 		return id;
@@ -33,5 +33,12 @@ public class BookingStatus {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
+	public List<Booking> getBookingList() {
+		return bookingList;
+	}
+
+	public void setBookingList(List<Booking> bookingList) {
+		this.bookingList = bookingList;
+	}
 }

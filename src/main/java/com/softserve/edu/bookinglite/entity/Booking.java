@@ -1,20 +1,8 @@
 package com.softserve.edu.bookinglite.entity;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "bookings")
@@ -23,34 +11,32 @@ public class Booking {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@NotNull
+
 	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name="apartment_id",referencedColumnName = "id") 
+    @JoinColumn(name="apartment_id",referencedColumnName = "id",nullable = false)
 	private Apartment apartment;
 	
-	
-	@NotNull
+
 	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id", referencedColumnName = "id") 
+    @JoinColumn(name="user_id", referencedColumnName = "id",nullable = false)
 	private User user;
-	
-	@NotNull
+
+	@Column(nullable = false)
     private Date check_in;
-	
-	@NotNull
+
+	@Column(nullable = false)
     private Date check_out;
 	
-	@NotNull
-	@Column(columnDefinition= "DECIMAL(8,2)")
+
+	@Column(columnDefinition= "DECIMAL(8,2)",nullable = false)
     private BigDecimal total_price;
 	
-	@NotNull
+
 	@ManyToOne(cascade = {
 			CascadeType.DETACH, CascadeType.MERGE,
 			CascadeType.PERSIST, CascadeType.REFRESH
 			}, fetch = FetchType.LAZY)
-    @JoinColumn(name="status_id", referencedColumnName = "id") 
+    @JoinColumn(name="status_id", referencedColumnName = "id",nullable = false)
 	private BookingStatus bookingstatus;
 	
 	//

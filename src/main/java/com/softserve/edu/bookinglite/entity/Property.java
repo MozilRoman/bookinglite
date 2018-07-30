@@ -1,23 +1,10 @@
 package com.softserve.edu.bookinglite.entity;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 
 @Entity
@@ -46,14 +33,14 @@ public class Property {
 			CascadeType.DETACH, CascadeType.MERGE,
 			CascadeType.PERSIST, CascadeType.REFRESH
 			}, fetch = FetchType.LAZY)
-	@JoinColumn(name = "property_type_id")
+	@JoinColumn(name = "property_type_id",nullable = false)
 	private PropertyType propertyType;
 
 	@ManyToOne(cascade = { 
 			CascadeType.DETACH, CascadeType.MERGE,
 			CascadeType.PERSIST, CascadeType.REFRESH
 			}, fetch = FetchType.LAZY)
-	@JoinColumn(name = "address_id")
+	@JoinColumn(name = "address_id",nullable = false)
 	private Address address;
 
 	@OneToMany(mappedBy = "property", cascade = {
@@ -65,7 +52,7 @@ public class Property {
 	
 	// Change CascadeType
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "owner_id")
+	@JoinColumn(name = "owner_id",nullable = false)
 	private User user; 
 
 	@ManyToMany(cascade = {

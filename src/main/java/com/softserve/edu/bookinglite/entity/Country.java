@@ -1,20 +1,18 @@
 package com.softserve.edu.bookinglite.entity;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-@Entity(name = "counties")
+@Entity(name = "countries")
 public class Country {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
-    @Column(unique = true)
+    @Column(nullable = false)
     private String name;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "country")
-    private Set<City> cities=new HashSet<City>();
+    private List<City> cities=new ArrayList<City>();
 
 
     public Long getId() {
@@ -33,11 +31,11 @@ public class Country {
         this.name = name;
     }
 
-    public Set<City> getCities() {
+    public List<City> getCities() {
         return cities;
     }
 
-    public void setCities(Set<City> cities) {
+    public void setCities(List<City> cities) {
         this.cities = cities;
     }
 }

@@ -23,11 +23,11 @@ public class Photo {
 	private Long id;
 	
 	
-	@Column(name="url", nullable = false, length = 100)
+	@Column(name="url", nullable = false)
 	private String url;
 	
 	@ManyToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="property_id")
+	@JoinColumn(name="property_id",nullable = false)
 	private Property property;
 
 	public Long getId() {

@@ -1,9 +1,9 @@
 package com.softserve.edu.bookinglite.entity;
 
+
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "addresses")
@@ -11,16 +11,19 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
+
+    @Column(nullable = false)
     private String adressLine;
+    @Column(nullable = false)
     private String zip;
-    @NotNull
+
+
     @ManyToOne(cascade=CascadeType.PERSIST)
-    @JoinColumn(name = "city_id")
+    @JoinColumn(name = "city_id",nullable = false)
     private City city;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "address")
-    private Set<Property>properties=new HashSet<>();
+    private List<Property> properties=new ArrayList<>();
 
     public Address() {
     }

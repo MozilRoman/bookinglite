@@ -26,9 +26,6 @@ public class UserService implements UserDetailsService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
 
     public boolean existsByEmail(String email){
         return userRepository.existsByEmail(email);

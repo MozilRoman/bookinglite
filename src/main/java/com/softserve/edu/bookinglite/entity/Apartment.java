@@ -1,7 +1,6 @@
 package com.softserve.edu.bookinglite.entity;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,20 +13,20 @@ public class Apartment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @Column(nullable = false)
     private String name;
 
-    @NotNull
-    @Column(columnDefinition= "DECIMAL(8,2)")
+
+    @Column(columnDefinition= "DECIMAL(8,2)",nullable = false)
     private BigDecimal price;
 
-    @Column(name= "number_of_guests")
+    @Column(name= "number_of_guests",nullable = false)
     private int numberOfGuests;
 
     @ManyToOne(cascade = {
             CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "apartment_type_id")
+    @JoinColumn(name = "apartment_type_id",nullable = false)
     private ApartmentType apartmentType;
 
     @ManyToMany(cascade = {
@@ -41,7 +40,7 @@ public class Apartment {
     @ManyToOne(cascade = {
 			CascadeType.DETACH, CascadeType.MERGE,
 			CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "property_id")
+    @JoinColumn(name = "property_id",nullable = false)
     private Property property;
 
 
