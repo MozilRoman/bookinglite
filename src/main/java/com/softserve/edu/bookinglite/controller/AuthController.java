@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api")
@@ -28,8 +29,8 @@ public class AuthController {
 
 
     @GetMapping("/hello")
-    public String hello(){
-       return "Hello world";
+    public String hello(Principal principal){
+       return "Hello world " + principal.getName();
     }
 
 
@@ -42,7 +43,7 @@ public class AuthController {
                             loginDto.getPassword()
                     )
             );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            //SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtTokenProvider.generateToken(authentication);
             return ResponseEntity.ok().body(jwt);
         } catch (AuthenticationException ex){

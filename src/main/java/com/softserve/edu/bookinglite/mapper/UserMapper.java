@@ -13,6 +13,6 @@ public class UserMapper {
             roles[i] = user.getRoles().iterator().next().getName();
         }
 
-        return new org.springframework.security.core.userdetails.User(user.getEmail(),user.getPassword(),AuthorityUtils.createAuthorityList(roles));
+        return new org.springframework.security.core.userdetails.User(user.getId().toString(),user.getPassword(),AuthorityUtils.createAuthorityList(roles));
     }
 }
