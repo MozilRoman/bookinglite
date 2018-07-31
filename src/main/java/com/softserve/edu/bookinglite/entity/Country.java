@@ -38,4 +38,16 @@ public class Country {
     public void setCities(List<City> cities) {
         this.cities = cities;
     }
+
+    @Override
+    public boolean equals(Object obj){
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof Country))
+            return false;
+        Country other = (Country) obj;
+        return this.name.equals(other.name);
+    }
 }

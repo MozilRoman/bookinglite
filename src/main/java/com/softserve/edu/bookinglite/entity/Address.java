@@ -13,12 +13,12 @@ public class Address {
     private Long id;
 
     @Column(nullable = false)
-    private String adressLine;
+    private String addressLine;
     @Column(nullable = false)
     private String zip;
 
 
-    @ManyToOne(cascade=CascadeType.PERSIST)
+    @ManyToOne(cascade=CascadeType.MERGE)
     @JoinColumn(name = "city_id",nullable = false)
     private City city;
 
@@ -36,12 +36,12 @@ public class Address {
         this.id = id;
     }
 
-    public String getAdressLine() {
-        return adressLine;
+    public String getAddressLine() {
+        return addressLine;
     }
 
-    public void setAdressLine(String adressLine) {
-        this.adressLine = adressLine;
+    public void setAddressLine(String addressLine) {
+        this.addressLine = addressLine;
     }
 
     public String getZip() {

@@ -12,7 +12,7 @@ public class City {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @ManyToOne(cascade=CascadeType.PERSIST)
+    @ManyToOne(cascade=CascadeType.MERGE)
     @JoinColumn(name = "country_id",nullable = false)
     private Country country;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "city")
@@ -51,5 +51,17 @@ public class City {
 
     public void setAddresses(List<Address> addresses) {
         this.addresses = addresses;
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof City))
+            return false;
+        City other = (City) obj;
+        return this.name.equals(other.name);
     }
 }

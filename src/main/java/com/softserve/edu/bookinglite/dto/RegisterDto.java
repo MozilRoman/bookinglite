@@ -1,5 +1,7 @@
 package com.softserve.edu.bookinglite.dto;
 
+import com.softserve.edu.bookinglite.entity.Address;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
@@ -18,6 +20,9 @@ public class RegisterDto {
     private String phone_number;
 
     private boolean owner;
+
+    private Address address;
+
 
     public String getEmail() {
         return email;
@@ -65,5 +70,13 @@ public class RegisterDto {
 
     public void setOwner(boolean owner) {
         this.owner = owner;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }
