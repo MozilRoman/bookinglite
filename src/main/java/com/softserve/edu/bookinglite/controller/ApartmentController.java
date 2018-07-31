@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -23,21 +24,25 @@ public class ApartmentController {
     }
 
     @GetMapping("/apartment/{id}")
-    public ApartmentDto getApartment(@PathVariable ("id") Long id){
-        return apartmentService.findDtoById(id);
+    public ApartmentDto getApartment(@PathVariable ("id") Long apartmentId){
+        return apartmentService.findDtoById(apartmentId);
     }
 
     @PostMapping("/property/{id}/apartment")
-    public ResponseEntity<Void> saveApartment (@Valid @RequestBody ApartmentDto apartmentDto, @PathVariable ("id") Long propertyId){
-        if (apartmentService.saveApartment(apartmentDto, propertyId)){
-            return new ResponseEntity<Void>(HttpStatus.OK);
+    public ResponseEntity<Void> saveApartment (@Valid @RequestBody ApartmentDto apartmentDto,
+                                               @PathVariable ("id") Long propertyId,
+                                               Principal principal){
+        Long userId = Long.parseLong(principal.getName());
+        if (apartmentService.saveApartment(apartmentDto, propertyId, userId)){
+            return new ResponseEntity<Void>(HttpStatus.CREATED);
         }else {
             return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@RequestBody ApartmentDto apartmentDto, @PathVariable ("id") Long apartmentId) {
+    public ResponseEntity<Void> update(@RequestBody ApartmentDto apartmentDto,
+                                       @PathVariable ("id") Long apartmentId) {
         if (apartmentService.updateApartment(apartmentDto, apartmentId)){
             return new ResponseEntity<Void>(HttpStatus.OK);
         }else {

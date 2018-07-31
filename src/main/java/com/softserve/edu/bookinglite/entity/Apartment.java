@@ -16,33 +16,26 @@ public class Apartment {
     @Column(nullable = false)
     private String name;
 
-
-    @Column(columnDefinition= "DECIMAL(8,2)",nullable = false)
+    @Column(columnDefinition= "DECIMAL(8,2)", nullable = false)
     private BigDecimal price;
 
-    @Column(name= "number_of_guests",nullable = false)
+    @Column(name= "number_of_guests", nullable = false)
     private int numberOfGuests;
 
-    @ManyToOne(cascade = {
-            CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "apartment_type_id",nullable = false)
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "apartment_type_id", nullable = false)
     private ApartmentType apartmentType;
 
-    @ManyToMany(cascade = {
-            CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH},
+            fetch = FetchType.EAGER)
     @JoinTable(name = "apartment_amenities",
             joinColumns = @JoinColumn(name = "apartment_id"),
             inverseJoinColumns = @JoinColumn(name = "amenity_id"))
     private Set<Amenity> amenities = new HashSet<>();
 
-    @ManyToOne(cascade = {
-			CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "property_id",nullable = false)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "property_id", nullable = false)
     private Property property;
-
 
     public Apartment() {
     }

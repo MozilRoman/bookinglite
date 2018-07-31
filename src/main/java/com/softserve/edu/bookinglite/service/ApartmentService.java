@@ -35,7 +35,7 @@ public class ApartmentService {
         return allApartmentsDto;
     }
 
-    public Apartment findById (Long id){
+    public Apartment findById(Long id){
         Optional<Apartment> apartment = apartmentRepository.findById(id);
         if(apartment.isPresent()){
             return apartment.get();
@@ -59,9 +59,9 @@ public class ApartmentService {
         }
     }
 
-    public boolean saveApartment (ApartmentDto apartmentDto, Long propertyId){
+    public boolean saveApartment (ApartmentDto apartmentDto, Long propertyId, Long userId){
         Property property = propertyRepository.findById(propertyId).get();
-        if (property != null){
+        if (property != null && property.getUser().getId().equals(userId)){
             Apartment apartment = new Apartment();
             apartment.setName(apartmentDto.getName());
             apartment.setPrice(apartmentDto.getPrice());
@@ -75,7 +75,7 @@ public class ApartmentService {
         return false;
     }
 
-    public boolean updateApartment (ApartmentDto apartmentDto, Long apartmentId) {
+    public boolean updateApartment(ApartmentDto apartmentDto, Long apartmentId) {
         if (apartmentId != null){
             Apartment apartment = new Apartment();
             apartment.setId(apartmentId);
@@ -100,4 +100,5 @@ public class ApartmentService {
         apartmentDto.setAmenities(apartment.getAmenities());
         return apartmentDto;
     }
+
 }

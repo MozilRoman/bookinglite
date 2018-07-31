@@ -2,22 +2,21 @@ package com.softserve.edu.bookinglite.dto;
 
 import com.softserve.edu.bookinglite.entity.Amenity;
 import com.softserve.edu.bookinglite.entity.ApartmentType;
-import com.softserve.edu.bookinglite.entity.Property;
 
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
 public class ApartmentDto {
 
-    //TODO validation
     private Long id;
+    @NotBlank
     private String name;
     private BigDecimal price;
     private int numberOfGuests;
     private ApartmentType apartmentType;
     private Set<Amenity> amenities = new HashSet<>();
-//    private Property property;
 
     public ApartmentDto() {
     }
@@ -70,11 +69,4 @@ public class ApartmentDto {
         this.amenities = amenities;
     }
 
-//    public Property getProperty() {
-//        return property;
-//    }
-//
-//    public void setProperty(Property property) {
-//        this.property = property;
-//    }
 }
