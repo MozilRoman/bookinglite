@@ -1,4 +1,4 @@
-package com.softserve.edu.bookinglite.controller;
+ package com.softserve.edu.bookinglite.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;

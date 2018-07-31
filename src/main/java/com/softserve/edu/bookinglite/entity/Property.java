@@ -29,10 +29,7 @@ public class Property {
 	@Column(name = "contact_email" , length = 50, nullable = false)
 	private String contactEmail;
 
-	@ManyToOne(cascade = {
-			CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.PERSIST, CascadeType.REFRESH
-			}, fetch = FetchType.LAZY)
+	@ManyToOne(cascade = CascadeType.MERGE , fetch = FetchType.LAZY)
 	@JoinColumn(name = "property_type_id",nullable = false)
 	private PropertyType propertyType;
 
@@ -55,10 +52,7 @@ public class Property {
 	@JoinColumn(name = "owner_id",nullable = false)
 	private User user; 
 
-	@ManyToMany(cascade = {
-			CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.PERSIST, CascadeType.REFRESH
-	})
+	@ManyToMany(cascade = CascadeType.MERGE)
 	@JoinTable(name = "property_facilities",
 			joinColumns = @JoinColumn(name = "property_id"),
 			inverseJoinColumns = @JoinColumn(name = "facility_id"))
