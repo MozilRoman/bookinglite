@@ -52,4 +52,16 @@ public class City {
     public void setAddresses(List<Address> addresses) {
         this.addresses = addresses;
     }
+
+    @Override
+    public boolean equals(Object obj){
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof City))
+            return false;
+        City other = (City) obj;
+        return this.name.equals(other.name);
+    }
 }

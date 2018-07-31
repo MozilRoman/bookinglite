@@ -27,8 +27,8 @@ public class User {
     @Column(nullable = false)
     private String phone_number;
 
-    @OneToOne()
-    @JoinColumn(name = "address_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", nullable = false)
     Address address;
 
     @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE,CascadeType.PERSIST})
