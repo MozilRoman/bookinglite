@@ -1,11 +1,10 @@
 package com.softserve.edu.bookinglite.service;
 
-import com.softserve.edu.bookinglite.dto.RegisterDto;
-import com.softserve.edu.bookinglite.entity.Role;
-import com.softserve.edu.bookinglite.entity.User;
-import com.softserve.edu.bookinglite.mapper.UserMapper;
-import com.softserve.edu.bookinglite.repository.RoleRepository;
-import com.softserve.edu.bookinglite.repository.UserRepository;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,9 +12,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.softserve.edu.bookinglite.dto.RegisterDto;
+import com.softserve.edu.bookinglite.entity.Role;
+import com.softserve.edu.bookinglite.entity.User;
+import com.softserve.edu.bookinglite.mapper.UserMapper;
+import com.softserve.edu.bookinglite.repository.RoleRepository;
+import com.softserve.edu.bookinglite.repository.UserRepository;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -63,4 +65,9 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("User with this email not exist: " + email);
         }
     }
+    
+    public Optional<User> getUserById(Long id) {
+    	return userRepository.findById(id);
+    }
+    
 }

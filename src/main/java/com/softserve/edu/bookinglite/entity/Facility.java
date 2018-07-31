@@ -37,4 +37,5 @@ public class Facility {
 	public void setName(String name) {
 		this.name = name;
 	}
+
 }

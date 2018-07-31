@@ -18,7 +18,7 @@ public class Address {
     private String zip;
 
 
-    @ManyToOne(cascade=CascadeType.PERSIST)
+    @ManyToOne(cascade=CascadeType.MERGE)
     @JoinColumn(name = "city_id",nullable = false)
     private City city;
 

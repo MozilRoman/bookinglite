@@ -12,7 +12,7 @@ public class City {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @ManyToOne(cascade=CascadeType.PERSIST)
+    @ManyToOne(cascade=CascadeType.MERGE)
     @JoinColumn(name = "country_id",nullable = false)
     private Country country;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "city")
