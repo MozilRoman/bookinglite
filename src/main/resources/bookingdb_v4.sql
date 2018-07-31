@@ -27,7 +27,7 @@ DROP TABLE IF EXISTS `addresses`;
 
 CREATE TABLE `addresses` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `adress_line` varchar(255) NOT NULL,
+  `address_line` varchar(255) NOT NULL,
   `zip` varchar(255) NOT NULL,
   `city_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
