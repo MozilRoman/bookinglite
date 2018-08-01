@@ -42,8 +42,10 @@ public class ApartmentController {
 
     @PutMapping("/apartment/{id}")
     public ResponseEntity<Void> update(@RequestBody ApartmentDto apartmentDto,
-                                       @PathVariable ("id") Long apartmentId) {
-        if (apartmentService.updateApartment(apartmentDto, apartmentId)){
+                                       @PathVariable ("id") Long apartmentId,
+                                       Principal principal) {
+        Long userId = Long.parseLong(principal.getName());
+        if (apartmentService.updateApartment(apartmentDto, apartmentId, userId)){
             return new ResponseEntity<Void>(HttpStatus.OK);
         }else {
             return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);

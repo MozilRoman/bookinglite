@@ -1,11 +1,13 @@
 package com.softserve.edu.bookinglite.service;
 
+import ch.qos.logback.core.sift.AppenderFactory;
 import com.softserve.edu.bookinglite.dto.ApartmentDto;
 import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.repository.ApartmentRepository;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -46,6 +48,7 @@ public class ApartmentService {
         Optional<Apartment> apartment = apartmentRepository.findById(id);
         if(apartment.isPresent()){
             ApartmentDto apartmentDto = new ApartmentDto();
+            apartmentDto.setId(apartment.get().getId());
             apartmentDto.setName(apartment.get().getName());
             apartmentDto.setPrice(apartment.get().getPrice());
             apartmentDto.setNumberOfGuests(apartment.get().getNumberOfGuests());
@@ -73,17 +76,18 @@ public class ApartmentService {
         return false;
     }
 
-    public boolean updateApartment(ApartmentDto apartmentDto, Long apartmentId) {
-        if (apartmentId != null){
-            Apartment apartment = new Apartment();
-            apartment.setId(apartmentId);
-            apartment.setName(apartmentDto.getName());
-            apartment.setPrice(apartmentDto.getPrice());
-            apartment.setNumberOfGuests(apartmentDto.getNumberOfGuests());
-            apartment.setApartmentType(apartmentDto.getApartmentType());
-            apartment.setAmenities(apartmentDto.getAmenities());
-            apartmentRepository.save(apartment);
-            return true;
+    public boolean updateApartment(ApartmentDto apartmentDto, Long apartmentId, Long userId) {
+        Optional<Apartment> apartment = apartmentRepository.findById(apartmentId);
+        if (apartment.isPresent()){
+            apartment.get().setName(apartmentDto.getName());
+            apartment.get().setPrice(apartmentDto.getPrice());
+            apartment.get().setNumberOfGuests(apartmentDto.getNumberOfGuests());
+            apartment.get().setApartmentType(apartmentDto.getApartmentType());
+            apartment.get().setAmenities(apartmentDto.getAmenities());
+            if ((apartment.get().getProperty().getUser().getId()).equals(userId)){
+                apartmentRepository.save(apartment.get());
+                return true;
+            }
         }
         return false;
     }
