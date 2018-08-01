@@ -30,12 +30,17 @@ public class PropertyDto {
 	@NotBlank
 	private String contactEmail;
 	
+
 	private User user;
 	@NotNull
 	private PropertyType propertyType;
 	@NotNull
 	private Address address;
-	@NotNull
+
+	
+	
+	
+	
 	private Set<Facility> facilities;
 
 	private List<Apartment> apartments;
@@ -90,6 +95,8 @@ public class PropertyDto {
 		this.contactEmail = contactEmail;
 	}
 
+
+
 	public User getUser() {
 		return user;
 	}
@@ -139,4 +146,5 @@ public class PropertyDto {
 	}
 	
 
-}
+	
+	}
