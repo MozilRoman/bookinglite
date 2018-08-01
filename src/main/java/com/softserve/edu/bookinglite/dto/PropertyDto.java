@@ -3,6 +3,11 @@ package com.softserve.edu.bookinglite.dto;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.softserve.edu.bookinglite.entity.Address;
 import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.Facility;
@@ -10,32 +15,30 @@ import com.softserve.edu.bookinglite.entity.Photo;
 import com.softserve.edu.bookinglite.entity.PropertyType;
 import com.softserve.edu.bookinglite.entity.User;
 
+@JsonInclude(Include.NON_NULL)
 public class PropertyDto {
 	
-	//TODO Validation
 	private Long id;
-	
+	@NotBlank
 	private String name;
-	
+	@NotBlank
 	private String description;
 	
 	private Float rating;
-	
+	@NotBlank
 	private String phoneNumber;
-	
+	@NotBlank
 	private String contactEmail;
 	
 	private User user;
-	
-	
-	
+	@NotNull
 	private PropertyType propertyType;
-	
+	@NotNull
 	private Address address;
-	
-	private List<Apartment> apartments;
-	
+	@NotNull
 	private Set<Facility> facilities;
+
+	private List<Apartment> apartments;
 	
 	private List<Photo> photos;
 
@@ -134,5 +137,6 @@ public class PropertyDto {
 	public void setPhotos(List<Photo> photos) {
 		this.photos = photos;
 	}
+	
 
 }

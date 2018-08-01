@@ -1,6 +1,9 @@
 package com.softserve.edu.bookinglite.entity;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,9 +11,6 @@ import java.util.List;
 @Table(name = "property_types")
 public class PropertyType {
 	
-	public PropertyType() {
-	}
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -40,7 +40,7 @@ public class PropertyType {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	@JsonIgnore
 	public List<Property> getProperties() {
 		return properties;
 	}

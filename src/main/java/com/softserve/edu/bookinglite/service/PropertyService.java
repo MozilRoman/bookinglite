@@ -22,16 +22,12 @@ public class PropertyService {
 		propertyRepository.save(convertToProperty(propertyDto, userId));
 	}
 
-	public void updateProperty(Property property) {
-		propertyRepository.save(property);
-	}
-
-	public Property getPropertyById(Long id) {
-		return propertyRepository.getOne(id);
+	public Optional<Property> getPropertyById(Long id) {
+		return propertyRepository.findById(id);
 	}
 	
 	public PropertyDto getPropertyDtoById(Long id) {
-		return convertToPropertyDto(getPropertyById(id));
+		return convertToPropertyDto(getPropertyById(id).get());
 	}
 
 	public List<Property> getAllProperties() {
@@ -42,7 +38,6 @@ public class PropertyService {
 		Property property = new Property();
 		property.setName(propertyDto.getName());
 		property.setDescription(propertyDto.getDescription());
-		property.setRating(propertyDto.getRating());
 		property.setPhoneNumber(propertyDto.getPhoneNumber());
 		property.setContactEmail(propertyDto.getContactEmail());
 		Optional<User> user = userService.getUserById(userId);
@@ -61,10 +56,11 @@ public class PropertyService {
 		propertyDto.setRating(property.getRating());
 		propertyDto.setPhoneNumber(property.getPhoneNumber());
 		propertyDto.setContactEmail(property.getContactEmail());
-//		propertyDto.setUser(property.getUser());
-//		propertyDto.setPropertyType(property.getPropertyType());
-//		propertyDto.setAddress(property.getAddress());
-//		propertyDto.setFacilities(property.getFacilities());
+		propertyDto.setUser(property.getUser());
+		propertyDto.setPropertyType(property.getPropertyType());
+		propertyDto.setAddress(property.getAddress());
+		propertyDto.setFacilities(property.getFacilities());
+		
 		return propertyDto;
 	}
 	
@@ -75,5 +71,21 @@ public class PropertyService {
 			propertyDtos.add(dto);
 		}
 		return propertyDtos;
+	}
+	
+	public boolean updateProperty(PropertyDto propertyDto, Long propertyId) {
+		if (propertyDto != null) {
+			Property property = propertyRepository.findById(propertyId).get();
+			System.out.println(propertyDto.getName());
+			property.setName(propertyDto.getName());
+			property.setDescription(propertyDto.getDescription());
+			property.setPhoneNumber(propertyDto.getPhoneNumber());
+			property.setContactEmail(propertyDto.getContactEmail());
+			property.setPropertyType(propertyDto.getPropertyType());
+			property.setFacilities(propertyDto.getFacilities());
+			propertyRepository.save(property);
+			return true;
+		}
+		return false;
 	}
 }

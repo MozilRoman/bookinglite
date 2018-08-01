@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -21,6 +22,10 @@ public class Facility {
 	
 	@Column(length = 50, nullable = false)
 	private String name;
+	
+//	@ManyToMany(mappedBy = "facilities")
+//	private Property property;
+	
 
 	public Long getId() {
 		return id;
