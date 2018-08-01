@@ -25,10 +25,8 @@ public class ApartmentService {
     }
 
     public List<ApartmentDto> findAllApartmentDto(){
-        List<Apartment> allApartments = findAllApartment();
         List<ApartmentDto> allApartmentsDto = new ArrayList<>();
-        for (int i=0; i<allApartments.size(); i++){
-            Apartment apartment = allApartments.get(i);
+        for (Apartment apartment: findAllApartment()) {
             ApartmentDto apartmentDto = convertToDto(apartment);
             allApartmentsDto.add(apartmentDto);
         }
