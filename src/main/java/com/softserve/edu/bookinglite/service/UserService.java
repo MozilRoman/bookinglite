@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -56,6 +57,20 @@ public class UserService implements UserDetailsService {
         User result = userRepository.save(user);
         if(result != null)return true;
         else return false;
+    }
+    public  User findById(Long id){
+        return userRepository.findById(id).get();
+    }
+    public String[] getUserRoles(Long userid){
+        User user = new User();
+        user.setId(userid);
+        ArrayList<String> roles = new ArrayList<>();
+        Set<Role> roleSet = userRepository.findById(userid).get().getRoles();
+        for(Role role : roleSet){
+            roles.add(role.getName());
+        }
+        String[] result = new String[roles.size()];
+        return  roles.toArray(result);
     }
 
 
