@@ -1,43 +1,24 @@
-package com.softserve.edu.bookinglite.entity;
+package com.softserve.edu.bookinglite.dto;
 
-import javax.persistence.*;
+import com.softserve.edu.bookinglite.entity.Amenity;
+import com.softserve.edu.bookinglite.entity.ApartmentType;
+
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Table(name = "apartments")
-public class Apartment {
+public class ApartmentDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
+    @NotBlank
     private String name;
-
-    @Column(columnDefinition= "DECIMAL(8,2)", nullable = false)
     private BigDecimal price;
-
-    @Column(name= "number_of_guests", nullable = false)
     private int numberOfGuests;
-
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "apartment_type_id", nullable = false)
     private ApartmentType apartmentType;
-
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH},
-            fetch = FetchType.EAGER)
-    @JoinTable(name = "apartment_amenities",
-            joinColumns = @JoinColumn(name = "apartment_id"),
-            inverseJoinColumns = @JoinColumn(name = "amenity_id"))
     private Set<Amenity> amenities = new HashSet<>();
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "property_id", nullable = false)
-    private Property property;
-
-    public Apartment() {
+    public ApartmentDto() {
     }
 
     public Long getId() {
@@ -88,11 +69,4 @@ public class Apartment {
         this.amenities = amenities;
     }
 
-    public Property getProperty() {
-        return property;
-    }
-
-    public void setProperty(Property property) {
-        this.property = property;
-    }
 }
