@@ -40,7 +40,7 @@ public class ApartmentController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/apartment/{id}")
     public ResponseEntity<Void> update(@RequestBody ApartmentDto apartmentDto,
                                        @PathVariable ("id") Long apartmentId) {
         if (apartmentService.updateApartment(apartmentDto, apartmentId)){
