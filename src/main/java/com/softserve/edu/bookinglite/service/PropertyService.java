@@ -47,8 +47,9 @@ public class PropertyService {
 		property.setContactEmail(propertyDto.getContactEmail());
 		Optional<User> user = userService.getUserById(userId);
 		property.setUser(user.get());
-		property.setPropertyType(propertyDto.getPropertyType());
-		property.setAddress(propertyDto.getAddress());
+		
+//		property.setPropertyType(propertyDto.getPropertyType());
+//		property.setAddress(propertyDto.getAddress());
 		property.setFacilities(propertyDto.getFacilities());
 		return property;
 	}
@@ -61,7 +62,11 @@ public class PropertyService {
 		propertyDto.setRating(property.getRating());
 		propertyDto.setPhoneNumber(property.getPhoneNumber());
 		propertyDto.setContactEmail(property.getContactEmail());
-//		propertyDto.setUser(property.getUser());
+		propertyDto.setUserId(property.getUser().getId());
+		propertyDto.setPropertyTypeId(property.getPropertyType().getId());
+		propertyDto.setAddressId(property.getAddress().getId());
+		
+//		propertyDto.setUser(property.getUser().getId());
 //		propertyDto.setPropertyType(property.getPropertyType());
 //		propertyDto.setAddress(property.getAddress());
 //		propertyDto.setFacilities(property.getFacilities());

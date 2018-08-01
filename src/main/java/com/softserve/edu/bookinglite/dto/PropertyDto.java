@@ -25,13 +25,15 @@ public class PropertyDto {
 	
 	private String contactEmail;
 	
-	private User user;
+//	private User user;
+	private Long userId;
 	
+//	private PropertyType propertyType;
 	
+	private Long propertyTypeId;
 	
-	private PropertyType propertyType;
-	
-	private Address address;
+//	private Address address;
+	private Long addressId;
 	
 	private List<Apartment> apartments;
 	
@@ -87,28 +89,28 @@ public class PropertyDto {
 		this.contactEmail = contactEmail;
 	}
 
-	public User getUser() {
-		return user;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
-	public PropertyType getPropertyType() {
-		return propertyType;
+	public Long getPropertyTypeId() {
+		return propertyTypeId;
 	}
 
-	public void setPropertyType(PropertyType propertyType) {
-		this.propertyType = propertyType;
+	public void setPropertyTypeId(Long propertyTypeId) {
+		this.propertyTypeId = propertyTypeId;
 	}
 
-	public Address getAddress() {
-		return address;
+	public Long getAddressId() {
+		return addressId;
 	}
 
-	public void setAddress(Address address) {
-		this.address = address;
+	public void setAddressId(Long addressId) {
+		this.addressId = addressId;
 	}
 
 	public List<Apartment> getApartments() {
@@ -135,4 +137,5 @@ public class PropertyDto {
 		this.photos = photos;
 	}
 
-}
+	
+	}
