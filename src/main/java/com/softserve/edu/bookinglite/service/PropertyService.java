@@ -25,7 +25,7 @@ public class PropertyService {
 	public Optional<Property> getPropertyById(Long id) {
 		return propertyRepository.findById(id);
 	}
-	
+
 	public PropertyDto getPropertyDtoById(Long id) {
 		return convertToPropertyDto(getPropertyById(id).get());
 	}
@@ -42,9 +42,8 @@ public class PropertyService {
 		property.setContactEmail(propertyDto.getContactEmail());
 		Optional<User> user = userService.getUserById(userId);
 		property.setUser(user.get());
-		
-//		property.setPropertyType(propertyDto.getPropertyType());
-//		property.setAddress(propertyDto.getAddress());
+		property.setPropertyType(propertyDto.getPropertyType());
+		property.setAddress(propertyDto.getAddress());
 		property.setFacilities(propertyDto.getFacilities());
 		return property;
 	}
@@ -57,29 +56,25 @@ public class PropertyService {
 		propertyDto.setRating(property.getRating());
 		propertyDto.setPhoneNumber(property.getPhoneNumber());
 		propertyDto.setContactEmail(property.getContactEmail());
-
 		propertyDto.setUser(property.getUser());
 		propertyDto.setPropertyType(property.getPropertyType());
 		propertyDto.setAddress(property.getAddress());
 		propertyDto.setFacilities(property.getFacilities());
-		
-
 		return propertyDto;
 	}
-	
-	public List<PropertyDto> getAllPropertyDtos(){
+
+	public List<PropertyDto> getAllPropertyDtos() {
 		List<PropertyDto> propertyDtos = new ArrayList<>();
-		for(Property properties : getAllProperties()) {
+		for (Property properties : getAllProperties()) {
 			PropertyDto dto = convertToPropertyDto(properties);
 			propertyDtos.add(dto);
 		}
 		return propertyDtos;
 	}
-	
+
 	public boolean updateProperty(PropertyDto propertyDto, Long propertyId) {
 		if (propertyDto != null) {
 			Property property = propertyRepository.findById(propertyId).get();
-			System.out.println(propertyDto.getName());
 			property.setName(propertyDto.getName());
 			property.setDescription(propertyDto.getDescription());
 			property.setPhoneNumber(propertyDto.getPhoneNumber());

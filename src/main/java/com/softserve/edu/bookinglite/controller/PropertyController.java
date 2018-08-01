@@ -15,15 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.softserve.edu.bookinglite.dto.PropertyDto;
-import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.service.PropertyService;
 
 @RestController
 @RequestMapping("/api")
 public class PropertyController {
 
-	@Autowired
-	private PropertyService propertyService;
+	@Autowired private PropertyService propertyService;
 
 	@GetMapping("/property")
 	public List<PropertyDto> getAllProperties() {
@@ -45,15 +43,10 @@ public class PropertyController {
 	@PutMapping("/property/{propertyId}")
 	public ResponseEntity<PropertyDto> update(@RequestBody PropertyDto propertyDto,
 			@PathVariable("propertyId") Long id) {
-//		Property property = propertyService.getPropertyById(id).get();
 		if(propertyService.updateProperty(propertyDto,id)) {
-//			propertyDto.setId(id);
-			
 			return new ResponseEntity<PropertyDto>(HttpStatus.OK);
 		}else {
 			return new ResponseEntity<PropertyDto>(HttpStatus.BAD_REQUEST);
 		}
-			
 	}
-
 }

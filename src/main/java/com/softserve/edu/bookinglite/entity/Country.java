@@ -1,6 +1,9 @@
 package com.softserve.edu.bookinglite.entity;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +33,7 @@ public class Country {
     public void setName(String name) {
         this.name = name;
     }
-
+    @JsonIgnore
     public List<City> getCities() {
         return cities;
     }

@@ -41,36 +41,28 @@ public class Property {
 	@Column(name = "contact_email" , length = 50, nullable = false)
 	private String contactEmail;
 
-	@ManyToOne(cascade = CascadeType.MERGE , fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "property_type_id",nullable = false)
 	private PropertyType propertyType;
 
-	@ManyToOne(cascade = { 
-			CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.PERSIST, CascadeType.REFRESH
-			}, fetch = FetchType.EAGER)
+	@ManyToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST},fetch = FetchType.EAGER)
 	@JoinColumn(name = "address_id",nullable = false)
 	private Address address;
 
-	@OneToMany(mappedBy = "property", cascade = {
-			CascadeType.DETACH,
-			CascadeType.MERGE,
-			CascadeType.PERSIST,
-			CascadeType.REFRESH })
+	@OneToMany(mappedBy = "property")
 	private List<Apartment> apartments = new ArrayList<>();
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "owner_id",nullable = false)
 	private User user; 
 
-	@ManyToMany(cascade =  {CascadeType.MERGE,CascadeType.PERSIST},fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "property_facilities",
 			joinColumns = @JoinColumn(name = "property_id"),
 			inverseJoinColumns = @JoinColumn(name = "facility_id"))
 	private Set<Facility> facilities = new HashSet<>();
 	
-	
-	@OneToMany(mappedBy = "property" , cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "property")
 	private List<Photo> photos = new ArrayList<>();
 
 	public Long getId() {
@@ -137,6 +129,14 @@ public class Property {
 		this.address = address;
 	}
 
+	public List<Apartment> getApartments() {
+		return apartments;
+	}
+
+	public void setApartments(List<Apartment> apartments) {
+		this.apartments = apartments;
+	}
+
 	public User getUser() {
 		return user;
 	}
@@ -144,7 +144,7 @@ public class Property {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+
 	public Set<Facility> getFacilities() {
 		return facilities;
 	}
@@ -160,14 +160,4 @@ public class Property {
 	public void setPhotos(List<Photo> photos) {
 		this.photos = photos;
 	}
-
-	public List<Apartment> getApartments() {
-		return apartments;
-	}
-
-	public void setApartments(List<Apartment> apartments) {
-		this.apartments = apartments;
-	}
-	
-
 }

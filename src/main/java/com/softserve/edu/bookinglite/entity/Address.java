@@ -19,7 +19,7 @@ public class Address {
 	@Column(nullable = false)
 	private String zip;
 
-	@ManyToOne(cascade = CascadeType.MERGE)
+	@ManyToOne()
 	@JoinColumn(name = "city_id", nullable = false)
 	private City city;
 
@@ -52,7 +52,6 @@ public class Address {
 	public void setZip(String zip) {
 		this.zip = zip;
 	}
-	@JsonIgnore
 	public City getCity() {
 		return city;
 	}
