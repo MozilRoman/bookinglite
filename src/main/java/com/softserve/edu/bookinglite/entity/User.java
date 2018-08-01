@@ -1,6 +1,8 @@
 package com.softserve.edu.bookinglite.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -67,6 +69,7 @@ public class User {
         this.last_name = last_name;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
