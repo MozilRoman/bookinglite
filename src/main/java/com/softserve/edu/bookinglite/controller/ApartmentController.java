@@ -41,7 +41,7 @@ public class ApartmentController {
     }
 
     @PutMapping("/apartment/{id}")
-    public ResponseEntity<Void> update(@RequestBody ApartmentDto apartmentDto,
+    public ResponseEntity<Void> update(@Valid @RequestBody ApartmentDto apartmentDto,
                                        @PathVariable ("id") Long apartmentId,
                                        Principal principal) {
         Long userId = Long.parseLong(principal.getName());

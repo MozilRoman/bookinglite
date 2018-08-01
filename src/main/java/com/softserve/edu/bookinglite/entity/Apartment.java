@@ -22,18 +22,17 @@ public class Apartment {
     @Column(name= "number_of_guests", nullable = false)
     private int numberOfGuests;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     @JoinColumn(name = "apartment_type_id", nullable = false)
     private ApartmentType apartmentType;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH},
-            fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "apartment_amenities",
-            joinColumns = @JoinColumn(name = "apartment_id"),
-            inverseJoinColumns = @JoinColumn(name = "amenity_id"))
+            joinColumns = @JoinColumn(name = "apartment_id", updatable=false,insertable=false),
+            inverseJoinColumns = @JoinColumn(name = "amenity_id", updatable=false,insertable=false))
     private Set<Amenity> amenities = new HashSet<>();
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name = "property_id", nullable = false)
     private Property property;
 
