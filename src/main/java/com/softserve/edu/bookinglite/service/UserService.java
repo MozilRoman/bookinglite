@@ -37,8 +37,6 @@ public class UserService implements UserDetailsService {
     public boolean existsByEmail(String email){
         return userRepository.existsByEmail(email);
     }
-
-
     //TODO: REFACTOR
     @Transactional
     public boolean registerUser(RegisterDto registerDto){
@@ -60,8 +58,6 @@ public class UserService implements UserDetailsService {
         if(result != null)return true;
         else return false;
     }
-
-
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

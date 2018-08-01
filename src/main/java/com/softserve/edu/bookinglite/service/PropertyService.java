@@ -29,6 +29,10 @@ public class PropertyService {
 	public Property getPropertyById(Long id) {
 		return propertyRepository.getOne(id);
 	}
+	
+	public PropertyDto getPropertyDtoById(Long id) {
+		return convertToPropertyDto(getPropertyById(id));
+	}
 
 	public List<Property> getAllProperties() {
 		return propertyRepository.findAll();
@@ -51,6 +55,7 @@ public class PropertyService {
 
 	private PropertyDto convertToPropertyDto(Property property) {
 		PropertyDto propertyDto = new PropertyDto();
+		propertyDto.setId(property.getId());
 		propertyDto.setName(property.getName());
 		propertyDto.setDescription(property.getDescription());
 		propertyDto.setRating(property.getRating());

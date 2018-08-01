@@ -27,6 +27,8 @@ public class PropertyDto {
 	
 	private User user;
 	
+	
+	
 	private PropertyType propertyType;
 	
 	private Address address;

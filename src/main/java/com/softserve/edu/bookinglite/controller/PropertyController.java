@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,11 +26,17 @@ public class PropertyController {
 	public List<PropertyDto> getAllProperties(){
 		return propertyService.getAllPropertyDtos();
 	}
+	
+	@GetMapping("/property/{propertyId}")
+	public PropertyDto getPropertyById(@PathVariable("propertyId") Long id) {
+		return propertyService.getPropertyDtoById(id);
+	}
 
 	@PostMapping("/property")
-	public ResponseEntity<Void> createProperty(@RequestBody PropertyDto propertyDto, Principal principal) {
+	public ResponseEntity<Void> createProperty(@RequestBody PropertyDto propertyDto, 
+			Principal principal) {
 		Long userId = Long.parseLong(principal.getName());
 		propertyService.saveProperty(propertyDto,userId);
-		return new ResponseEntity<>(HttpStatus.CREATED);
+		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
 }
