@@ -1,25 +1,12 @@
 package com.softserve.edu.bookinglite.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "properties")
@@ -49,20 +36,20 @@ public class Property {
 	@JoinColumn(name = "address_id",nullable = false)
 	private Address address;
 
-	@OneToMany(mappedBy = "property")
+	@OneToMany(mappedBy = "property",fetch = FetchType.LAZY)
 	private List<Apartment> apartments = new ArrayList<>();
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "owner_id",nullable = false)
 	private User user; 
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "property_facilities",
 			joinColumns = @JoinColumn(name = "property_id"),
 			inverseJoinColumns = @JoinColumn(name = "facility_id"))
 	private Set<Facility> facilities = new HashSet<>();
 	
-	@OneToMany(mappedBy = "property")
+	@OneToMany(mappedBy = "property",fetch = FetchType.LAZY)
 	private List<Photo> photos = new ArrayList<>();
 
 	public Long getId() {

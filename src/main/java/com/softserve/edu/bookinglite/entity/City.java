@@ -1,13 +1,6 @@
 package com.softserve.edu.bookinglite.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "cities")
@@ -20,12 +13,8 @@ public class City {
     @ManyToOne()
     @JoinColumn(name = "country_id",nullable = false)
     private Country country;
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "city")
 
-    private List<Address> addresses=new ArrayList<Address>();
 
-    public City() {
-    }
 
     public Long getId() {
         return id;
@@ -51,14 +40,6 @@ public class City {
         this.country = country;
     }
 
-    @JsonIgnore
-    public List<Address> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
-    }
 
     @Override
     public boolean equals(Object obj){

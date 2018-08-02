@@ -12,12 +12,12 @@ public class Booking {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="apartment_id",referencedColumnName = "id",nullable = false)
 	private Apartment apartment;
 	
 
-	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id", referencedColumnName = "id",nullable = false)
 	private User user;
 
@@ -32,15 +32,12 @@ public class Booking {
     private BigDecimal total_price;
 	
 
-	@ManyToOne(cascade = {
-			CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.PERSIST, CascadeType.REFRESH
-			}, fetch = FetchType.LAZY)
+	@ManyToOne
     @JoinColumn(name="status_id", referencedColumnName = "id",nullable = false)
 	private BookingStatus bookingstatus;
 	
 	//
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "review_id")
 	private Review review;
 	

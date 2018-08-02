@@ -1,14 +1,7 @@
 package com.softserve.edu.bookinglite.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "addresses")
@@ -22,15 +15,10 @@ public class Address {
 	@Column(nullable = false)
 	private String zip;
 
-	@ManyToOne()
+	@ManyToOne
 	@JoinColumn(name = "city_id", nullable = false)
 	private City city;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "address")
-	private List<Property> properties = new ArrayList<>();
-
-	public Address() {
-	}
 
 	public Long getId() {
 		return id;
@@ -55,6 +43,7 @@ public class Address {
 	public void setZip(String zip) {
 		this.zip = zip;
 	}
+
 	public City getCity() {
 		return city;
 	}
@@ -62,25 +51,5 @@ public class Address {
 	public void setCity(City city) {
 		this.city = city;
 	}
-	@JsonIgnore
-	public List<Property> getProperties() {
-		return properties;
-	}
-
-	public void setProperties(List<Property> properties) {
-		this.properties = properties;
-	}
-
-
-    public void setCity(City city) {
-        this.city = city;
-    }
-    @JsonIgnore
-    public List<Property> getProperties() {
-        return properties;
-    }
-
-    public void setProperties(List<Property> properties) {
-        this.properties = properties;
 
 }
