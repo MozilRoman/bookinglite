@@ -1,11 +1,13 @@
 package com.softserve.edu.bookinglite.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.softserve.edu.bookinglite.entity.Address;
 import com.softserve.edu.bookinglite.entity.Role;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto {
 
     private Long id;
