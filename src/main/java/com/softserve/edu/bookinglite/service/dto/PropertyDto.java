@@ -1,4 +1,4 @@
-package com.softserve.edu.bookinglite.dto;
+package com.softserve.edu.bookinglite.service.dto;
 
 import java.util.List;
 import java.util.Set;
