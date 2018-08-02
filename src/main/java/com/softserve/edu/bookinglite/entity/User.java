@@ -103,7 +103,7 @@ public class User {
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
     }
-    @JsonIgnore
+    
     public Set<Role> getRoles() {
         return roles;
     }
