@@ -26,9 +26,9 @@ public class PhotoController {
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	@DeleteMapping("/photos/{url}")
-	public ResponseEntity<Void> deletePhoto(@PathVariable("url") String url){
-		if(photoService.deletePtoto(url)) {
+	@DeleteMapping("/photos/{name}")
+	public ResponseEntity<Void> deletePhoto(@PathVariable("name") String name){
+		if(photoService.deletePtoto(name)) {
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}else{
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
