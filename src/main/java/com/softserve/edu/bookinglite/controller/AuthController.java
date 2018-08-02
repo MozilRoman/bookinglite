@@ -1,7 +1,7 @@
 package com.softserve.edu.bookinglite.controller;
 
-import com.softserve.edu.bookinglite.dto.LoginDto;
-import com.softserve.edu.bookinglite.dto.RegisterDto;
+import com.softserve.edu.bookinglite.service.dto.LoginDto;
+import com.softserve.edu.bookinglite.service.dto.RegisterDto;
 import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.security.JwtTokenProvider;
 import com.softserve.edu.bookinglite.service.UserService;

@@ -1,6 +1,6 @@
 package com.softserve.edu.bookinglite.controller;
 
-import com.softserve.edu.bookinglite.dto.ApartmentDto;
+import com.softserve.edu.bookinglite.service.dto.ApartmentDto;
 import com.softserve.edu.bookinglite.service.ApartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,17 +15,21 @@ import java.util.List;
 @RequestMapping("/api")
 public class ApartmentController {
 
+    private final ApartmentService apartmentService;
+
     @Autowired
-    private ApartmentService apartmentService;
+    public ApartmentController(ApartmentService apartmentService) {
+        this.apartmentService = apartmentService;
+    }
 
     @GetMapping("/apartment")
     public List<ApartmentDto> getAllApartments(){
-        return apartmentService.findAllApartmentDto();
+        return apartmentService.findAllApartmentDtos();
     }
 
     @GetMapping("/apartment/{id}")
     public ApartmentDto getApartment(@PathVariable ("id") Long apartmentId){
-        return apartmentService.findDtoById(apartmentId);
+        return apartmentService.findApartmentDtoById(apartmentId);
     }
 
     @PostMapping("/property/{id}/apartment")

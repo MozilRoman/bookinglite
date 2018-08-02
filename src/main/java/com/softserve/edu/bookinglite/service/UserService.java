@@ -1,24 +1,23 @@
 package com.softserve.edu.bookinglite.service;
 
+
+import com.softserve.edu.bookinglite.service.dto.RegisterDto;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-
-import com.softserve.edu.bookinglite.dto.RegisterDto;
 import com.softserve.edu.bookinglite.entity.Role;
 import com.softserve.edu.bookinglite.entity.User;
-import com.softserve.edu.bookinglite.mapper.UserMapper;
+import com.softserve.edu.bookinglite.service.mapper.UserMapper;
 import com.softserve.edu.bookinglite.repository.AddressRepository;
 import com.softserve.edu.bookinglite.repository.RoleRepository;
 import com.softserve.edu.bookinglite.repository.UserRepository;

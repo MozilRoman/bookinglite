@@ -26,18 +26,15 @@ public class Apartment {
     @JoinColumn(name = "apartment_type_id", nullable = false)
     private ApartmentType apartmentType;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "apartment_amenities",
-            joinColumns = @JoinColumn(name = "apartment_id", updatable=false,insertable=false),
-            inverseJoinColumns = @JoinColumn(name = "amenity_id", updatable=false,insertable=false))
+            joinColumns = @JoinColumn(name = "apartment_id"),
+            inverseJoinColumns = @JoinColumn(name = "amenity_id"))
     private Set<Amenity> amenities = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "property_id", nullable = false)
     private Property property;
-
-    public Apartment() {
-    }
 
     public Long getId() {
         return id;
@@ -94,4 +91,5 @@ public class Apartment {
     public void setProperty(Property property) {
         this.property = property;
     }
+
 }

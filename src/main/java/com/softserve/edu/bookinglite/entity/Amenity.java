@@ -1,10 +1,6 @@
 package com.softserve.edu.bookinglite.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "amenities")
@@ -16,12 +12,6 @@ public class Amenity {
 
     @Column(nullable = false)
     private String name;
-
-    @ManyToMany(mappedBy = "amenities")
-    private List<Apartment> apartments = new ArrayList<>();
-
-    public Amenity() {
-    }
 
     public Long getId() {
         return id;
@@ -37,15 +27,6 @@ public class Amenity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @JsonIgnore
-    public List<Apartment> getApartments() {
-        return apartments;
-    }
-
-    public void setApartments(List<Apartment> apartments) {
-        this.apartments = apartments;
     }
 
 }
