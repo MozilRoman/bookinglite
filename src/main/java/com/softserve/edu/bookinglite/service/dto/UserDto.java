@@ -1,40 +1,19 @@
-package com.softserve.edu.bookinglite.entity;
+package com.softserve.edu.bookinglite.service.dto;
 
+import com.softserve.edu.bookinglite.entity.Address;
+import com.softserve.edu.bookinglite.entity.Role;
 
-
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Table(name = "users")
+public class UserDto {
 
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(unique = true,nullable = false)
     private String email;
-
-    @Column(nullable = false)
     private String first_name;
-
-    @Column(nullable = false)
     private String last_name;
-
-    @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false)
     private String phone_number;
-
-    @OneToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST},fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id", nullable = false)
     Address address;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),inverseJoinColumns = @JoinColumn(name = "role_id"))
     Set<Role> roles = new HashSet<>();
 
     public Long getId() {
@@ -69,28 +48,12 @@ public class User {
         this.last_name = last_name;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getPhone_number() {
         return phone_number;
     }
 
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
-    }
-    
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
     }
 
     public Address getAddress() {
@@ -99,5 +62,13 @@ public class User {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }
