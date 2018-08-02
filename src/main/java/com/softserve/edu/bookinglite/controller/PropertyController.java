@@ -1,6 +1,6 @@
 package com.softserve.edu.bookinglite.controller;
 
-import com.softserve.edu.bookinglite.dto.PropertyDto;
+import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

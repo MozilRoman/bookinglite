@@ -1,16 +1,15 @@
 package com.softserve.edu.bookinglite.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.softserve.edu.bookinglite.dto.PropertyDto;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
+import com.softserve.edu.bookinglite.service.dto.PropertyDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PropertyService {

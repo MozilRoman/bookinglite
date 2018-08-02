@@ -29,6 +29,9 @@ public class User {
     @Column(nullable = false)
     private String phone_number;
 
+    @Column(nullable = false)
+    private boolean verified;
+
     @OneToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST},fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", nullable = false)
     Address address;
@@ -99,5 +102,13 @@ public class User {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 }
