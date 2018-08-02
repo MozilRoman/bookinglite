@@ -1,10 +1,10 @@
 package com.softserve.edu.bookinglite.controller;
 
-import com.softserve.edu.bookinglite.service.dto.LoginDto;
-import com.softserve.edu.bookinglite.service.dto.RegisterDto;
-import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.security.JwtTokenProvider;
 import com.softserve.edu.bookinglite.service.UserService;
+import com.softserve.edu.bookinglite.service.dto.LoginDto;
+import com.softserve.edu.bookinglite.service.dto.RegisterDto;
+import com.softserve.edu.bookinglite.service.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +33,8 @@ public class AuthController {
 
 
     @GetMapping("/hello")
-    public User hello(Principal principal){
-       User user = userService.findById(Long.parseLong(principal.getName()));
+    public UserDto hello(Principal principal){
+       UserDto user = userService.findById(Long.parseLong(principal.getName()));
        return user;
     }
 

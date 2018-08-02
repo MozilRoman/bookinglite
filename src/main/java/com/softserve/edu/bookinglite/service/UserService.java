@@ -7,6 +7,7 @@ import com.softserve.edu.bookinglite.repository.AddressRepository;
 import com.softserve.edu.bookinglite.repository.RoleRepository;
 import com.softserve.edu.bookinglite.repository.UserRepository;
 import com.softserve.edu.bookinglite.service.dto.RegisterDto;
+import com.softserve.edu.bookinglite.service.dto.UserDto;
 import com.softserve.edu.bookinglite.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,8 +15,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.*;
 
 
@@ -59,12 +60,14 @@ public class UserService implements UserDetailsService {
         if(result != null)return true;
         else return false;
     }
-    public  User findById(Long id){
-        return userRepository.findById(id).get();
+
+
+    public  UserDto findById(Long id){
+        UserDto user = userRepository.findById(id).map(UserMapper.instance::UserToBaseUserDtoWithRolesAndAddress).orElse(new UserDto());
+        return user;
     }
+    @Transactional
     public String[] getUserRoles(Long userid){
-        User user = new User();
-        user.setId(userid);
         ArrayList<String> roles = new ArrayList<>();
         Set<Role> roleSet = userRepository.findById(userid).get().getRoles();
         for(Role role : roleSet){
@@ -75,10 +78,11 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user =  userRepository.findByEmail(email);
         if(user != null){
-           return UserMapper.toSecurityUser(user);
+           return UserMapper.instance.UsertoSecurityUser(user);
         } else {
             throw new UsernameNotFoundException("User with this email not exist: " + email);
         }
