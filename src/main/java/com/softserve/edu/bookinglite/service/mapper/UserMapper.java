@@ -1,9 +1,7 @@
-package com.softserve.edu.bookinglite.mapper;
+package com.softserve.edu.bookinglite.service.mapper;
 
-import com.softserve.edu.bookinglite.entity.Role;
 import com.softserve.edu.bookinglite.entity.User;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UserDetails;
 
 public class UserMapper {
     //TODO: REFACTOR

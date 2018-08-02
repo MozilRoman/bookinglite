@@ -1,9 +1,9 @@
 package com.softserve.edu.bookinglite.service;
 
-import com.softserve.edu.bookinglite.dto.RegisterDto;
+import com.softserve.edu.bookinglite.service.dto.RegisterDto;
 import com.softserve.edu.bookinglite.entity.Role;
 import com.softserve.edu.bookinglite.entity.User;
-import com.softserve.edu.bookinglite.mapper.UserMapper;
+import com.softserve.edu.bookinglite.service.mapper.UserMapper;
 import com.softserve.edu.bookinglite.repository.AddressRepository;
 import com.softserve.edu.bookinglite.repository.RoleRepository;
 import com.softserve.edu.bookinglite.repository.UserRepository;

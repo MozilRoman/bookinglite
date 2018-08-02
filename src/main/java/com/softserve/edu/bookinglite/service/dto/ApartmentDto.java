@@ -1,9 +1,10 @@
-package com.softserve.edu.bookinglite.dto;
+package com.softserve.edu.bookinglite.service.dto;
 
 import com.softserve.edu.bookinglite.entity.Amenity;
 import com.softserve.edu.bookinglite.entity.ApartmentType;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,13 +14,13 @@ public class ApartmentDto {
     private Long id;
     @NotBlank
     private String name;
+    @NotBlank
     private BigDecimal price;
     private int numberOfGuests;
+    @NotNull
     private ApartmentType apartmentType;
+    @NotNull
     private Set<Amenity> amenities = new HashSet<>();
-
-    public ApartmentDto() {
-    }
 
     public Long getId() {
         return id;
