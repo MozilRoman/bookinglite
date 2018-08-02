@@ -15,8 +15,14 @@ import com.softserve.edu.bookinglite.repository.PropertyRepository;
 @Service
 public class PropertyService {
 
-	@Autowired private PropertyRepository propertyRepository;
-	@Autowired private UserService userService;
+	 private PropertyRepository propertyRepository;
+	 private UserService userService;
+
+	 @Autowired
+	public PropertyService(PropertyRepository propertyRepository, UserService userService) {
+		this.propertyRepository = propertyRepository;
+		this.userService = userService;
+	}
 
 	public void saveProperty(PropertyDto propertyDto, Long userId) {
 		propertyRepository.save(convertToProperty(propertyDto, userId));

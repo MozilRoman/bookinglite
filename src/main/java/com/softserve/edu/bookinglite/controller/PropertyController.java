@@ -21,7 +21,12 @@ import com.softserve.edu.bookinglite.service.PropertyService;
 @RequestMapping("/api")
 public class PropertyController {
 
-	@Autowired private PropertyService propertyService;
+	private PropertyService propertyService;
+
+	@Autowired
+	public PropertyController(PropertyService propertyService) {
+		this.propertyService = propertyService;
+	}
 
 	@GetMapping("/property")
 	public List<PropertyDto> getAllProperties() {
@@ -43,9 +48,9 @@ public class PropertyController {
 	@PutMapping("/property/{propertyId}")
 	public ResponseEntity<PropertyDto> update(@RequestBody PropertyDto propertyDto,
 			@PathVariable("propertyId") Long id) {
-		if(propertyService.updateProperty(propertyDto,id)) {
+		if (propertyService.updateProperty(propertyDto, id)) {
 			return new ResponseEntity<PropertyDto>(HttpStatus.OK);
-		}else {
+		} else {
 			return new ResponseEntity<PropertyDto>(HttpStatus.BAD_REQUEST);
 		}
 	}
