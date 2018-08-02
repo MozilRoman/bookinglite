@@ -1,19 +1,13 @@
-package com.softserve.edu.bookinglite.dto;
-
-import java.util.List;
-import java.util.Set;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+package com.softserve.edu.bookinglite.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.softserve.edu.bookinglite.entity.Address;
-import com.softserve.edu.bookinglite.entity.Apartment;
-import com.softserve.edu.bookinglite.entity.Facility;
-import com.softserve.edu.bookinglite.entity.Photo;
-import com.softserve.edu.bookinglite.entity.PropertyType;
-import com.softserve.edu.bookinglite.entity.User;
+import com.softserve.edu.bookinglite.entity.*;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Set;
 
 @JsonInclude(Include.NON_NULL)
 public class PropertyDto {

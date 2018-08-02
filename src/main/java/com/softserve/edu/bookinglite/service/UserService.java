@@ -63,7 +63,7 @@ public class UserService implements UserDetailsService {
 
 
     public  UserDto findById(Long id){
-        UserDto user = userRepository.findById(id).map(UserMapper.instance::UserToBaseUserDtoWithRolesAndAddress).orElse(new UserDto());
+        UserDto user = userRepository.findById(id).map(UserMapper.instance::UserToBaseUserDtoWithRoles).orElse(new UserDto());
         return user;
     }
     @Transactional
