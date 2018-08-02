@@ -1,15 +1,14 @@
 package com.softserve.edu.bookinglite.service;
 
-import com.softserve.edu.bookinglite.service.dto.ApartmentDto;
 import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.repository.ApartmentRepository;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
+import com.softserve.edu.bookinglite.service.dto.ApartmentDto;
+import com.softserve.edu.bookinglite.service.mapper.ApartmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.softserve.edu.bookinglite.service.mapper.ApartmentMapper;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
