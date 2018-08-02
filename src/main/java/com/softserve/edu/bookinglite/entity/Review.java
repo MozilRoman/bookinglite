@@ -5,27 +5,20 @@ import javax.persistence.*;
 @Entity
 @Table(name = "reviews")
 public class Review {
-	
-	public Review() {
-		super();
-	}
-
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@Column(name="message", nullable = false, length = 1000)
+
+	@Column(name="message", nullable = false)
 	private String message;
-	
+
 	@Column(name="rating", nullable = false)
 	private Integer rating;
-	
-	//
+
 	@OneToOne(mappedBy = "review",fetch = FetchType.LAZY)
 	private Booking booking;
-	
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -57,5 +50,5 @@ public class Review {
 	public void setBooking(Booking booking) {
 		this.booking = booking;
 	}
-	
+
 }
