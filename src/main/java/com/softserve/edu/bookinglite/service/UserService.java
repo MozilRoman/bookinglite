@@ -1,44 +1,38 @@
 package com.softserve.edu.bookinglite.service;
 
 
+import com.softserve.edu.bookinglite.entity.Role;
+import com.softserve.edu.bookinglite.entity.User;
+import com.softserve.edu.bookinglite.repository.AddressRepository;
+import com.softserve.edu.bookinglite.repository.RoleRepository;
+import com.softserve.edu.bookinglite.repository.UserRepository;
 import com.softserve.edu.bookinglite.service.dto.RegisterDto;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.transaction.Transactional;
+import com.softserve.edu.bookinglite.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.softserve.edu.bookinglite.entity.Role;
-import com.softserve.edu.bookinglite.entity.User;
-import com.softserve.edu.bookinglite.service.mapper.UserMapper;
-import com.softserve.edu.bookinglite.repository.AddressRepository;
-import com.softserve.edu.bookinglite.repository.RoleRepository;
-import com.softserve.edu.bookinglite.repository.UserRepository;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 @Service
 public class UserService implements UserDetailsService {
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final AddressRepository addressRepository;
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    UserRepository userRepository;
-    @Autowired
-    RoleRepository roleRepository;
-    @Autowired
-    AddressRepository addressRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, AddressRepository addressRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.addressRepository = addressRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
 
     public boolean existsByEmail(String email){

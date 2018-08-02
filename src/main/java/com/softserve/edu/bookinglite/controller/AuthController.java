@@ -20,9 +20,16 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/api")
 public class AuthController {
-    @Autowired private UserService userService;
-    @Autowired private AuthenticationManager authenticationManager;
-    @Autowired private JwtTokenProvider jwtTokenProvider;
+    private final UserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    public AuthController(UserService userService, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+        this.userService = userService;
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
 
     @GetMapping("/hello")
