@@ -3,6 +3,9 @@ package com.softserve.edu.bookinglite.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +17,7 @@ public class City {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @ManyToOne(cascade=CascadeType.MERGE)
+    @ManyToOne()
     @JoinColumn(name = "country_id",nullable = false)
     private Country country;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "city")
