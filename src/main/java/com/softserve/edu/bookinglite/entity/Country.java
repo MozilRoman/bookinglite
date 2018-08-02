@@ -1,5 +1,7 @@
 package com.softserve.edu.bookinglite.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,6 +17,7 @@ public class Country {
     @Column(nullable = false)
     private String name;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "country")
+
     private List<City> cities=new ArrayList<City>();
 
 
@@ -33,6 +36,7 @@ public class Country {
     public void setName(String name) {
         this.name = name;
     }
+
     @JsonIgnore
     public List<City> getCities() {
         return cities;

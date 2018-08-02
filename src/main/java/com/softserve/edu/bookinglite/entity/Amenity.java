@@ -1,5 +1,7 @@
 package com.softserve.edu.bookinglite.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,7 @@ public class Amenity {
         this.name = name;
     }
 
+    @JsonIgnore
     public List<Apartment> getApartments() {
         return apartments;
     }

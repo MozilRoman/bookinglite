@@ -1,5 +1,8 @@
 package com.softserve.edu.bookinglite.entity;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -67,5 +70,17 @@ public class Address {
 	public void setProperties(List<Property> properties) {
 		this.properties = properties;
 	}
+
+
+    public void setCity(City city) {
+        this.city = city;
+    }
+    @JsonIgnore
+    public List<Property> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(List<Property> properties) {
+        this.properties = properties;
 
 }

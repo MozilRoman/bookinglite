@@ -1,5 +1,10 @@
 package com.softserve.edu.bookinglite.entity;
 
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,7 +45,7 @@ public class User {
     @Column(nullable = false)
     private String phone_number;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id", nullable = false)
     Address address;
 
@@ -79,7 +84,10 @@ public class User {
     public void setLast_name(String last_name) {
         this.last_name = last_name;
     }
-    
+
+
+
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
