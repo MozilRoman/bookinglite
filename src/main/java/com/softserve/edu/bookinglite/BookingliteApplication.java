@@ -7,6 +7,9 @@ import com.softserve.edu.bookinglite.security.JwtAuthorizationFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.event.ApplicationEventMulticaster;
+import org.springframework.context.event.SimpleApplicationEventMulticaster;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,13 +33,7 @@ public class BookingliteApplication {
 				CloudinaryData.API_KEY.getName(), CloudinaryData.API_KEY.getValue(),
 				CloudinaryData.API_SECRET.getName(), CloudinaryData.API_SECRET.getValue()));
 	}
-	@Bean  
-	 public TaskExecutor taskExecutor() {  
-	   ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();  
-	   threadPoolTaskExecutor.setCorePoolSize(1);  
-	   threadPoolTaskExecutor.setMaxPoolSize(5);  
-	   return threadPoolTaskExecutor;  
-	 }  
+	 
 	public static void main(String[] args) {
 		SpringApplication.run(BookingliteApplication.class, args);
 	}
