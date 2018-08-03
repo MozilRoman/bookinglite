@@ -26,12 +26,6 @@ public class ReviewController {
         return reviewService.findAllReviewsByBookingId(bookingId);
     }
 
-//    @GetMapping("/booking/{id}/review")
-//    public ReviewDto getReviewByUser(@PathVariable ("id") Long bookingId, Principal principal){
-//        Long userId = Long.parseLong(principal.getName());
-//        return reviewService.findReviewByUserId(bookingId, userId);
-//    }
-
     @PostMapping("/booking/{id}/review")
     public ResponseEntity<Void> saveReview(@RequestBody ReviewDto reviewDto,
                                            @PathVariable ("id") Long bookingId,

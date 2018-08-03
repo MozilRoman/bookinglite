@@ -4,6 +4,7 @@ import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.Review;
 import com.softserve.edu.bookinglite.repository.BookingRepository;
+import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.repository.ReviewRepository;
 import com.softserve.edu.bookinglite.service.dto.ReviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +19,20 @@ public class ReviewService {
 
     private final BookingRepository bookingRepository;
     private  final ReviewRepository reviewRepository;
+    private final PropertyRepository propertyRepository;
 
     @Autowired
-    public ReviewService(BookingRepository bookingRepository, ReviewRepository reviewRepository) {
+    public ReviewService(BookingRepository bookingRepository, ReviewRepository reviewRepository, PropertyRepository propertyRepository) {
         this.bookingRepository = bookingRepository;
         this.reviewRepository = reviewRepository;
+        this.propertyRepository = propertyRepository;
     }
 
     public List<ReviewDto> findAllReviewsByBookingId(Long bookingId){
-        List<Review> reviews = reviewRepository.findByBookingId(bookingId);
         List<ReviewDto> reviewDtos = new ArrayList<>();
         for (Review review :reviewRepository.findByBookingId(bookingId)) {
             ReviewDto reviewDto = ReviewMapper.instance.toDto(review);
+            reviewDto.setBookingId(bookingId);
             reviewDtos.add(reviewDto);
         }
         return reviewDtos;
@@ -52,7 +55,11 @@ public class ReviewService {
             review.setRating(reviewDto.getRating());
             review.setBooking(booking);
             reviewRepository.save(review);
+
+            booking.setReview(review);
+            bookingRepository.save(booking);
             property.setRating((property.getRating() + review.getRating())/2);
+            propertyRepository.save(property);
             return true;
         }
         return false;

@@ -5,7 +5,7 @@ public class ReviewDto {
     private Long id;
     private String message;
     private Integer rating;
-    private BookingDto bookingDto;
+    private Long bookingId;
 
     public Long getId() {
         return id;
@@ -31,12 +31,11 @@ public class ReviewDto {
         this.rating = rating;
     }
 
-    public BookingDto getBookingDto() {
-        return bookingDto;
+    public Long getBookingId() {
+        return bookingId;
     }
 
-    public void setBookingDto(BookingDto bookingDto) {
-        this.bookingDto = bookingDto;
+    public void setBookingId(Long bookingId) {
+        this.bookingId = bookingId;
     }
-
 }
