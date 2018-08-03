@@ -27,7 +27,7 @@ public class Apartment {
     @Column(name= "number_of_guests", nullable = false)
     private int numberOfGuests;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "apartment_type_id", nullable = false)
     private ApartmentType apartmentType;
 
