@@ -14,9 +14,9 @@ public class BookingDto {
 
 	
 	private Long booking_id;
-	@NotNull
+
 	private ApartmentDto apartmentDto;
-	@NotNull
+
 	private UserDto userDto;
 	@NotNull
 	private Date check_in;
@@ -25,9 +25,9 @@ public class BookingDto {
 	@NotNull
 	private BigDecimal total_price;
 	@NotNull
-	private BookingStatus bookingstatus;
+	private String bookingstatus;
 	
-	private Review review;
+	private String review;
 	
 	public BookingDto() {
 		
@@ -81,19 +81,27 @@ public class BookingDto {
 		this.total_price = total_price;
 	}
 
-	public BookingStatus getBookingstatus() {
+	public Long getBooking_id() {
+		return booking_id;
+	}
+
+	public void setBooking_id(Long booking_id) {
+		this.booking_id = booking_id;
+	}
+
+	public String getBookingstatus() {
 		return bookingstatus;
 	}
 
-	public void setBookingstatus(BookingStatus bookingstatus) {
+	public void setBookingstatus(String bookingstatus) {
 		this.bookingstatus = bookingstatus;
 	}
 
-	public Review getReview() {
+	public String getReview() {
 		return review;
 	}
 
-	public void setReview(Review review) {
+	public void setReview(String review) {
 		this.review = review;
-	}		
+	}
 }

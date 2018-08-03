@@ -95,23 +95,22 @@ public class BookingService {
 	public boolean createBooking(BookingDto bookingDto, Long user_id, Long apartment_id){
     	Booking booking=new Booking();  	
     	
-    	Optional<Apartment> apartment= apartmentRepository.findById(apartment_id);
-			booking.setApartment(apartment.get());			
-			
-		Optional<User> user= userRepository.findById(user_id);
-			booking.setUser(user.get());		
-				
+    	if(apartmentRepository.existsById(apartment_id)	){
+    		Apartment apartment=new Apartment();
+    		apartment.setId(apartment_id);
+    		booking.setApartment(apartment);
+		}
+		
+		if(userRepository.existsById(user_id)){
+    		User user=new User();
+    		user.setId(user_id);
+    		booking.setUser(user);
+		}
+
     	booking.setCheck_in(bookingDto.getCheck_in());
     	booking.setCheck_out(bookingDto.getCheck_out()); //TODO edit visualization Data!!!!!!
     	booking.setTotal_price(bookingDto.getTotal_price());
-    	booking.setBookingstatus(bookingStatusRepository.findByName(RESERVED));
-    	
-    	if(bookingDto.getReview()!=null) {
-    		Review review = bookingDto.getReview();
-        	reviewRepository.save(review);
-        	booking.setReview(bookingDto.getReview());        	
-    	}    	    	
-    	
+    	booking.setBookingstatus(bookingStatusRepository.findByName("Reserved"));
     	//check if date is not reserved 
     	
     	Booking result = bookingRepository.save(booking); 
@@ -123,7 +122,7 @@ public class BookingService {
 	
     public boolean updateBooking(BookingDto bookingDto){
     	    	    	
-    	Booking booking=new Booking();
+    	/*Booking booking=new Booking();
     	booking.setId(bookingDto.getId());
     	Apartment apartment= new Apartment();
     	apartment.
@@ -140,12 +139,13 @@ public class BookingService {
     	
     	Booking result = bookingRepository.save(booking);
         if(result != null)return true;
-        else return false;
+        else return false;*/
+    	return true;
     }
     
     private BookingDto convertToBookingDto(Booking booking){
     	BookingDto bookingDto = new BookingDto();
-    	bookingDto.setId(booking.getId());
+    	/*bookingDto.setId(booking.getId());
     	bookingDto.setApartment(booking.getApartment());
     	bookingDto.setBookingstatus(booking.getBookingstatus());
     	bookingDto.setCheck_in(booking.getCheck_in());
@@ -164,7 +164,7 @@ public class BookingService {
     	}
     	catch(NullPointerException e) {
     		System.out.println("55555 ");
-    	} 	    	
+    	} 	    	*/
     	
     	/*if(reviewRepository.findById( booking.getReview().getId()).get()!=null) {
 			bookingDto.setReview(reviewRepository.findById(booking.getReview().getId()).get());
