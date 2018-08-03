@@ -1,5 +1,6 @@
 package com.softserve.edu.bookinglite.service;
 
+import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.Review;
@@ -32,18 +33,18 @@ public class ReviewService {
         List<ReviewDto> reviewDtos = new ArrayList<>();
         for (Review review :reviewRepository.findByBookingId(bookingId)) {
             ReviewDto reviewDto = ReviewMapper.instance.toDto(review);
-            reviewDto.setBookingId(bookingId);
             reviewDtos.add(reviewDto);
         }
         return reviewDtos;
     }
 
-    public ReviewDto findReviewByUserId(Long bookingId, Long userId){
-        Booking booking = bookingRepository.findById(bookingId).get();
-        if (booking.getUser().getId().equals(userId)){
-            return ReviewMapper.instance.toDto(booking.getReview());
+    public List<ReviewDto> findReviewsByProperty(Long propertyId){
+        List<ReviewDto> reviewDtos = new ArrayList<>();
+        for (Review review : reviewRepository.findAllReviewsByIdProperty(propertyId)) {
+            ReviewDto reviewDto = ReviewMapper.instance.toDto(review);
+            reviewDtos.add(reviewDto);
         }
-        return null;
+        return reviewDtos;
     }
 
     public boolean addReview(ReviewDto reviewDto, Long bookingId, Long userId){

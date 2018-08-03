@@ -26,6 +26,11 @@ public class ReviewController {
         return reviewService.findAllReviewsByBookingId(bookingId);
     }
 
+    @GetMapping("/property/{id}/reviews")
+    public List<ReviewDto> findAllReviewsByIdProperty(@PathVariable ("id") Long propertyId){
+        return reviewService.findReviewsByProperty(propertyId);
+    }
+
     @PostMapping("/booking/{id}/review")
     public ResponseEntity<Void> saveReview(@RequestBody ReviewDto reviewDto,
                                            @PathVariable ("id") Long bookingId,
