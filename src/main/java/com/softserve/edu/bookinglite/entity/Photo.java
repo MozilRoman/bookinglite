@@ -40,7 +40,7 @@ public class Photo {
 	}
 
 	public void setProperty(Property property) {
-		this.property = property;
+		this.property = property;  
 	}
 	
 	

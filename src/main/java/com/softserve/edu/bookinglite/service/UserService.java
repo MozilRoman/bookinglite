@@ -3,13 +3,17 @@ package com.softserve.edu.bookinglite.service;
 
 import com.softserve.edu.bookinglite.entity.Role;
 import com.softserve.edu.bookinglite.entity.User;
-import com.softserve.edu.bookinglite.repository.AddressRepository;
+import com.softserve.edu.bookinglite.entity.VerificationToken;
+import com.softserve.edu.bookinglite.events.RegistrationCompleteEvent;
 import com.softserve.edu.bookinglite.repository.RoleRepository;
 import com.softserve.edu.bookinglite.repository.UserRepository;
+import com.softserve.edu.bookinglite.repository.VerificationTokenRepository;
 import com.softserve.edu.bookinglite.service.dto.RegisterDto;
 import com.softserve.edu.bookinglite.service.dto.UserDto;
 import com.softserve.edu.bookinglite.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,15 +28,23 @@ import java.util.*;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
+    private final VerificationTokenRepository verificationTokenRepository;
+    private final ApplicationEventMulticaster applicationEventMulticaster;
+
+    @Value("${app.emailverification}")
+    private Boolean emailverification;
+
+    @Value("${app.hosturl}")
+    private String appUrl;
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, AddressRepository addressRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, VerificationTokenRepository verificationTokenRepository, ApplicationEventMulticaster applicationEventMulticaster) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.addressRepository = addressRepository;
+        this.applicationEventMulticaster = applicationEventMulticaster;
         this.passwordEncoder = passwordEncoder;
+        this.verificationTokenRepository = verificationTokenRepository;
     }
 
 
@@ -51,20 +63,49 @@ public class UserService implements UserDetailsService {
         user.setAddress(registerDto.getAddress());
         List<Role> roles = roleRepository.findAll();
         Set<Role> userRoles = new HashSet<Role>();
-        userRoles.add(roles.get(0));
-        if(registerDto.isOwner()){
-            userRoles.add(roles.get(1));
+        for(Role role : roles){
+            if(role.getName().equals("ROLE_OWNER") && registerDto.isOwner()){
+                userRoles.add(role);
+                continue;
+            }
+            userRoles.add(role);
         }
         user.setRoles(userRoles);
+
+        if(emailverification) user.setVerified(false);
+        else user.setVerified(true);
+
+
         User result = userRepository.save(user);
+        if(emailverification) applicationEventMulticaster.multicastEvent(new RegistrationCompleteEvent(result,appUrl));
         if(result != null)return true;
         else return false;
     }
-
+    @Transactional
+    public boolean verifyUser(String token){
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
+        if(verificationToken != null){
+            if(new Date().before(verificationToken.getExpire_at())){
+                verificationToken.getUser().setVerified(true);
+                userRepository.save(verificationToken.getUser());
+                verificationTokenRepository.delete(verificationToken);
+                return true;
+            } else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    }
 
     public  UserDto findById(Long id){
-        UserDto user = userRepository.findById(id).map(UserMapper.instance::UserToBaseUserDtoWithRolesAndAddress).orElse(new UserDto());
+        UserDto user = userRepository.findById(id).map(UserMapper.instance::UserToBaseUserDtoWithRoles).orElse(new UserDto());
         return user;
+    }
+
+    public User findByEmail(String email){
+        return userRepository.findByEmail(email);
     }
     @Transactional
     public String[] getUserRoles(Long userid){
@@ -75,6 +116,14 @@ public class UserService implements UserDetailsService {
         }
         String[] result = new String[roles.size()];
         return  roles.toArray(result);
+    }
+    public void createVerificationToken(User user,String token){
+        VerificationToken verificationToken =  new VerificationToken();
+        verificationToken.setToken(token);
+        verificationToken.setUser(user);
+        Date expire = new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24));
+        verificationToken.setExpire_at(expire);
+        verificationTokenRepository.save(verificationToken);
     }
 
     @Override
