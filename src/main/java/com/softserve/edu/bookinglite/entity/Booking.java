@@ -10,7 +10,7 @@ public class Booking {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long id;//
 
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="apartment_id",referencedColumnName = "id",nullable = false)
