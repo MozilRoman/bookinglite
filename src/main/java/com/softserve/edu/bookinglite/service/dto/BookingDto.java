@@ -13,7 +13,7 @@ import com.softserve.edu.bookinglite.entity.User;
 public class BookingDto {
 
 	
-	private Long id;
+	private Long booking_id;
 	@NotNull
 	private ApartmentDto apartmentDto;
 	@NotNull
@@ -34,11 +34,11 @@ public class BookingDto {
 	}
 	
 	public Long getId() {
-		return id;
+		return booking_id;
 	}
 
 	public void setId(Long id) {
-		this.id = id;
+		this.booking_id = id;
 	}
 
 	public ApartmentDto getApartmentDto() {
