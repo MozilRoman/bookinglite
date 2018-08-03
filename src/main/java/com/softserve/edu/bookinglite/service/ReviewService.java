@@ -56,10 +56,14 @@ public class ReviewService {
             review.setRating(reviewDto.getRating());
             review.setBooking(booking);
             reviewRepository.save(review);
-
             booking.setReview(review);
             bookingRepository.save(booking);
-            property.setRating((property.getRating() + review.getRating())/2);
+
+            if (property.getRating() == null){
+                property.setRating(review.getRating());
+            }else {
+                property.setRating((property.getRating() + review.getRating()) / 2);
+            }
             propertyRepository.save(property);
             return true;
         }

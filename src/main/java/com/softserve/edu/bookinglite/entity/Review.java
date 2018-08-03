@@ -14,7 +14,7 @@ public class Review {
 	private String message;
 
 	@Column(name="rating", nullable = false)
-	private Integer rating;
+	private Float rating;
 
 	@OneToOne(mappedBy = "review",fetch = FetchType.LAZY)
 	private Booking booking;
@@ -27,7 +27,7 @@ public class Review {
 		return message;
 	}
 
-	public Integer getRating() {
+	public Float getRating() {
 		return rating;
 	}
 
@@ -39,7 +39,7 @@ public class Review {
 		this.message = message;
 	}
 
-	public void setRating(Integer rating) {
+	public void setRating(Float rating) {
 		this.rating = rating;
 	}
 
