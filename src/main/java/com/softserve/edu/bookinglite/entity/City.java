@@ -1,8 +1,6 @@
 package com.softserve.edu.bookinglite.entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "cities")
@@ -12,14 +10,11 @@ public class City {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @ManyToOne(cascade=CascadeType.MERGE)
+    @ManyToOne()
     @JoinColumn(name = "country_id",nullable = false)
     private Country country;
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "city")
-    private List<Address> addresses=new ArrayList<Address>();
 
-    public City() {
-    }
+
 
     public Long getId() {
         return id;
@@ -45,13 +40,6 @@ public class City {
         this.country = country;
     }
 
-    public List<Address> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
-    }
 
     @Override
     public boolean equals(Object obj){

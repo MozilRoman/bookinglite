@@ -2,61 +2,54 @@ package com.softserve.edu.bookinglite.entity;
 
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "addresses")
 public class Address {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private String addressLine;
-    @Column(nullable = false)
-    private String zip;
+	@Column(nullable = false)
+	private String addressLine;
+	@Column(nullable = false)
+	private String zip;
+
+	@ManyToOne
+	@JoinColumn(name = "city_id", nullable = false)
+	private City city;
 
 
-    @ManyToOne(cascade=CascadeType.MERGE)
-    @JoinColumn(name = "city_id",nullable = false)
-    private City city;
+	public Long getId() {
+		return id;
+	}
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "address")
-    private List<Property> properties=new ArrayList<>();
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public Address() {
-    }
+	public String getAddressLine() {
+		return addressLine;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public void setAddressLine(String addressLine) {
+		this.addressLine = addressLine;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public String getZip() {
+		return zip;
+	}
 
-    public String getAddressLine() {
-        return addressLine;
-    }
+	public void setZip(String zip) {
+		this.zip = zip;
+	}
 
-    public void setAddressLine(String addressLine) {
-        this.addressLine = addressLine;
-    }
+	public City getCity() {
+		return city;
+	}
 
-    public String getZip() {
-        return zip;
-    }
+	public void setCity(City city) {
+		this.city = city;
+	}
 
-    public void setZip(String zip) {
-        this.zip = zip;
-    }
-
-    public City getCity() {
-        return city;
-    }
-
-    public void setCity(City city) {
-        this.city = city;
-    }
 }

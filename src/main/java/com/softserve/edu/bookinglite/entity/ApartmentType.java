@@ -1,8 +1,6 @@
 package com.softserve.edu.bookinglite.entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "apartment_types")
@@ -14,16 +12,6 @@ public class ApartmentType {
 
     @Column(nullable = false)
     private String name;
-
-    @OneToMany(mappedBy = "apartmentType", cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH })
-    private List<Apartment> apartments = new ArrayList<>();
-
-    public ApartmentType() {
-    }
 
     public Long getId() {
         return id;
@@ -39,14 +27,6 @@ public class ApartmentType {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<Apartment> getApartments() {
-        return apartments;
-    }
-
-    public void setApartments(List<Apartment> apartments) {
-        this.apartments = apartments;
     }
 
 }

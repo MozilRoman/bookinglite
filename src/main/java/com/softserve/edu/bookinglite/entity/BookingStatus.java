@@ -1,8 +1,6 @@
 package com.softserve.edu.bookinglite.entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "booking_statuses")
@@ -15,8 +13,7 @@ public class BookingStatus {
 	@Column(nullable = false)
 	private String name;
 
-	@OneToMany(mappedBy = "bookingstatus")
-	List<Booking> bookingList = new ArrayList<>();
+
 	
 	public Long getId() {
 		return id;
@@ -34,11 +31,4 @@ public class BookingStatus {
 		this.name = name;
 	}
 
-	public List<Booking> getBookingList() {
-		return bookingList;
-	}
-
-	public void setBookingList(List<Booking> bookingList) {
-		this.bookingList = bookingList;
-	}
 }

@@ -1,46 +1,26 @@
-package com.softserve.edu.bookinglite.entity;
+package com.softserve.edu.bookinglite.service.dto;
 
-import javax.persistence.*;
+import com.softserve.edu.bookinglite.entity.Amenity;
+import com.softserve.edu.bookinglite.entity.ApartmentType;
 
-import org.springframework.boot.autoconfigure.liquibase.LiquibaseDataSource;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Table(name = "apartments")
-public class Apartment {
+public class ApartmentDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
+    @NotBlank
     private String name;
-
-    @Column(columnDefinition= "DECIMAL(8,2)", nullable = false)
+    @NotBlank
     private BigDecimal price;
-
-    @Column(name= "number_of_guests", nullable = false)
     private int numberOfGuests;
-
-    @ManyToOne
-    @JoinColumn(name = "apartment_type_id", nullable = false)
+    @NotNull
     private ApartmentType apartmentType;
-
-    @ManyToMany
-    @JoinTable(name = "apartment_amenities",
-            joinColumns = @JoinColumn(name = "apartment_id"),
-            inverseJoinColumns = @JoinColumn(name = "amenity_id"))
+    @NotNull
     private Set<Amenity> amenities = new HashSet<>();
-    
-    @JsonBackReference
-    @ManyToOne
-    @JoinColumn(name = "property_id", nullable = false)
-    private Property property;
 
     public Long getId() {
         return id;
@@ -88,14 +68,6 @@ public class Apartment {
 
     public void setAmenities(Set<Amenity> amenities) {
         this.amenities = amenities;
-    }
-
-    public Property getProperty() {
-        return property;
-    }
-
-    public void setProperty(Property property) {
-        this.property = property;
     }
 
 }

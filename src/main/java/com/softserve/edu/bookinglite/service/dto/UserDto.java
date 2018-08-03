@@ -1,28 +1,30 @@
-package com.softserve.edu.bookinglite.dto;
+package com.softserve.edu.bookinglite.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.softserve.edu.bookinglite.entity.Address;
+import com.softserve.edu.bookinglite.entity.Role;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import java.util.HashSet;
+import java.util.Set;
 
-// TODO: REFACTOR add validation
-public class RegisterDto {
-    @NotBlank
-    @Email
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class UserDto {
+
+    private Long id;
     private String email;
-
     private String first_name;
-
     private String last_name;
-
-    private String password;
-
     private String phone_number;
+    Address address;
+    Set<Role> roles = new HashSet<>();
 
-    private boolean owner;
+    public Long getId() {
+        return id;
+    }
 
-    private Address address;
-
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getEmail() {
         return email;
@@ -48,14 +50,6 @@ public class RegisterDto {
         this.last_name = last_name;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getPhone_number() {
         return phone_number;
     }
@@ -64,19 +58,19 @@ public class RegisterDto {
         this.phone_number = phone_number;
     }
 
-    public boolean isOwner() {
-        return owner;
-    }
-
-    public void setOwner(boolean owner) {
-        this.owner = owner;
-    }
-
     public Address getAddress() {
         return address;
     }
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

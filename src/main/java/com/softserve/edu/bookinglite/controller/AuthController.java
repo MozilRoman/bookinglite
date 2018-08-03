@@ -1,10 +1,11 @@
 package com.softserve.edu.bookinglite.controller;
 
-import com.softserve.edu.bookinglite.dto.LoginDto;
-import com.softserve.edu.bookinglite.dto.RegisterDto;
+import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.security.JwtTokenProvider;
 import com.softserve.edu.bookinglite.service.UserService;
-
+import com.softserve.edu.bookinglite.service.dto.LoginDto;
+import com.softserve.edu.bookinglite.service.dto.RegisterDto;
+import com.softserve.edu.bookinglite.service.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,19 +21,32 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/api")
 public class AuthController {
-    @Autowired private UserService userService;
-    @Autowired private AuthenticationManager authenticationManager;
-    @Autowired private JwtTokenProvider jwtTokenProvider;
+    private final UserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    public AuthController(UserService userService, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+        this.userService = userService;
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
+
 
 
     @GetMapping("/hello")
-    public String hello(Principal principal){
-       return "Hello world " + principal.getName();
+    public UserDto hello(Principal principal){
+       UserDto user = userService.findById(Long.parseLong(principal.getName()));
+       return user;
     }
 
 
     @PostMapping("/login")
-    public ResponseEntity login(@Valid @RequestBody LoginDto loginDto){
+    public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto){
+        User user = userService.findByEmail(loginDto.getEmail());
+        if(user != null && !user.isVerified()){
+            return ResponseEntity.status(401).body("Unverified");
+        }
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -40,7 +54,7 @@ public class AuthController {
                             loginDto.getPassword()
                     )
             );
-            //SecurityContextHolder.getContext().setAuthentication(authentication);
+
             String jwt = jwtTokenProvider.generateToken(authentication);
             return ResponseEntity.ok().body(jwt);
         } catch (AuthenticationException ex){
@@ -60,6 +74,14 @@ public class AuthController {
         else {
             return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
         }
+    }
+    @GetMapping("/registrationconfirm")
+    public ResponseEntity<Void> registrationconfirm(@RequestParam(name = "token") String token){
+       if(userService.verifyUser(token)){
+           return new ResponseEntity<Void>(HttpStatus.OK);
+       } else {
+           return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+       }
     }
 
 
