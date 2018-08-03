@@ -1,6 +1,11 @@
 package com.softserve.edu.bookinglite.entity;
 
 import javax.persistence.*;
+
+import org.springframework.boot.autoconfigure.liquibase.LiquibaseDataSource;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,7 +36,8 @@ public class Apartment {
             joinColumns = @JoinColumn(name = "apartment_id"),
             inverseJoinColumns = @JoinColumn(name = "amenity_id"))
     private Set<Amenity> amenities = new HashSet<>();
-
+    
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "property_id", nullable = false)
     private Property property;
