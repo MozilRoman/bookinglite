@@ -1,6 +1,7 @@
 package com.softserve.edu.bookinglite.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "booking_statuses")
@@ -9,12 +10,10 @@ public class BookingStatus {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@Column(nullable = false)
+
+	@NotBlank
 	private String name;
 
-
-	
 	public Long getId() {
 		return id;
 	}

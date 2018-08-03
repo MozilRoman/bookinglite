@@ -1,5 +1,6 @@
 package com.softserve.edu.bookinglite.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -101,7 +102,9 @@ public class BookingService {
 		}
 		return userHasBookingsDto;
 	}
-	
+public void chekBookingByChekInandCheckOut(Long apartment_id,Date chekIn,Date checkOut){
+		System.out.println(bookingRepository.getBookingByCheck_inAndAndCheck_out(apartment_id,chekIn,checkOut));
+}
 	/*public Booking validation(BookingDto bookingDto, Long booking_id){
 		Apartment apartment= bookingDto.getApartment();
 		Property property=apartment.getProperty();

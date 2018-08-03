@@ -1,7 +1,5 @@
 package com.softserve.edu.bookinglite.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.HashSet;

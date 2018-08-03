@@ -1,6 +1,8 @@
 package com.softserve.edu.bookinglite.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -15,7 +17,6 @@ public class Booking {
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="apartment_id",referencedColumnName = "id",nullable = false)
 	private Apartment apartment;
-	
 
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id", referencedColumnName = "id",nullable = false)
@@ -26,17 +27,15 @@ public class Booking {
 
 	@Column(nullable = false)
     private Date check_out;
-	
 
 	@Column(columnDefinition= "DECIMAL(8,2)",nullable = false)
+	@NotNull
     private BigDecimal total_price;
-	
 
 	@ManyToOne
     @JoinColumn(name="status_id", referencedColumnName = "id",nullable = false)
 	private BookingStatus bookingstatus;
-	
-	//
+
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "review_id")
 	private Review review;
