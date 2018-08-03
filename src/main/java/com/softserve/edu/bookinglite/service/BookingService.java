@@ -8,6 +8,7 @@ import java.util.Optional;
 import com.softserve.edu.bookinglite.repository.*;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
 
+import com.softserve.edu.bookinglite.service.dto.UserHasBookingsDto;
 import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
 import com.softserve.edu.bookinglite.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +88,18 @@ public class BookingService {
 			return booking.get();
 		}
 		return new Booking();
+	}
+	@Transactional
+	public UserHasBookingsDto getAllBookingsDtoByUserId(Long user_id){
+		List<Booking> listBooking= bookingRepository.getAllByUserIdOrderByCheck_inAsc(user_id);
+		UserHasBookingsDto userHasBookingsDto=new UserHasBookingsDto(userService.findById(user_id));
+		if(listBooking.size()>0) {
+			for (Booking booking : listBooking
+					) {
+      userHasBookingsDto.addBookingDto(convertToBookingDto(booking));
+			}
+		}
+		return userHasBookingsDto;
 	}
 	
 	/*public Booking validation(BookingDto bookingDto, Long booking_id){
