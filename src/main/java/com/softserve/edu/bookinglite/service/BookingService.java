@@ -141,9 +141,6 @@ public class BookingService {
 		} else
 			return false;
 	}
-
-
-	
 	
     public boolean updateBooking(BookingDto bookingDto){
     	    	    	
