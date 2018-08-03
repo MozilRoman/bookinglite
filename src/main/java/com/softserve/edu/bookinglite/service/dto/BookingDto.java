@@ -15,9 +15,9 @@ public class BookingDto {
 	
 	private Long id;
 	@NotNull
-	private Apartment apartment;
+	private ApartmentDto apartmentDto;
 	@NotNull
-	private User user;
+	private UserDto userDto;
 	@NotNull
 	private Date check_in;
 	@NotNull
@@ -41,20 +41,20 @@ public class BookingDto {
 		this.id = id;
 	}
 
-	public Apartment getApartment() {
-		return apartment;
+	public ApartmentDto getApartmentDto() {
+		return apartmentDto;
 	}
 
-	public void setApartment(Apartment apartment) {
-		this.apartment = apartment;
+	public void setApartmentDto(ApartmentDto apartmentDto) {
+		this.apartmentDto = apartmentDto;
 	}
 
-	public User getUser() {
-		return user;
+	public UserDto getUserDto() {
+		return userDto;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserDto(UserDto userDto) {
+		this.userDto = userDto;
 	}
 
 	public Date getCheck_in() {

@@ -125,7 +125,7 @@ public class BookingService {
     	    	    	
     	Booking booking=new Booking();
     	booking.setId(bookingDto.getId());
-    	booking.setApartment(bookingDto.getApartment());
+    	booking.setApartment(bookingDto.getApartmentDto());
     	booking.setUser(bookingDto.getUser());
     	booking.setCheck_in(bookingDto.getCheck_in());
     	booking.setCheck_out(bookingDto.getCheck_out());
