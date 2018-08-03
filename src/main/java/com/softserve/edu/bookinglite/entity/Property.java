@@ -1,12 +1,25 @@
 package com.softserve.edu.bookinglite.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "properties")
@@ -38,6 +51,7 @@ public class Property {
 
 	@OneToMany(mappedBy = "property",fetch = FetchType.LAZY)
 	private List<Apartment> apartments = new ArrayList<>();
+	
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "owner_id",nullable = false)
@@ -99,51 +113,42 @@ public class Property {
 	public void setContactEmail(String contactEmail) {
 		this.contactEmail = contactEmail;
 	}
-
+	/////////////////////////
 	public PropertyType getPropertyType() {
 		return propertyType;
 	}
-
 	public void setPropertyType(PropertyType propertyType) {
 		this.propertyType = propertyType;
 	}
-
 	public Address getAddress() {
 		return address;
 	}
-
 	public void setAddress(Address address) {
 		this.address = address;
 	}
-
 	public List<Apartment> getApartments() {
 		return apartments;
 	}
-
 	public void setApartments(List<Apartment> apartments) {
 		this.apartments = apartments;
 	}
-
+//	@JsonIgnore
 	public User getUser() {
 		return user;
 	}
-
 	public void setUser(User user) {
 		this.user = user;
 	}
-
+//	@JsonIgnore
 	public Set<Facility> getFacilities() {
 		return facilities;
 	}
-
 	public void setFacilities(Set<Facility> facilities) {
 		this.facilities = facilities;
 	}
-
 	public List<Photo> getPhotos() {
 		return photos;
 	}
-
 	public void setPhotos(List<Photo> photos) {
 		this.photos = photos;
 	}
