@@ -66,7 +66,7 @@ public class BookingController {
 	@PutMapping(value="/booking/{id}") 
 	public ResponseEntity<BookingDto> updateBooking(@Valid @RequestBody BookingDto bookingDto,  //Or ResponseEntity<Void> ??
 			@PathVariable ("id") Long id) {	
-		bookingDto.setId(id);;
+		bookingDto.setBooking_id(id);;
 		if(bookingService.updateBooking(bookingDto)) {
 			return new ResponseEntity<BookingDto>(HttpStatus.OK);
 		}else {

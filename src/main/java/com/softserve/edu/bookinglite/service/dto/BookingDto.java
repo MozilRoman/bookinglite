@@ -5,11 +5,12 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.BookingStatus;
 import com.softserve.edu.bookinglite.entity.Review;
 import com.softserve.edu.bookinglite.entity.User;
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BookingDto {
 
 	
@@ -32,13 +33,13 @@ public class BookingDto {
 	public BookingDto() {
 		
 	}
-	
-	public Long getId() {
+
+	public Long getBooking_id() {
 		return booking_id;
 	}
 
-	public void setId(Long id) {
-		this.booking_id = id;
+	public void setBooking_id(Long booking_id) {
+		this.booking_id = booking_id;
 	}
 
 	public ApartmentDto getApartmentDto() {
@@ -79,14 +80,6 @@ public class BookingDto {
 
 	public void setTotal_price(BigDecimal total_price) {
 		this.total_price = total_price;
-	}
-
-	public Long getBooking_id() {
-		return booking_id;
-	}
-
-	public void setBooking_id(Long booking_id) {
-		this.booking_id = booking_id;
 	}
 
 	public String getBookingstatus() {

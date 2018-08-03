@@ -98,7 +98,7 @@ public class UserService implements UserDetailsService {
             return false;
         }
     }
-
+    @Transactional
     public  UserDto findById(Long id){
         UserDto user = userRepository.findById(id).map(UserMapper.instance::UserToBaseUserDtoWithRoles).orElse(new UserDto());
         return user;
