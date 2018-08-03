@@ -1,6 +1,6 @@
 package com.softserve.edu.bookinglite.service;
 
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,8 +10,6 @@ import com.softserve.edu.bookinglite.repository.*;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
 
 import com.softserve.edu.bookinglite.service.dto.UserHasBookingsDto;
-import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
-import com.softserve.edu.bookinglite.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,47 +24,49 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BookingService {
-	
-	final String RESERVED= "Reserved";
-	
-	 private final BookingRepository bookingRepository;
-	 private final ApartmentService apartmentService;
-	 private final UserService userService;
-	 private final BookingStatusRepository bookingStatusRepository;
-	 private final ReviewRepository reviewRepository;
 
-	    @Autowired
-	    public BookingService(BookingRepository bookingRepository,
-							  ApartmentService apartmentService,
-	    		UserService userService,
-	    		BookingStatusRepository bookingStatusRepository,
-	    		ReviewRepository reviewRepository
-	    		) {
-	        this.bookingRepository = bookingRepository;
-	        this.apartmentService = apartmentService;
-	        this.userService=userService;
-	        this.bookingStatusRepository = bookingStatusRepository;
-	        this.reviewRepository = reviewRepository;
+	final String RESERVED = "Reserved";
+
+	private final BookingRepository bookingRepository;
+	private final ApartmentService apartmentService;
+	private final UserService userService;
+	private final BookingStatusRepository bookingStatusRepository;
+	private final ReviewRepository reviewRepository;
+
+	@Autowired
+	public BookingService(BookingRepository bookingRepository,
+						  ApartmentService apartmentService,
+						  UserService userService,
+						  BookingStatusRepository bookingStatusRepository,
+						  ReviewRepository reviewRepository
+	) {
+		this.bookingRepository = bookingRepository;
+		this.apartmentService = apartmentService;
+		this.userService = userService;
+		this.bookingStatusRepository = bookingStatusRepository;
+		this.reviewRepository = reviewRepository;
 	}
 
-@Transactional
-	public boolean existsById(Long id){
-        return bookingRepository.existsById(id);
-    }
 	@Transactional
-	public List<BookingDto> getAllBookingDto(){
+	public boolean existsById(Long id) {
+		return bookingRepository.existsById(id);
+	}
+
+	@Transactional
+	public List<BookingDto> getAllBookingDto() {
 		System.out.println("let all booking ");
-		List<Booking> listBooking= getAllBooking();
-		List<BookingDto> listBookingDto= new ArrayList<>();
-		for (int i=0; i<listBooking.size(); i++){
+		List<Booking> listBooking = getAllBooking();
+		List<BookingDto> listBookingDto = new ArrayList<>();
+		for (int i = 0; i < listBooking.size(); i++) {
 			Booking booking = listBooking.get(i);
-            BookingDto bookingDto = convertToBookingDto(booking);
-            listBookingDto.add(bookingDto);
-        }
+			BookingDto bookingDto = convertToBookingDto(booking);
+			listBookingDto.add(bookingDto);
+		}
 		return listBookingDto;
 	}
+
 	@Transactional
-	public List<Booking> getAllBooking(){
+	public List<Booking> getAllBooking() {
 		return bookingRepository.findAll();
 	}
 
@@ -76,35 +76,38 @@ public class BookingService {
 		return bookingDto;
 	}*/
 	@Transactional
-	public BookingDto getBookinDTOById(Long id){
+	public BookingDto getBookinDTOById(Long id) {
 		BookingDto bookingDto = convertToBookingDto(getBookingById(id));
 		return bookingDto;
 	}
+
 	@Transactional
-	public Booking getBookingById(Long id){
-		System.out.println("Id2 = "+ id);
+	public Booking getBookingById(Long id) {
+		System.out.println("Id2 = " + id);
 
 		Optional<Booking> booking = bookingRepository.findById(id);
-		if(booking.isPresent()) {
+		if (booking.isPresent()) {
 			return booking.get();
 		}
 		return new Booking();
 	}
+
 	@Transactional
-	public UserHasBookingsDto getAllBookingsDtoByUserId(Long user_id){
-		List<Booking> listBooking= bookingRepository.getAllByUserIdOrderByCheck_inAsc(user_id);
-		UserHasBookingsDto userHasBookingsDto=new UserHasBookingsDto(userService.findById(user_id));
-		if(listBooking.size()>0) {
+	public UserHasBookingsDto getAllBookingsDtoByUserId(Long user_id) {
+		List<Booking> listBooking = bookingRepository.getAllByUserIdOrderByCheck_inAsc(user_id);
+		UserHasBookingsDto userHasBookingsDto = new UserHasBookingsDto(userService.findById(user_id));
+		if (listBooking.size() > 0) {
 			for (Booking booking : listBooking
 					) {
-      userHasBookingsDto.addBookingDto(convertToBookingDto(booking));
+				userHasBookingsDto.addBookingDto(convertToBookingDto(booking));
 			}
 		}
 		return userHasBookingsDto;
 	}
-public void chekBookingByChekInandCheckOut(Long apartment_id,Date chekIn,Date checkOut){
-		System.out.println(bookingRepository.getBookingByCheck_inAndAndCheck_out(apartment_id,chekIn,checkOut));
-}
+
+	public Apartment chekBookingByChekInandCheckOut(Long apartment_id, Date chekIn, Date checkOut) {
+		return bookingRepository.getBookingByCheck_inAndAndCheck_out(apartment_id, chekIn, checkOut);
+	}
 	/*public Booking validation(BookingDto bookingDto, Long booking_id){
 		Apartment apartment= bookingDto.getApartment();
 		Property property=apartment.getProperty();
@@ -113,33 +116,32 @@ public void chekBookingByChekInandCheckOut(Long apartment_id,Date chekIn,Date ch
 		System.out.println("booking price by query = "+ booking.get().getTotal_price());
 		return booking.get();
 	}*/
-	
+
 	@Transactional
-	public boolean createBooking(BookingDto bookingDto, Long user_id, Long apartment_id){
-    	Booking booking=new Booking();  	
-    	
-    	if(apartmentService.findApartmentDtoById(apartment_id)!=null){
-    		Apartment apartment=new Apartment();
-    		apartment.setId(apartment_id);
-    		booking.setApartment(apartment);
-		}
+	public boolean createBooking(BookingDto bookingDto, Long user_id, Long apartment_id) {
+		if (chekBookingByChekInandCheckOut(apartment_id, bookingDto.getCheck_in(), bookingDto.getCheck_out()) == null) {
+			Booking booking = new Booking();
+			if (apartmentService.findApartmentDtoById(apartment_id) != null) {
+				Apartment apartment = new Apartment();
+				apartment.setId(apartment_id);
+				booking.setApartment(apartment);
+			}
+			if (userService.findById(user_id) != null) {
+				User user = new User();
+				user.setId(user_id);
+				booking.setUser(user);
+			}
+			booking.setCheck_in(bookingDto.getCheck_in());
+			booking.setCheck_out(bookingDto.getCheck_out()); //TODO edit visualization Data!!!!!!
+			booking.setTotal_price(bookingDto.getTotal_price());
+			booking.setBookingstatus(bookingStatusRepository.findByName(RESERVED));
+			Booking result = bookingRepository.save(booking);
+			if (result != null){ return true;}
+			else return false;
+		} else
+			return false;
+	}
 
-		if(userService.findById(user_id)!=null){
-    		User user=new User();
-    		user.setId(user_id);
-    		booking.setUser(user);
-		}
-
-    	booking.setCheck_in(bookingDto.getCheck_in());
-    	booking.setCheck_out(bookingDto.getCheck_out()); //TODO edit visualization Data!!!!!!
-    	booking.setTotal_price(bookingDto.getTotal_price());
-    	booking.setBookingstatus(bookingStatusRepository.findByName(RESERVED));
-    	//check if date is not reserved 
-    	
-    	Booking result = bookingRepository.save(booking); 
-        if(result != null)return true;
-        else return false;
-    }
 
 	
 	

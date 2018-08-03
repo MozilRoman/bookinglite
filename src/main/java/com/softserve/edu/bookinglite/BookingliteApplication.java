@@ -37,12 +37,13 @@ public class BookingliteApplication {
 
 	@PostConstruct
 	public void init(){
-		/*BookingDto bookingDto=new BookingDto();
-		bookingDto.setCheck_in(new Date(118,0,8,16,0));
-		bookingDto.setCheck_out(new Date(118,0,18,14,0));
+		BookingDto bookingDto=new BookingDto();
+		bookingDto.setCheck_in(new Date(118,1,8,16,0));
+		bookingDto.setCheck_out(new Date(118,1,18,14,0));
 		bookingDto.setTotal_price(BigDecimal.valueOf(99.99*7));
-		bookingService.createBooking(bookingDto,1l,1l);
-		System.out.println(bookingService.getAllBookingDto());*/
+
+		System.out.println(bookingService.createBooking(bookingDto,1l,2l));
+		//System.out.println(bookingService.getAllBookingDto());
 		//ObjectMapper mapper = new ObjectMapper();
 		//UserHasBookingsDto obj = bookingService.getAllBookingsDtoByUserId(1l);
 //Object to JSON in String
@@ -51,11 +52,8 @@ public class BookingliteApplication {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}*/
-		System.out.println("Chek in DB"+bookingService.getBookinDTOById(2l).getCheck_in());
-		System.out.println(new Date(118,0,8,17,0));
+		//System.out.println("Chek in DB"+bookingService.getBookinDTOById(2l).getCheck_in());
 
-		bookingService.chekBookingByChekInandCheckOut(1l,new Date(118,0,8,16,0),
-				new Date(118,0,18,15,0));
 	}
 
 
