@@ -1,5 +1,6 @@
 package com.softserve.edu.bookinglite.controller;
 
+import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.security.JwtTokenProvider;
 import com.softserve.edu.bookinglite.service.UserService;
 import com.softserve.edu.bookinglite.service.dto.LoginDto;
@@ -32,6 +33,7 @@ public class AuthController {
     }
 
 
+
     @GetMapping("/hello")
     public UserDto hello(Principal principal){
        UserDto user = userService.findById(Long.parseLong(principal.getName()));
@@ -40,7 +42,11 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity login(@Valid @RequestBody LoginDto loginDto){
+    public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto){
+        User user = userService.findByEmail(loginDto.getEmail());
+        if(user != null && !user.isVerified()){
+            return ResponseEntity.status(401).body("Unverified");
+        }
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -48,7 +54,7 @@ public class AuthController {
                             loginDto.getPassword()
                     )
             );
-            //SecurityContextHolder.getContext().setAuthentication(authentication);
+
             String jwt = jwtTokenProvider.generateToken(authentication);
             return ResponseEntity.ok().body(jwt);
         } catch (AuthenticationException ex){
@@ -68,6 +74,14 @@ public class AuthController {
         else {
             return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
         }
+    }
+    @GetMapping("/registrationconfirm")
+    public ResponseEntity<Void> registrationconfirm(@RequestParam(name = "token") String token){
+       if(userService.verifyUser(token)){
+           return new ResponseEntity<Void>(HttpStatus.OK);
+       } else {
+           return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+       }
     }
 
 
