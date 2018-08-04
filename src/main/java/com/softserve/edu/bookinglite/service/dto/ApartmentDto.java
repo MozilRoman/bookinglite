@@ -14,7 +14,7 @@ public class ApartmentDto {
     private Long id;
     @NotBlank
     private String name;
-    @NotBlank
+//    @NotBlank
     private BigDecimal price;
     private int numberOfGuests;
     @NotNull

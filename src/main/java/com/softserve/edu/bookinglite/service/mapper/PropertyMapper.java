@@ -40,7 +40,6 @@ public interface PropertyMapper {
 	@Mapping(target = "user",ignore = true)
 	PropertyDto propertyToBasePropertyDtoWithAddressApartment(Property property);
 	
-	
 	PropertyDto propertyToBasePropertyDtoWithApartmentAddressUser(Property property);
 	
 	Set<Apartment> map(Set<Apartment> apartments);
