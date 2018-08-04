@@ -25,7 +25,7 @@ public class BookingDto {
 	private Date check_out;
 	@NotNull
 	private BigDecimal total_price;
-	@NotNull
+	
 	private String bookingstatus;
 	
 	private String review;

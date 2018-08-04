@@ -82,7 +82,7 @@ public class BookingService {
 	}
 
 	@Transactional
-	public Booking getBookingById(Long id) {
+	public Booking getBookingById(Long id) { //edit for recomendation Petro
 		System.out.println("Id2 = " + id);
 
 		Optional<Booking> booking = bookingRepository.findById(id);
@@ -120,26 +120,31 @@ public class BookingService {
 	@Transactional
 	public boolean createBooking(BookingDto bookingDto, Long user_id, Long apartment_id) {
 		if (chekBookingByChekInandCheckOut(apartment_id, bookingDto.getCheck_in(), bookingDto.getCheck_out()) == null) {
-			Booking booking = new Booking();
-			if (apartmentService.findApartmentDtoById(apartment_id) != null) {
-				Apartment apartment = new Apartment();
-				apartment.setId(apartment_id);
-				booking.setApartment(apartment);
-			}
-			if (userService.findById(user_id) != null) {
-				User user = new User();
-				user.setId(user_id);
-				booking.setUser(user);
-			}
-			booking.setCheck_in(bookingDto.getCheck_in());
-			booking.setCheck_out(bookingDto.getCheck_out()); //TODO edit visualization Data!!!!!!
-			booking.setTotal_price(bookingDto.getTotal_price());
-			booking.setBookingstatus(bookingStatusRepository.findByName(RESERVED));
-			Booking result = bookingRepository.save(booking);
-			if (result != null){ return true;}
-			else return false;
-		} else
-			return false;
+						
+			if(checkValidationDate (bookingDto)) { 				
+					Booking booking = new Booking();
+					if (apartmentService.findApartmentDtoById(apartment_id) != null) {
+						Apartment apartment = new Apartment();
+						apartment.setId(apartment_id);
+						booking.setApartment(apartment);
+					}
+					if (userService.findById(user_id) != null) {
+						User user = new User();
+						user.setId(user_id);
+						booking.setUser(user);
+					}
+					booking.setCheck_in(bookingDto.getCheck_in());
+					booking.setCheck_out(bookingDto.getCheck_out()); //TODO edit visualization Data!!!!!!
+					booking.setTotal_price(bookingDto.getTotal_price());
+					booking.setBookingstatus(bookingStatusRepository.findByName(RESERVED));
+					Booking result = bookingRepository.save(booking);
+					if (result != null){ return true;}
+					else return false;
+			    }
+				else{
+					return false;
+			 	     }			
+		} else return false;
 	}
 	
     public boolean updateBooking(BookingDto bookingDto){
@@ -176,4 +181,19 @@ public class BookingService {
 
         return bookingDto;
         }
+    
+    public boolean checkValidationDate (BookingDto bookingDto){
+    	boolean validation= true;
+    	
+    	if(bookingDto.getCheck_out().before(bookingDto.getCheck_in())) {
+    		validation= false;
+    	}
+    	if(bookingDto.getCheck_in().before(new Date()) ) {
+    		validation= false;
+    	}
+    	if(bookingDto.getCheck_out().compareTo(bookingDto.getCheck_in())==0) {
+    		validation= false;
+    	}  	
+    	return validation;
+    }
 }

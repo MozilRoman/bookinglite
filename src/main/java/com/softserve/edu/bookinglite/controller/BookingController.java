@@ -58,9 +58,12 @@ public class BookingController {
 	public ResponseEntity<BookingDto> createBooking(@Valid @RequestBody BookingDto bookingDto, 
 			@PathVariable ("apartment_id") Long apartment_id,
 			Principal principal) {		 		
-		 Long userId = Long.parseLong(principal.getName());						
-		 bookingService.createBooking(bookingDto, userId, apartment_id);
-		return new ResponseEntity<BookingDto>(HttpStatus.CREATED);
+		 Long userId = Long.parseLong(principal.getName());						 
+		 if(bookingService.createBooking(bookingDto, userId, apartment_id)) {
+				return new ResponseEntity<BookingDto>(HttpStatus.CREATED);
+			}else {
+				return new ResponseEntity<BookingDto>(HttpStatus.BAD_REQUEST);
+	              }
 	}
 	
 	@PutMapping(value="/booking/{id}") 

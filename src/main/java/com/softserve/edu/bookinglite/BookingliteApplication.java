@@ -29,7 +29,7 @@ public class BookingliteApplication {
 		return new JwtAuthorizationFilter();
 	}
 
-	@Autowired
+	/*@Autowired
 	private BookingService bookingService;
 
 	@Autowired
@@ -42,7 +42,7 @@ public class BookingliteApplication {
 		bookingDto.setCheck_out(new Date(118,1,18,14,0));
 		bookingDto.setTotal_price(BigDecimal.valueOf(99.99*7));
 
-		System.out.println(bookingService.createBooking(bookingDto,1l,2l));
+		System.out.println(bookingService.createBooking(bookingDto,1l,2l));*/
 		//System.out.println(bookingService.getAllBookingDto());
 		//ObjectMapper mapper = new ObjectMapper();
 		//UserHasBookingsDto obj = bookingService.getAllBookingsDtoByUserId(1l);
@@ -54,7 +54,7 @@ public class BookingliteApplication {
 		}*/
 		//System.out.println("Chek in DB"+bookingService.getBookinDTOById(2l).getCheck_in());
 
-	}
+	//}
 
 
 	public static void main(String[] args) {
