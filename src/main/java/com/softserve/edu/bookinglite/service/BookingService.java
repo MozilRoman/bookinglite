@@ -9,7 +9,8 @@ import java.util.Optional;
 import com.softserve.edu.bookinglite.repository.*;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
 
-import com.softserve.edu.bookinglite.service.dto.UserHasBookingsDto;
+import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,56 +48,37 @@ public class BookingService {
 	}
 
 	@Transactional
-	public List<BookingDto> getAllBookingDto() { //rename findtAllBookingDto
-		System.out.println("let all booking ");
-		List<Booking> listBooking = getAllBooking();
-		List<BookingDto> listBookingDto = new ArrayList<>();
-		for (int i = 0; i < listBooking.size(); i++) {
-			Booking booking = listBooking.get(i);
-			BookingDto bookingDto = convertToBookingDto(booking);
-			listBookingDto.add(bookingDto);
+	public List<BookingDto> findAllBookingDto() { 
+		List<BookingDto> allBookingDto = new ArrayList<>();
+		for (Booking booking: findAllBookings()) {
+			BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
+			allBookingDto.add(bookingDto);
 		}
-		return listBookingDto;
+		return allBookingDto;
 	}
 
 	@Transactional
-	public List<Booking> getAllBooking() { //rename findtAllBooking
+	public List<Booking> findAllBookings() { 
 		return bookingRepository.findAll();
 	}
 
-	/*@Transactional
-	public  BookingDto getBookinDTOById(Long id){
-		BookingDto bookingDto = bookingRepository.findById(id).map(BookingMapper.instance::bookingToBaseBookingDto).orElse(new BookingDto());
-		return bookingDto;
-	}*/
 	@Transactional
-	public BookingDto getBookinDTOById(Long id) { //rename findtAllBookingDtoById
-		BookingDto bookingDto = convertToBookingDto(getBookingById(id));
-		return bookingDto;
-	}
-
-	@Transactional
-	public Booking getBookingById(Long id) { //edit for recomendation Petro
-		System.out.println("Id2 = " + id);
-
+	public BookingDto findBookinDTOById(Long id) { //rename findtAllBookingDtoById
 		Optional<Booking> booking = bookingRepository.findById(id);
-		if (booking.isPresent()) {
-			return booking.get();
-		}
-		return new Booking();
+		return booking.map(BookingMapper.instance::bookingToBaseBookingDto).orElse(null);
 	}
 
 	@Transactional
-	public UserHasBookingsDto getAllBookingsDtoByUserId(Long user_id) {
+	public List<BookingDto> getAllBookingsDtoByUserId(Long user_id) {
+		List<BookingDto> listBookingDto = new ArrayList<>();
 		List<Booking> listBooking = bookingRepository.getAllByUserIdOrderByCheck_inAsc(user_id);
-		UserHasBookingsDto userHasBookingsDto = new UserHasBookingsDto(userService.findById(user_id));
 		if (listBooking.size() > 0) {
-			for (Booking booking : listBooking
-					) {
-				userHasBookingsDto.addBookingDto(convertToBookingDto(booking));
+			for (Booking booking : listBooking	) {
+				BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
+				listBookingDto.add(bookingDto);				
 			}
 		}
-		return userHasBookingsDto;
+		return listBookingDto;
 	}
 
 	public Apartment chekBookingByChekInandCheckOut(Long apartment_id, Date chekIn, Date checkOut) {
@@ -165,20 +147,7 @@ public class BookingService {
     		
     	bookingRepository.save(booking);
     	return true;    	  	       	 	  	    	    		
-    }
-    
-    @Transactional
-    public BookingDto convertToBookingDto(Booking booking){
-    	BookingDto bookingDto = new BookingDto();
-    	bookingDto.setBooking_id(booking.getId());
-    	bookingDto.setTotal_price(booking.getTotal_price());
-    	bookingDto.setCheck_in(booking.getCheck_in());
-    	bookingDto.setCheck_out(booking.getCheck_out());
-    	bookingDto.setUserDto(userService.findById(booking.getUser().getId()));
-    	bookingDto.setApartmentDto(apartmentService.findApartmentDtoById(booking.getApartment().getId()));
-
-        return bookingDto;
-        }
+    }    
     
     public boolean checkValidationDate (BookingDto bookingDto){
     	boolean validation= true;

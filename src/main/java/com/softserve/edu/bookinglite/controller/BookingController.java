@@ -37,13 +37,18 @@ public class BookingController {
 	public List<BookingDto> getAllBooking( ) {
 		List<BookingDto> listBookingDto= new ArrayList<>();
 				
-		listBookingDto= bookingService.getAllBookingDto();
+		listBookingDto= bookingService.findAllBookingDto();
 		return listBookingDto ;
 	}
 	
 	@GetMapping(value="/booking/{booking_id}")
 	public BookingDto getBookingById(@PathVariable ("booking_id") Long booking_id ) {
-		return bookingService.getBookinDTOById(booking_id);
+		return bookingService.findBookinDTOById(booking_id);
+	}
+	
+	@GetMapping(value="/booking/user/{user_id}")
+	public List<BookingDto> getAllBookingsDtoByUserId(@PathVariable ("user_id") Long user_id ) {
+		return bookingService.getAllBookingsDtoByUserId(user_id);
 	}
 	
 	@PostMapping(value="/booking/{apartment_id}")
