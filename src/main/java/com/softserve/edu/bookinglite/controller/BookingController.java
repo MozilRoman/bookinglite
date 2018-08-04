@@ -46,14 +46,6 @@ public class BookingController {
 		return bookingService.getBookinDTOById(booking_id);
 	}
 	
-	/*@PostMapping(value="/bookingbyquery/{booking_id}")
-	public BookingDto getBookingByQuery(@Valid @RequestBody BookingDto bookingDto, 
-			@PathVariable ("booking_id") Long booking_id ) {
-		bookingService.validation(bookingDto, booking_id);
-		BookingDto b = new BookingDto();
-		return b;
-	}*/
-	
 	@PostMapping(value="/booking/{apartment_id}")
 	public ResponseEntity<BookingDto> createBooking(@Valid @RequestBody BookingDto bookingDto, 
 			@PathVariable ("apartment_id") Long apartment_id,

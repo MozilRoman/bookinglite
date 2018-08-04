@@ -14,7 +14,7 @@ import com.softserve.edu.bookinglite.entity.User;
 public class BookingDto {
 
 	
-	private Long booking_id;
+	private Long booking_id; // edit booking_id to bookingId
 
 	private ApartmentDto apartmentDto;
 
@@ -26,9 +26,9 @@ public class BookingDto {
 	@NotNull
 	private BigDecimal total_price;
 	
-	private String bookingstatus;
+	private BookingStatus bookingstatus;
 	
-	private String review;
+	private Review review;
 	
 	public BookingDto() {
 		
@@ -82,19 +82,19 @@ public class BookingDto {
 		this.total_price = total_price;
 	}
 
-	public String getBookingstatus() {
+	public BookingStatus getBookingstatus() {
 		return bookingstatus;
 	}
 
-	public void setBookingstatus(String bookingstatus) {
+	public void setBookingstatus(BookingStatus bookingstatus) {
 		this.bookingstatus = bookingstatus;
 	}
 
-	public String getReview() {
+	public Review getReview() {
 		return review;
 	}
 
-	public void setReview(String review) {
+	public void setReview(Review review) {
 		this.review = review;
 	}
 }

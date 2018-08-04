@@ -7,5 +7,5 @@ import com.softserve.edu.bookinglite.entity.BookingStatus;
 @Repository
 public interface BookingStatusRepository extends JpaRepository<BookingStatus, Long>{
 
-	BookingStatus findByName(String name);
+	public BookingStatus findByName(String name);
 }
