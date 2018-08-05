@@ -12,7 +12,7 @@ public class Photo {
 	private Long id;
 	
 	
-	@Column(name="url", nullable = false)
+	@Column(unique = true, name="url", nullable = false)
 	private String url;
 	
 	@ManyToOne
@@ -40,7 +40,7 @@ public class Photo {
 	}
 
 	public void setProperty(Property property) {
-		this.property = property;
+		this.property = property;  
 	}
 	
 	

@@ -1,7 +1,8 @@
 package com.softserve.edu.bookinglite.controller;
 
-import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.PropertyService;
+import com.softserve.edu.bookinglite.service.dto.PropertyDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,9 +42,9 @@ public class PropertyController {
 	@PutMapping("/property/{propertyId}")
 	public ResponseEntity<PropertyDto> update(@RequestBody PropertyDto propertyDto,
 			@PathVariable("propertyId") Long id) {
-		if(propertyService.updateProperty(propertyDto,id)) {
+		if (propertyService.updateProperty(propertyDto, id)) {
 			return new ResponseEntity<PropertyDto>(HttpStatus.OK);
-		}else {
+		} else {
 			return new ResponseEntity<PropertyDto>(HttpStatus.BAD_REQUEST);
 		}
 	}

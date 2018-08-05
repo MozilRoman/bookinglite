@@ -1,7 +1,5 @@
 package com.softserve.edu.bookinglite.service.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.softserve.edu.bookinglite.entity.*;
 
 import javax.validation.constraints.NotBlank;
@@ -9,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 
-@JsonInclude(Include.NON_NULL)
+//@JsonInclude(Include.NON_NULL)
 public class PropertyDto {
 	
 	private Long id;
@@ -23,7 +21,7 @@ public class PropertyDto {
 	@NotBlank
 	private String contactEmail;
 	@NotNull
-	private User user;
+	private UserDto user;
 	@NotNull
 	private PropertyType propertyType;
 	@NotNull
@@ -83,16 +81,18 @@ public class PropertyDto {
 		this.contactEmail = contactEmail;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
+	
 
 	public PropertyType getPropertyType() {
 		return propertyType;
+	}
+
+	public UserDto getUser() {
+		return user;
+	}
+
+	public void setUser(UserDto user) {
+		this.user = user;
 	}
 
 	public void setPropertyType(PropertyType propertyType) {
