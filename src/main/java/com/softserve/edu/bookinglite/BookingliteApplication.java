@@ -39,40 +39,6 @@ public class BookingliteApplication {
 		return new JwtAuthorizationFilter();
 	}
 
-	@Autowired
-	private BookingService bookingService;
-
-	@Autowired
-	private ApartmentService apartmentService;
-
-	@PostConstruct
-	public void init(){
-		Date in=new Date(118,9,10);
-		Date out=new Date(118,9,23);
-
-		System.out.println("Chek in DB  "+bookingService.checkBookingIfExistByChekInandCheckOut(2l,in,out));
-
-		BookingDto bookingDto=new BookingDto();
-		bookingDto.setCheck_in(in);
-		bookingDto.setCheck_out(out);
-		bookingDto.setTotal_price(BigDecimal.valueOf(99.99*7));
-
-		bookingService.createBooking(bookingDto,1l,3l);
-		System.out.println("booking size : "+bookingService.findAllBookingDto().size());
-		System.out.println("apartment size : "+apartmentService.findAllApartmentDtos().size());
-		System.out.println("Available size : "+bookingService.findAvailableApartamentsDtoByCheckInAndCheckOutDates(in,out).size());
-		//ObjectMapper mapper = new ObjectMapper();
-		//UserHasBookingsDto obj = bookingService.getAllBookingsDtoByUserId(1l);
-//Object to JSON in String
-		/*try {
-			System.out.println(mapper.writeValueAsString(obj));
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}*/
-
-
-	}
-
 	@Bean
 	Cloudinary cloudinary() {
 		return new Cloudinary(ObjectUtils.asMap(
