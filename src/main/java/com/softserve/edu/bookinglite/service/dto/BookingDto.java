@@ -19,11 +19,11 @@ public class BookingDto {
 	private ApartmentDto apartmentDto;
 
 	private UserDto userDto;
-	@NotNull
+
 	private Date check_in;
-	@NotNull
+
 	private Date check_out;
-	@NotNull
+
 	private BigDecimal total_price;
 	
 	private BookingStatus bookingstatus;

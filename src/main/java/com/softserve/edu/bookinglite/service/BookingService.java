@@ -1,10 +1,7 @@
 package com.softserve.edu.bookinglite.service;
 
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import com.softserve.edu.bookinglite.repository.*;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
@@ -80,16 +77,22 @@ public class BookingService {
 		}
 		return listBookingDto;
 	}
-
-	public Apartment chekBookingByChekInandCheckOut(Long apartment_id, Date chekIn, Date checkOut) {
-		return bookingRepository.getBookingByCheck_inAndAndCheck_out(apartment_id, chekIn, checkOut);
+//if booking already exist it will return true
+    @Transactional
+	public boolean checkBookingIfExistByChekInandCheckOut(Long apartment_id, Date checkIn, Date checkOut) {
+		if(bookingRepository.getBookingByCheck(apartment_id,checkIn)==null && bookingRepository.getBookingByCheck(apartment_id,checkOut)==null){
+		    return false;
+        }
+        return true;
 	}
 
 	@Transactional
 	public boolean createBooking(BookingDto bookingDto, Long user_id, Long apartment_id) {
-		if (chekBookingByChekInandCheckOut(apartment_id, bookingDto.getCheck_in(), bookingDto.getCheck_out()) == null) {
-						
-			if(checkValidationDate (bookingDto)) { 				
+  if(checkValidationDate (bookingDto)==false){
+	System.out.println("validate date : false");
+	return false; }
+		if (checkBookingIfExistByChekInandCheckOut(apartment_id,bookingDto.getCheck_in(),bookingDto.getCheck_out())==false) {
+			System.out.println("validation complete");
 					Booking booking = new Booking();
 					if (apartmentService.findApartmentDtoById(apartment_id) != null) {
 						Apartment apartment = new Apartment();
@@ -99,29 +102,23 @@ public class BookingService {
 					if (userService.findById(user_id) != null) {
 						User user = new User();
 						user.setId(user_id);
-						booking.setUser(user);
-					}
+						booking.setUser(user); }
 					booking.setCheck_in(bookingDto.getCheck_in());
-					booking.setCheck_out(bookingDto.getCheck_out()); //TODO edit visualization Data!!!!!!
+					booking.setCheck_out(bookingDto.getCheck_out());
 					booking.setTotal_price(bookingDto.getTotal_price());
 					booking.setBookingstatus(bookingStatusRepository.findByName(RESERVED));
 					Booking result = bookingRepository.save(booking);
 					if (result != null){ return true;}
-					else return false;
-			    }
-				else{
-					return false;
-			 	     }			
-		} else return false;
+					else return false; }
+					else
+			        System.out.println("validation failed");
+			        return false;
 	}
 	
 	@Transactional
     public boolean updateBooking(BookingDto bookingDto){
     	Booking booking = bookingRepository.findById(bookingDto.getBooking_id()).get();
-    	    	
-    		if (chekBookingByChekInandCheckOut(bookingDto.getApartmentDto().getId(),
-    				bookingDto.getCheck_in(), bookingDto.getCheck_out()) == null) {
-    			
+    		if (checkBookingIfExistByChekInandCheckOut(bookingDto.getApartmentDto().getId(),bookingDto.getCheck_in(),bookingDto.getCheck_out())==false) {
     			if(checkValidationDate (bookingDto)) {
     				if (apartmentService.findApartmentDtoById(bookingDto.getApartmentDto().getId()) != null) {
 						Apartment apartment = new Apartment();

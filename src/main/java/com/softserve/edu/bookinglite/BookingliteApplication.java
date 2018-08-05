@@ -29,7 +29,7 @@ public class BookingliteApplication {
 		return new JwtAuthorizationFilter();
 	}
 
-	/*@Autowired
+	@Autowired
 	private BookingService bookingService;
 
 	@Autowired
@@ -37,13 +37,18 @@ public class BookingliteApplication {
 
 	@PostConstruct
 	public void init(){
+		Date in=new Date(118,10,10);
+		Date out=new Date(118,10,23);
+
+		//System.out.println("Chek in DB  "+bookingService.checkBookingIfExistByChekInandCheckOut(2l,in,out));
+
 		BookingDto bookingDto=new BookingDto();
-		bookingDto.setCheck_in(new Date(118,1,8,16,0));
-		bookingDto.setCheck_out(new Date(118,1,18,14,0));
+		bookingDto.setCheck_in(in);
+		bookingDto.setCheck_out(out);
 		bookingDto.setTotal_price(BigDecimal.valueOf(99.99*7));
 
-		System.out.println(bookingService.createBooking(bookingDto,1l,2l));*/
-		//System.out.println(bookingService.getAllBookingDto());
+		System.out.println(bookingService.createBooking(bookingDto,1l,2l));
+		System.out.println(bookingService.findAllBookingDto().size());
 		//ObjectMapper mapper = new ObjectMapper();
 		//UserHasBookingsDto obj = bookingService.getAllBookingsDtoByUserId(1l);
 //Object to JSON in String
@@ -52,9 +57,9 @@ public class BookingliteApplication {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}*/
-		//System.out.println("Chek in DB"+bookingService.getBookinDTOById(2l).getCheck_in());
 
-	//}
+
+	}
 
 
 	public static void main(String[] args) {
