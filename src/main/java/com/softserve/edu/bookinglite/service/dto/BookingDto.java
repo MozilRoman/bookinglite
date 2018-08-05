@@ -5,51 +5,57 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.BookingStatus;
 import com.softserve.edu.bookinglite.entity.Review;
 import com.softserve.edu.bookinglite.entity.User;
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BookingDto {
 
-    private Long id;
-    @NotNull
-    private Apartment apartment;
-    @NotNull
-    private User user;
+
+    private Long booking_id; // edit booking_id to bookingId
+
+    private ApartmentDto apartmentDto;
+
+    private UserDto userDto;
     @NotNull
     private Date check_in;
     @NotNull
     private Date check_out;
     @NotNull
     private BigDecimal total_price;
-    @NotNull
+
     private BookingStatus bookingstatus;
 
     private Review review;
 
-    public Long getId() {
-        return id;
+    public BookingDto() {
+
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Long getBooking_id() {
+        return booking_id;
     }
 
-    public Apartment getApartment() {
-        return apartment;
+    public void setBooking_id(Long booking_id) {
+        this.booking_id = booking_id;
     }
 
-    public void setApartment(Apartment apartment) {
-        this.apartment = apartment;
+    public ApartmentDto getApartmentDto() {
+        return apartmentDto;
     }
 
-    public User getUser() {
-        return user;
+    public void setApartmentDto(ApartmentDto apartmentDto) {
+        this.apartmentDto = apartmentDto;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public UserDto getUserDto() {
+        return userDto;
+    }
+
+    public void setUserDto(UserDto userDto) {
+        this.userDto = userDto;
     }
 
     public Date getCheck_in() {
@@ -91,5 +97,4 @@ public class BookingDto {
     public void setReview(Review review) {
         this.review = review;
     }
-
 }
