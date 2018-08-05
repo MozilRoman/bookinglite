@@ -105,8 +105,8 @@ public class BookingService {
 						User user = new User();
 						user.setId(user_id);
 						booking.setUser(user); }
-					booking.setCheck_in(setHourAndMinToDate(bookingDto.getCheck_in(),14,0));
-					booking.setCheck_out(setHourAndMinToDate(bookingDto.getCheck_out(),16,0));
+					booking.setCheck_in(setHourAndMinToDate(bookingDto.getCheck_in(),16,0));
+					booking.setCheck_out(setHourAndMinToDate(bookingDto.getCheck_out(),14,0));
 					booking.setTotal_price(bookingDto.getTotal_price());
 					booking.setBookingstatus(bookingStatusRepository.findByName(RESERVED));
 					Booking result = bookingRepository.save(booking);
@@ -151,7 +151,13 @@ public class BookingService {
 	public List<ApartmentDto> findAvailableApartamentsDtoByCheckInAndCheckOutDates(Date in, Date out){
 		List<ApartmentDto> list=apartmentService.findAllApartmentDtos();// wait method find All ApartmentDtos by country and city
 		if(list.size()>0){
-			list.removeIf(apartmentDto -> checkBookingIfExistByChekInandCheckOut(apartmentDto.getId(),in,out));
+			Iterator iterator=list.iterator();
+			while ((iterator.hasNext())){
+				ApartmentDto ap=(ApartmentDto)iterator.next();
+				if(checkBookingIfExistByChekInandCheckOut(ap.getId(),setHourAndMinToDate(in,16,0),setHourAndMinToDate(out,14,0))){
+					iterator.remove();
+				}
+			}
 			return list;
 		}else
 			return new ArrayList<ApartmentDto>();
