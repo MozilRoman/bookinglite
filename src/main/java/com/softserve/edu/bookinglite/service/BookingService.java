@@ -81,7 +81,8 @@ public class BookingService {
 //if booking already exist it will return true
     @Transactional
 	public boolean checkBookingIfExistByChekInandCheckOut(Long apartment_id, Date checkIn, Date checkOut) {
-		if(bookingRepository.getBookingByCheck(apartment_id,checkIn)==null && bookingRepository.getBookingByCheck(apartment_id,checkOut)==null){
+		if(bookingRepository.getBookingByCheck(apartment_id,setHourAndMinToDate(checkIn,16,0))==null &&
+				bookingRepository.getBookingByCheck(apartment_id,setHourAndMinToDate(checkOut,14,0))==null){
 		    return false;
         }
         return true;
@@ -104,8 +105,8 @@ public class BookingService {
 						User user = new User();
 						user.setId(user_id);
 						booking.setUser(user); }
-					booking.setCheck_in(bookingDto.getCheck_in());
-					booking.setCheck_out(bookingDto.getCheck_out());
+					booking.setCheck_in(setHourAndMinToDate(bookingDto.getCheck_in(),14,0));
+					booking.setCheck_out(setHourAndMinToDate(bookingDto.getCheck_out(),16,0));
 					booking.setTotal_price(bookingDto.getTotal_price());
 					booking.setBookingstatus(bookingStatusRepository.findByName(RESERVED));
 					Booking result = bookingRepository.save(booking);
@@ -147,15 +148,10 @@ public class BookingService {
     	return true;    	  	       	 	  	    	    		
     }
 	@Transactional
-	public List<ApartmentDto> findAvailableApartamentsDtoByCheckInAndCheckOutDates(Date in, Date out, List<ApartmentDto> apartmentDtoList){
-		List<ApartmentDto> list=new ArrayList<>();
-		if(apartmentDtoList.size()>0){
-			for (ApartmentDto apDto: apartmentDtoList
-					) {
-				if(checkBookingIfExistByChekInandCheckOut(apDto.getId(),in,out)==false){
-					list.add(apDto);
-				}
-			}
+	public List<ApartmentDto> findAvailableApartamentsDtoByCheckInAndCheckOutDates(Date in, Date out){
+		List<ApartmentDto> list=apartmentService.findAllApartmentDtos();// wait method find All ApartmentDtos by country and city
+		if(list.size()>0){
+			list.removeIf(apartmentDto -> checkBookingIfExistByChekInandCheckOut(apartmentDto.getId(),in,out));
 			return list;
 		}else
 			return new ArrayList<ApartmentDto>();
@@ -175,4 +171,11 @@ public class BookingService {
     	}  	
     	return validation;
     }
+    public Date setHourAndMinToDate(Date date,int hour,int minuts){
+		Calendar calendar=Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.set(Calendar.HOUR_OF_DAY, hour);
+		calendar.set(Calendar.MINUTE,minuts);
+		return calendar.getTime();
+	}
 }

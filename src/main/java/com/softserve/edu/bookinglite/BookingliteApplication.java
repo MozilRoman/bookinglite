@@ -7,6 +7,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.softserve.edu.bookinglite.config.CloudinaryConfig.CloudinaryData;
 import com.softserve.edu.bookinglite.security.JwtAuthorizationFilter;
+import com.softserve.edu.bookinglite.service.ApartmentService;
 import com.softserve.edu.bookinglite.service.BookingService;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
 import com.softserve.edu.bookinglite.util.DateUtil;
@@ -42,22 +43,24 @@ public class BookingliteApplication {
 	private BookingService bookingService;
 
 	@Autowired
-	private UserRepository userRepository;
+	private ApartmentService apartmentService;
 
 	@PostConstruct
 	public void init(){
-		Date in=new Date(118,10,10);
-		Date out=new Date(118,10,23);
+		Date in=new Date(118,9,10);
+		Date out=new Date(118,9,23);
 
-		//System.out.println("Chek in DB  "+bookingService.checkBookingIfExistByChekInandCheckOut(2l,in,out));
+		System.out.println("Chek in DB  "+bookingService.checkBookingIfExistByChekInandCheckOut(2l,in,out));
 
 		BookingDto bookingDto=new BookingDto();
 		bookingDto.setCheck_in(in);
 		bookingDto.setCheck_out(out);
 		bookingDto.setTotal_price(BigDecimal.valueOf(99.99*7));
 
-		System.out.println(bookingService.createBooking(bookingDto,1l,2l));
-		System.out.println(bookingService.findAllBookingDto().size());
+		bookingService.createBooking(bookingDto,1l,3l);
+		System.out.println("booking size : "+bookingService.findAllBookingDto().size());
+		System.out.println("apartment size : "+apartmentService.findAllApartmentDtos().size());
+		System.out.println("Available size : "+bookingService.findAvailableApartamentsDtoByCheckInAndCheckOutDates(in,out).size());
 		//ObjectMapper mapper = new ObjectMapper();
 		//UserHasBookingsDto obj = bookingService.getAllBookingsDtoByUserId(1l);
 //Object to JSON in String
