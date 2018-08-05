@@ -4,6 +4,7 @@ package com.softserve.edu.bookinglite.service;
 import java.util.*;
 
 import com.softserve.edu.bookinglite.repository.*;
+import com.softserve.edu.bookinglite.service.dto.ApartmentDto;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
 
 import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
@@ -144,8 +145,22 @@ public class BookingService {
     		
     	bookingRepository.save(booking);
     	return true;    	  	       	 	  	    	    		
-    }    
-    
+    }
+	@Transactional
+	public List<ApartmentDto> findAvailableApartamentsDtoByCheckInAndCheckOutDates(Date in, Date out, List<ApartmentDto> apartmentDtoList){
+		List<ApartmentDto> list=new ArrayList<>();
+		if(apartmentDtoList.size()>0){
+			for (ApartmentDto apDto: apartmentDtoList
+					) {
+				if(checkBookingIfExistByChekInandCheckOut(apDto.getId(),in,out)==false){
+					list.add(apDto);
+				}
+			}
+			return list;
+		}else
+			return new ArrayList<ApartmentDto>();
+	}
+
     public boolean checkValidationDate (BookingDto bookingDto){
     	boolean validation= true;
     	
