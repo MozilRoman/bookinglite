@@ -1,15 +1,21 @@
 package com.softserve.edu.bookinglite.controller;
 
-import com.softserve.edu.bookinglite.service.PropertyService;
-import com.softserve.edu.bookinglite.service.dto.PropertyDto;
+import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
-import java.util.List;
+import com.softserve.edu.bookinglite.service.PropertyService;
+import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 
 @RestController
 @RequestMapping("/api")
@@ -32,11 +38,25 @@ public class PropertyController {
 		return propertyService.getPropertyDtoById(id);
 	}
 
+	@GetMapping("/property/city/{cityName}")
+	public List<PropertyDto> getPropertiesByCityName(@PathVariable("cityName") String cityName) {
+		return propertyService.getPropertyDtosByCityName(cityName);
+	}
+
+	@GetMapping("/property/country/{countryName}")
+	public List<PropertyDto> getPropertiesByCountryName(@PathVariable("countryName") String countryName) {
+		return propertyService.getPropertyDtosByCountryName(countryName);
+	}
+
 	@PostMapping("/property")
 	public ResponseEntity<PropertyDto> createProperty(@RequestBody PropertyDto propertyDto, Principal principal) {
 		Long userId = Long.parseLong(principal.getName());
-		propertyService.saveProperty(propertyDto, userId);
-		return new ResponseEntity<PropertyDto>(HttpStatus.CREATED);
+		if (propertyService.saveProperty(propertyDto, userId)) {
+			return new ResponseEntity<PropertyDto>(HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<PropertyDto>(HttpStatus.BAD_REQUEST);
+
+		}
 	}
 
 	@PutMapping("/property/{propertyId}")

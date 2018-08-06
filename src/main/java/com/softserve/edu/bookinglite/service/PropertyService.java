@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.softserve.edu.bookinglite.entity.Property;
@@ -13,6 +15,7 @@ import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
+
 @Service
 public class PropertyService {
 
@@ -24,8 +27,8 @@ public class PropertyService {
 		this.propertyRepository = propertyRepository;
 		this.userService = userService;
 	}
-    
-    @Transactional
+
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, readOnly = true)
 	public List<PropertyDto> getAllPropertyDtos() {
 		List<PropertyDto> propertyDtos = new ArrayList<>();
 		for (Property property : propertyRepository.findAll()) {
@@ -34,19 +37,48 @@ public class PropertyService {
 		}
 		return propertyDtos;
 	}
-    @Transactional
+
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.READ_COMMITTED,readOnly = true)
 	public Optional<Property> getPropertyById(Long id) {
 		return propertyRepository.findById(id);
 	}
-    @Transactional
+
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.READ_COMMITTED,readOnly = true)
 	public PropertyDto getPropertyDtoById(Long id) {
 		Optional<Property> property = getPropertyById(id);
 		return property.map(PropertyMapper
 				.instance::propertyToBasePropertyDtoWithApartmentAddressUser).orElse(null);
 	}
+
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.READ_COMMITTED,readOnly = true)
+	public List<PropertyDto> getPropertyDtosByCityName(String name) {
+		List<PropertyDto> propertyDtos = new ArrayList<>();
+		for (Property property : propertyRepository.getAllPropertyByCityName(name.toLowerCase())) {
+			PropertyDto dto = PropertyMapper.instance
+					.propertyToBasePropertyDtoWithApartmentAddressUser(property);
+			propertyDtos.add(dto);
+		}
+		return propertyDtos;
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.READ_COMMITTED,readOnly = true)
+   	public List<PropertyDto> getPropertyDtosByCountryName(String name) {
+   		List<PropertyDto> propertyDtos = new ArrayList<>();
+   		for (Property property : propertyRepository.getAllPropertyByCountryName(name.toLowerCase())) {
+   			PropertyDto dto = PropertyMapper.instance
+   					.propertyToBasePropertyDtoWithApartmentAddressUser(property);
+   			propertyDtos.add(dto);
+   		}
+   		return propertyDtos;
+   	}
+
 	@Transactional
-	public void saveProperty(PropertyDto propertyDto, Long userId) {
-		propertyRepository.save(convertToProperty(propertyDto, userId));
+	public boolean saveProperty(PropertyDto propertyDto, Long userId) {
+		Property property = propertyRepository.save(convertToProperty(propertyDto, userId));
+		if (property != null) {
+			return true;
+		} else
+			return false;
 	}
 
 	private Property convertToProperty(PropertyDto propertyDto, Long userId) {
@@ -63,6 +95,7 @@ public class PropertyService {
 		return property;
 	}
 
+	@Transactional
 	public boolean updateProperty(PropertyDto propertyDto, Long propertyId) {
 		if (propertyDto != null) {
 			Property property = propertyRepository.findById(propertyId).get();
