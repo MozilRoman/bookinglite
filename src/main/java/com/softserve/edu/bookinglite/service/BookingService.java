@@ -39,27 +39,6 @@ public class BookingService {
 	}
 
 	@Transactional
-	public List<BookingDto> findAllBookingDto() { 
-		List<BookingDto> allBookingDto = new ArrayList<>();
-		for (Booking booking: findAllBookings()) {
-			BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
-			allBookingDto.add(bookingDto);
-		}
-		return allBookingDto;
-	}
-
-	@Transactional
-	public List<Booking> findAllBookings() { 
-		return bookingRepository.findAll();
-	}
-
-	@Transactional
-	public BookingDto findBookinDTOById(Long id) { //rename findtAllBookingDtoById
-		Optional<Booking> booking = bookingRepository.findById(id);
-		return booking.map(BookingMapper.instance::bookingToBaseBookingDto).orElse(null);
-	}
-
-	@Transactional
 	public List<BookingDto> getAllBookingsDtoByUserId(Long user_id) {
 		List<BookingDto> listBookingDto = new ArrayList<>();
 		List<Booking> listBooking = bookingRepository.getAllByUserIdOrderByCheck_inAsc(user_id);
@@ -134,7 +113,16 @@ public class BookingService {
     }
     @Transactional
 	public List<BookingDto> getAllBookingsDtoByOwnerId(Long id_user_owner){
-		List<BookingDto> listBookingDto = new ArrayList<>();
+    	List<BookingDto> listBookingDto = new ArrayList<>();
+		List<Booking> listBooking = bookingRepository.getAllBookingsByOwnerId(id_user_owner);
+		if (listBooking.size() > 0) {
+			for (Booking booking : listBooking	) {
+				BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
+				listBookingDto.add(bookingDto);				
+			}
+		}
+		return listBookingDto;
+		/*List<BookingDto> listBookingDto = new ArrayList<>();
 		List<Booking> listBooking = bookingRepository.getAllBookingsByOwnerId(id_user_owner);
 		if (listBooking.size() > 0) {
 			for (Booking booking : listBooking	) {
@@ -142,7 +130,7 @@ public class BookingService {
 				listBookingDto.add(bookingDto);
 			}
 		}
-		return listBookingDto;
+		return listBookingDto;*/
 	}
 
     public boolean checkValidationDate (BookingDto bookingDto){
