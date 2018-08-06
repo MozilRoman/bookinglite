@@ -1,14 +1,26 @@
 package com.softserve.edu.bookinglite.entity;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 @Entity
 @Table(name = "properties")
-
 public class Property {
 	
 	@Id
@@ -26,15 +38,15 @@ public class Property {
 	@Column(name = "contact_email" , length = 50, nullable = false)
 	private String contactEmail;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name = "property_type_id",nullable = false)
 	private PropertyType propertyType;
 
-	@ManyToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST},fetch = FetchType.EAGER)
+	@ManyToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST})
 	@JoinColumn(name = "address_id",nullable = false)
 	private Address address;
 
-	@OneToMany(mappedBy = "property",fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "property")
 	private List<Apartment> apartments = new ArrayList<>();
 	
 	
@@ -42,13 +54,13 @@ public class Property {
 	@JoinColumn(name = "owner_id",nullable = false)
 	private User user; 
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany
 	@JoinTable(name = "property_facilities",
 			joinColumns = @JoinColumn(name = "property_id"),
 			inverseJoinColumns = @JoinColumn(name = "facility_id"))
 	private Set<Facility> facilities = new HashSet<>();
 	
-	@OneToMany(mappedBy = "property",fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "property")
 	private List<Photo> photos = new ArrayList<>();
 
 	public Long getId() {
@@ -98,43 +110,53 @@ public class Property {
 	public void setContactEmail(String contactEmail) {
 		this.contactEmail = contactEmail;
 	}
-	/////////////////////////
+
 	public PropertyType getPropertyType() {
 		return propertyType;
 	}
+
 	public void setPropertyType(PropertyType propertyType) {
 		this.propertyType = propertyType;
 	}
+
 	public Address getAddress() {
 		return address;
 	}
+
 	public void setAddress(Address address) {
 		this.address = address;
 	}
+
 	public List<Apartment> getApartments() {
 		return apartments;
 	}
+
 	public void setApartments(List<Apartment> apartments) {
 		this.apartments = apartments;
 	}
-//	@JsonIgnore
+
 	public User getUser() {
 		return user;
 	}
+
 	public void setUser(User user) {
 		this.user = user;
 	}
-//	@JsonIgnore
+
 	public Set<Facility> getFacilities() {
 		return facilities;
 	}
+
 	public void setFacilities(Set<Facility> facilities) {
 		this.facilities = facilities;
 	}
+
 	public List<Photo> getPhotos() {
 		return photos;
 	}
+
 	public void setPhotos(List<Photo> photos) {
 		this.photos = photos;
 	}
+
 }

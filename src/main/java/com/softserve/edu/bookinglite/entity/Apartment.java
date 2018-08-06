@@ -1,14 +1,20 @@
 package com.softserve.edu.bookinglite.entity;
 
-import javax.persistence.*;
-
-import org.springframework.boot.autoconfigure.liquibase.LiquibaseDataSource;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "apartments")
@@ -37,7 +43,6 @@ public class Apartment {
             inverseJoinColumns = @JoinColumn(name = "amenity_id"))
     private Set<Amenity> amenities = new HashSet<>();
     
-    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "property_id", nullable = false)
     private Property property;
