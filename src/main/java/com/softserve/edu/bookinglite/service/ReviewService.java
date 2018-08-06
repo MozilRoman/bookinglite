@@ -1,18 +1,20 @@
 package com.softserve.edu.bookinglite.service;
 
-import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.Review;
 import com.softserve.edu.bookinglite.repository.BookingRepository;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.repository.ReviewRepository;
+import com.softserve.edu.bookinglite.service.dto.BookingDto;
 import com.softserve.edu.bookinglite.service.dto.ReviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.softserve.edu.bookinglite.service.mapper.ReviewMapper;
+import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -49,8 +51,9 @@ public class ReviewService {
 
     public boolean addReview(ReviewDto reviewDto, Long bookingId, Long userId){
         Booking booking = bookingRepository.findById(bookingId).get();
+        BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
         Property property = booking.getApartment().getProperty();
-        if (booking.getUser().getId().equals(userId)){
+        if (booking.getUser().getId().equals(userId) && bookingDto.getCheck_out().before(new Date())){
             Review review = new Review();
             review.setMessage(reviewDto.getMessage());
             review.setRating(reviewDto.getRating());
