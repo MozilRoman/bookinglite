@@ -88,7 +88,8 @@ public class BookingService {
 
 	@Transactional
 	public boolean createBooking(BookingDto bookingDto, Long user_id, Long apartment_id) {
-  		if(checkValidationDate (bookingDto)==false){
+		if(checkValidationDate (bookingDto)==false || 
+				bookingDto.getApartmentDto().getNumberOfGuests() > apartmentService.findApartmentDtoById(apartment_id).getNumberOfGuests()){
 			System.out.println("validate date : false");
 			return false;
   		}
