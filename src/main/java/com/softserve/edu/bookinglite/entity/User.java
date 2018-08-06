@@ -87,7 +87,7 @@ public class User {
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
     }
-    
+
     public Set<Role> getRoles() {
         return roles;
     }

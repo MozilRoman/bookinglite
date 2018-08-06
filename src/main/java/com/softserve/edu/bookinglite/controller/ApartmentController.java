@@ -22,9 +22,9 @@ public class ApartmentController {
         this.apartmentService = apartmentService;
     }
 
-    @GetMapping("/apartment")
-    public List<ApartmentDto> getAllApartments(){
-        return apartmentService.findAllApartmentDtos();
+    @GetMapping("/property/{id}/apartment")
+    public List<ApartmentDto> getAllPropertiesApartment(@PathVariable ("id") Long propertyId){
+        return apartmentService.findAllApartmentsByPropertyId(propertyId);
     }
 
     @GetMapping("/apartment/{id}")

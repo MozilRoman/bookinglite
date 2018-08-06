@@ -38,6 +38,16 @@ public class ApartmentService {
         return allApartmentsDto;
     }
 
+    public List<ApartmentDto> findAllApartmentsByPropertyId(Long propertyId) {
+        Property property = propertyRepository.findById(propertyId).get();
+        List<ApartmentDto> apartmentDtos = new ArrayList<>();
+        for (Apartment apartment: property.getApartments()) {
+            ApartmentDto apartmentDto = ApartmentMapper.instance.toDto(apartment);
+            apartmentDtos.add(apartmentDto);
+        }
+        return apartmentDtos;
+    }
+
     public ApartmentDto findApartmentDtoById(Long id){
         Optional<Apartment> apartment = apartmentRepository.findById(id);
         return apartment.map(ApartmentMapper.instance::toDto).orElse(null);
