@@ -1,8 +1,12 @@
 package com.softserve.edu.bookinglite.service.mapper;
 
-import com.softserve.edu.bookinglite.entity.*;
+import com.softserve.edu.bookinglite.entity.Apartment;
+import com.softserve.edu.bookinglite.entity.Booking;
+import com.softserve.edu.bookinglite.entity.Review;
+import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.service.dto.ApartmentDto;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
+import com.softserve.edu.bookinglite.service.dto.ReviewDto;
 import com.softserve.edu.bookinglite.service.dto.UserDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -23,12 +27,14 @@ public interface BookingMapper {
     BookingDto bookingToBaseBookingDto(Booking booking);
     
     ApartmentDto apartmentToApartmentDTO(Apartment apartment);
-    UserDto userToUserDTO(User user);
-    
-    @Mappings({@Mapping(target = "booking", source="review.id",ignore = true)})
-    Review reviewToReviewDTO(Review review);
-    
-    
+    default UserDto map(User user){
+        return UserMapper.instance.UserToBaseUserDto(user);
+    }
+
+    default ReviewDto map(Review review){
+        return ReviewMapper.instance.toDto(review);
+    }
+
    // ApartmentDto map(Apartment apartment);
     //UserDto map(User user);
 

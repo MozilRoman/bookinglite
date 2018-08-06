@@ -2,8 +2,6 @@ package com.softserve.edu.bookinglite.entity;
 
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;

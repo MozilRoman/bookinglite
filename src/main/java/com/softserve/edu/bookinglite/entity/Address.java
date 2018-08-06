@@ -3,11 +3,8 @@ package com.softserve.edu.bookinglite.entity;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 @Entity
 @Table(name = "addresses")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Address {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

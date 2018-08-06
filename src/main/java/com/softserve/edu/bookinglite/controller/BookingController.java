@@ -1,24 +1,16 @@
 package com.softserve.edu.bookinglite.controller;
 
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
-
+import com.softserve.edu.bookinglite.service.BookingService;
+import com.softserve.edu.bookinglite.service.dto.BookingDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.softserve.edu.bookinglite.service.BookingService;
-import com.softserve.edu.bookinglite.service.dto.BookingDto;
+import javax.validation.Valid;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -36,7 +28,6 @@ public class BookingController {
 	@GetMapping(value="/booking")
 	public List<BookingDto> getAllBooking( ) {
 		List<BookingDto> listBookingDto= new ArrayList<>();
-				
 		listBookingDto= bookingService.findAllBookingDto();
 		return listBookingDto ;
 	}
@@ -46,8 +37,9 @@ public class BookingController {
 		return bookingService.findBookinDTOById(booking_id);
 	}
 	
-	@GetMapping(value="/booking/user/{user_id}")
-	public List<BookingDto> getAllBookingsDtoByUserId(@PathVariable ("user_id") Long user_id ) {
+	@GetMapping(value="/bookings")
+	public List<BookingDto> getAllBookingsDtoByUserId(Principal principal) {
+    	Long user_id = Long.parseLong(principal.getName());
 		return bookingService.getAllBookingsDtoByUserId(user_id);
 	}
 	

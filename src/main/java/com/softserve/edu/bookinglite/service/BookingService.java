@@ -1,22 +1,19 @@
 package com.softserve.edu.bookinglite.service;
 
 
-import java.util.*;
-
-import com.softserve.edu.bookinglite.repository.*;
-import com.softserve.edu.bookinglite.service.dto.ApartmentDto;
-import com.softserve.edu.bookinglite.service.dto.BookingDto;
-
-import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-
 import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.User;
+import com.softserve.edu.bookinglite.repository.BookingRepository;
+import com.softserve.edu.bookinglite.repository.BookingStatusRepository;
+import com.softserve.edu.bookinglite.service.dto.ApartmentDto;
+import com.softserve.edu.bookinglite.service.dto.BookingDto;
+import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 @Service
 public class BookingService {
@@ -90,31 +87,35 @@ public class BookingService {
 
 	@Transactional
 	public boolean createBooking(BookingDto bookingDto, Long user_id, Long apartment_id) {
-  if(checkValidationDate (bookingDto)==false){
-	System.out.println("validate date : false");
-	return false; }
+  		if(checkValidationDate (bookingDto)==false){
+			System.out.println("validate date : false");
+			return false;
+  		}
 		if (checkBookingIfExistByChekInandCheckOut(apartment_id,bookingDto.getCheck_in(),bookingDto.getCheck_out())==false) {
-			System.out.println("validation complete");
-					Booking booking = new Booking();
-					if (apartmentService.findApartmentDtoById(apartment_id) != null) {
-						Apartment apartment = new Apartment();
-						apartment.setId(apartment_id);
-						booking.setApartment(apartment);
-					}
-					if (userService.findById(user_id) != null) {
-						User user = new User();
-						user.setId(user_id);
-						booking.setUser(user); }
-					booking.setCheck_in(setHourAndMinToDate(bookingDto.getCheck_in(),16,0));
-					booking.setCheck_out(setHourAndMinToDate(bookingDto.getCheck_out(),14,0));
-					booking.setTotal_price(bookingDto.getTotal_price());
-					booking.setBookingstatus(bookingStatusRepository.findByName(RESERVED));
-					Booking result = bookingRepository.save(booking);
-					if (result != null){ return true;}
-					else return false; }
-					else
-			        System.out.println("validation failed");
-			        return false;
+            Booking booking = new Booking();
+            if (apartmentService.findApartmentDtoById(apartment_id) != null) {
+                Apartment apartment = new Apartment();
+                apartment.setId(apartment_id);
+                booking.setApartment(apartment);
+            }
+            if (userService.findById(user_id) != null) {
+                User user = new User();
+                user.setId(user_id);
+                booking.setUser(user); }
+            booking.setCheck_in(setHourAndMinToDate(bookingDto.getCheck_in(),16,0));
+            booking.setCheck_out(setHourAndMinToDate(bookingDto.getCheck_out(),14,0));
+            booking.setTotal_price(bookingDto.getTotal_price());
+            booking.setBookingstatus(bookingStatusRepository.findByName(RESERVED));
+            Booking result = bookingRepository.save(booking);
+            if (result != null){
+                return true;
+            }
+            else return false;
+  		}
+  		else {
+            System.out.println("validation failed");
+            return false;
+        }
 	}
 	
 	@Transactional
