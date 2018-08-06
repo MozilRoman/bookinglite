@@ -128,12 +128,14 @@ public class UserService implements UserDetailsService {
     }
     public void checkVerificationToken(String email){
        VerificationToken verificationToken = verificationTokenRepository.findByUserEmail(email);
-       if(verificationToken.getUser().isVerified()){
-           verificationTokenRepository.delete(verificationToken);
-       } else {
-           User user = verificationToken.getUser();
-           verificationTokenRepository.delete(verificationToken);
-           userRepository.delete(user);
+       if(verificationToken != null) {
+           if (verificationToken.getUser().isVerified()) {
+               verificationTokenRepository.delete(verificationToken);
+           } else {
+               User user = verificationToken.getUser();
+               verificationTokenRepository.delete(verificationToken);
+               userRepository.delete(user);
+           }
        }
     }
 
