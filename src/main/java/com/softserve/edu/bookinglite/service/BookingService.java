@@ -133,21 +133,17 @@ public class BookingService {
 		}
 		else return false;        		  	       	 	  	    	    		
     }
-	
-	@Transactional
-	public List<ApartmentDto> findAvailableApartamentsDtoByCheckInAndCheckOutDates(Date in, Date out){
-		List<ApartmentDto> list=apartmentService.findAllApartmentDtos();// wait method find All ApartmentDtos by country and city
-		if(list.size()>0){
-			Iterator iterator=list.iterator();
-			while ((iterator.hasNext())){
-				ApartmentDto ap=(ApartmentDto)iterator.next();
-				if(checkBookingIfExistByChekInandCheckOut(ap.getId(),setHourAndMinToDate(in,16,0),setHourAndMinToDate(out,14,0))){
-					iterator.remove();
-				}
+    @Transactional
+	public List<BookingDto> getAllBookingsDtoByOwnerId(Long id_user_owner){
+		List<BookingDto> listBookingDto = new ArrayList<>();
+		List<Booking> listBooking = bookingRepository.getAllBookingsByOwnerId(id_user_owner);
+		if (listBooking.size() > 0) {
+			for (Booking booking : listBooking	) {
+				BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
+				listBookingDto.add(bookingDto);
 			}
-			return list;
-		}else
-			return new ArrayList<ApartmentDto>();
+		}
+		return listBookingDto;
 	}
 
     public boolean checkValidationDate (BookingDto bookingDto){

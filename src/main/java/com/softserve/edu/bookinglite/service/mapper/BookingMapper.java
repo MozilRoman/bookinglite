@@ -35,7 +35,5 @@ public interface BookingMapper {
         return ReviewMapper.instance.toDto(review);
     }
 
-   // ApartmentDto map(Apartment apartment);
-    //UserDto map(User user);
 
 }
