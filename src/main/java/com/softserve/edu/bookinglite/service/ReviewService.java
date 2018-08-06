@@ -29,7 +29,7 @@ public class ReviewService {
         this.propertyRepository = propertyRepository;
     }
 
-    public List<ReviewDto> findAllReviewsByBookingId(Long bookingId){
+    public List<ReviewDto> findReviewByBookingId(Long bookingId){
         List<ReviewDto> reviewDtos = new ArrayList<>();
         for (Review review :reviewRepository.findByBookingId(bookingId)) {
             ReviewDto reviewDto = ReviewMapper.instance.toDto(review);
