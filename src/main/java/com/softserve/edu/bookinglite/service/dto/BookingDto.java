@@ -10,11 +10,11 @@ import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.BookingStatus;
 import com.softserve.edu.bookinglite.entity.Review;
 import com.softserve.edu.bookinglite.entity.User;
-@JsonInclude(JsonInclude.Include.NON_NULL)
+
 public class BookingDto {
 
 	
-	private Long booking_id; // edit booking_id to bookingId
+	private Long booking_id; 
 
 	private ApartmentDto apartmentDto;
 
@@ -28,7 +28,7 @@ public class BookingDto {
 	
 	private BookingStatus bookingstatus;
 	
-	private Review review;
+	private ReviewDto reviewDto;
 	
 	public BookingDto() {
 		
@@ -90,11 +90,11 @@ public class BookingDto {
 		this.bookingstatus = bookingstatus;
 	}
 
-	public Review getReview() {
-		return review;
+	public ReviewDto getReviewDto() {
+		return reviewDto;
 	}
 
-	public void setReview(Review review) {
-		this.review = review;
+	public void setReviewDto(ReviewDto reviewDto) {
+		this.reviewDto = reviewDto;
 	}
 }

@@ -6,6 +6,7 @@ import com.softserve.edu.bookinglite.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -46,6 +47,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/login","/api/register","/api/registrationconfirm").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/property","property/*/photo","/property/*/apartment").hasAuthority("ROLE_OWNER")
+                .antMatchers(HttpMethod.PUT,"/apartment/*","/property/*").hasAuthority("ROLE_OWNER")
+                .antMatchers(HttpMethod.DELETE,"/photos/*").hasAuthority("ROLE_OWNER")
                 .anyRequest().authenticated();
         http.addFilterBefore(jwtAuthorizationFilter,UsernamePasswordAuthenticationFilter.class);
     }

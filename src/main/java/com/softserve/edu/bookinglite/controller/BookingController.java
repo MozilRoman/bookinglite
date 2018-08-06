@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -25,22 +24,16 @@ public class BookingController {
         this.bookingService = bookingService;
      }
 	
-	@GetMapping(value="/booking")
-	public List<BookingDto> getAllBooking( ) {
-		List<BookingDto> listBookingDto= new ArrayList<>();
-		listBookingDto= bookingService.findAllBookingDto();
-		return listBookingDto ;
-	}
-	
-	@GetMapping(value="/booking/{booking_id}")
-	public BookingDto getBookingById(@PathVariable ("booking_id") Long booking_id ) {
-		return bookingService.findBookinDTOById(booking_id);
-	}
-	
 	@GetMapping(value="/bookings")
 	public List<BookingDto> getAllBookingsDtoByUserId(Principal principal) {
     	Long user_id = Long.parseLong(principal.getName());
 		return bookingService.getAllBookingsDtoByUserId(user_id);
+	}
+	
+	@GetMapping(value="/guestarivals")
+	public List<BookingDto> getAllBookingsDtoByOwnerId(Principal principal) {
+		Long user_id = Long.parseLong(principal.getName());
+		return bookingService.getAllBookingsDtoByOwnerId(user_id);
 	}
 	
 	@PostMapping(value="/booking/{apartment_id}")
@@ -56,14 +49,13 @@ public class BookingController {
 	}
 	
 	@PutMapping(value="/booking/{id}") 
-	public ResponseEntity<BookingDto> updateBooking(@Valid @RequestBody BookingDto bookingDto,  //Or ResponseEntity<Void> ??
-			@PathVariable ("id") Long id) {	
-		bookingDto.setBooking_id(id);;
-		if(bookingService.updateBooking(bookingDto)) {
+	public ResponseEntity<BookingDto> cancelBooking( @PathVariable ("id") Long id) {	
+		if(bookingService.cancelBooking(id)) {
 			return new ResponseEntity<BookingDto>(HttpStatus.OK);
 		}else {
 			return new ResponseEntity<BookingDto>(HttpStatus.BAD_REQUEST);
               }
 	}
+	
 }
 
