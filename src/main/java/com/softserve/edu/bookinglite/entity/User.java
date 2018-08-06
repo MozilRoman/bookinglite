@@ -2,6 +2,8 @@ package com.softserve.edu.bookinglite.entity;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -87,7 +89,7 @@ public class User {
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
     }
-    
+
     public Set<Role> getRoles() {
         return roles;
     }
