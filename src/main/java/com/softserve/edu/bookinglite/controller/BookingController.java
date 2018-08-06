@@ -43,9 +43,10 @@ public class BookingController {
 		 Long userId = Long.parseLong(principal.getName());						 
 		 if(bookingService.createBooking(bookingDto, userId, apartment_id)) {
 				return new ResponseEntity<BookingDto>(HttpStatus.CREATED);
-			}else {
+		 }
+		 else {
 				return new ResponseEntity<BookingDto>(HttpStatus.BAD_REQUEST);
-	              }
+		 }
 	}
 	
 	@PutMapping(value="/booking/{id}") 
