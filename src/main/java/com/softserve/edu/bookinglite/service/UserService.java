@@ -73,7 +73,9 @@ public class UserService implements UserDetailsService {
         }
         user.setRoles(userRoles);
 
-        if(emailverification) user.setVerified(false);
+        if(emailverification) {
+            user.setVerified(false);
+        }
         else user.setVerified(true);
         User result = userRepository.save(user);
         if(emailverification) applicationEventMulticaster.multicastEvent(new RegistrationCompleteEvent(result,appUrl));
@@ -123,6 +125,16 @@ public class UserService implements UserDetailsService {
         Date expire = new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24));
         verificationToken.setExpire_at(expire);
         verificationTokenRepository.save(verificationToken);
+    }
+    public void checkVerificationToken(String email){
+       VerificationToken verificationToken = verificationTokenRepository.findByUserEmail(email);
+       if(verificationToken.getUser().isVerified()){
+           verificationTokenRepository.delete(verificationToken);
+       } else {
+           User user = verificationToken.getUser();
+           verificationTokenRepository.delete(verificationToken);
+           userRepository.delete(user);
+       }
     }
 
     @Override

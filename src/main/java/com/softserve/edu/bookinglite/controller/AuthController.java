@@ -65,6 +65,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<Void> register(@Valid @RequestBody RegisterDto registerDto){
         if(userService.existsByEmail(registerDto.getEmail())){
+            userService.checkVerificationToken(registerDto.getEmail());
         	return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         if (userService.registerUser(registerDto)){
