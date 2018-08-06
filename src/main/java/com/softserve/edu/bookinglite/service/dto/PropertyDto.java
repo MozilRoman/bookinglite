@@ -29,7 +29,7 @@ public class PropertyDto {
 
 	private Set<Facility> facilities;
 
-	private List<Apartment> apartments;
+	private List<ApartmentDto> apartments;
 	
 	private List<Photo> photos;
 
@@ -115,11 +115,11 @@ public class PropertyDto {
 		this.facilities = facilities;
 	}
 
-	public List<Apartment> getApartments() {
+	public List<ApartmentDto> getApartments() {
 		return apartments;
 	}
 
-	public void setApartments(List<Apartment> apartments) {
+	public void setApartments(List<ApartmentDto> apartments) {
 		this.apartments = apartments;
 	}
 

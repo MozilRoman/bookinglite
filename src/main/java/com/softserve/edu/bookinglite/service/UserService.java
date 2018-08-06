@@ -48,12 +48,13 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public boolean existsByEmail(String email){
+    public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
+
     //TODO: REFACTOR
     @Transactional
-    public boolean registerUser(RegisterDto registerDto){
+    public boolean registerUser(RegisterDto registerDto) {
         User user = new User();
         user.setEmail(registerDto.getEmail());
         user.setFirst_name(registerDto.getFirst_name());
@@ -63,11 +64,11 @@ public class UserService implements UserDetailsService {
         user.setAddress(registerDto.getAddress());
         List<Role> roles = roleRepository.findAll();
         Set<Role> userRoles = new HashSet<Role>();
-        for(Role role : roles){
-            if(role.getName().equals("ROLE_OWNER") && registerDto.isOwner()){
+        for (Role role : roles) {
+            if (role.getName().equals("ROLE_OWNER") && registerDto.isOwner()) {
                 userRoles.add(role);
                 continue;
-            } else if(role.getName().equals("ROLE_USER")){
+            } else if (role.getName().equals("ROLE_USER")) {
                 userRoles.add(role);
             }
         }

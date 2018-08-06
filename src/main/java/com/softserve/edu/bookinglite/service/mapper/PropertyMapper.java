@@ -4,6 +4,7 @@ import com.softserve.edu.bookinglite.entity.Address;
 import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.User;
+import com.softserve.edu.bookinglite.service.dto.ApartmentDto;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.dto.UserDto;
 import org.mapstruct.Mapper;
@@ -12,7 +13,7 @@ import org.mapstruct.Mappings;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
-import java.util.Set;
+import java.util.List;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PropertyMapper {
@@ -43,7 +44,10 @@ public interface PropertyMapper {
 	
 	PropertyDto propertyToBasePropertyDtoWithApartmentAddressUser(Property property);
 	
-	Set<Apartment> map(Set<Apartment> apartments);
+	List<ApartmentDto> map(List<ApartmentDto> apartments);
+    default ApartmentDto map(Apartment apartment) {
+       return ApartmentMapper.instance.toDto(apartment);
+    }
 	Address map(Address address);
 	default UserDto map(User user){
 		return UserMapper.instance.UserToBaseUserDto(user);
