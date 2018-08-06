@@ -67,15 +67,14 @@ public class UserService implements UserDetailsService {
             if(role.getName().equals("ROLE_OWNER") && registerDto.isOwner()){
                 userRoles.add(role);
                 continue;
+            } else if(role.getName().equals("ROLE_USER")){
+                userRoles.add(role);
             }
-            userRoles.add(role);
         }
         user.setRoles(userRoles);
 
         if(emailverification) user.setVerified(false);
         else user.setVerified(true);
-
-
         User result = userRepository.save(user);
         if(emailverification) applicationEventMulticaster.multicastEvent(new RegistrationCompleteEvent(result,appUrl));
         if(result != null)return true;
