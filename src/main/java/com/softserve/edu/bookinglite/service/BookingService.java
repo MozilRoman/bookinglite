@@ -6,7 +6,6 @@ import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.repository.BookingRepository;
 import com.softserve.edu.bookinglite.repository.BookingStatusRepository;
-import com.softserve.edu.bookinglite.service.dto.ApartmentDto;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
 import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +66,6 @@ public class BookingService {
 	public boolean createBooking(BookingDto bookingDto, Long user_id, Long apartment_id) {
 		if(checkValidationDate (bookingDto)==false || 
 				bookingDto.getApartmentDto().getNumberOfGuests() > apartmentService.findApartmentDtoById(apartment_id).getNumberOfGuests()){
-			System.out.println("validate date : false");
 			return false;
   		}
 		if (checkBookingIfExistByChekInandCheckOut(apartment_id,bookingDto.getCheck_in(),bookingDto.getCheck_out())==false) {
@@ -92,7 +90,6 @@ public class BookingService {
             else return false;
   		}
   		else {
-            System.out.println("validation failed");
             return false;
         }
 	}
@@ -122,15 +119,6 @@ public class BookingService {
 			}
 		}
 		return listBookingDto;
-		/*List<BookingDto> listBookingDto = new ArrayList<>();
-		List<Booking> listBooking = bookingRepository.getAllBookingsByOwnerId(id_user_owner);
-		if (listBooking.size() > 0) {
-			for (Booking booking : listBooking	) {
-				BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
-				listBookingDto.add(bookingDto);
-			}
-		}
-		return listBookingDto;*/
 	}
 
     public boolean checkValidationDate (BookingDto bookingDto){

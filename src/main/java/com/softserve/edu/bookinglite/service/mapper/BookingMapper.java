@@ -22,7 +22,8 @@ public interface BookingMapper {
     @Mappings({
     	@Mapping(target="booking_id", source="booking.id"),
         @Mapping(target="apartmentDto", source="booking.apartment"),
-        @Mapping(target="userDto", source="booking.user")
+        @Mapping(target="userDto", source="booking.user"),
+    	@Mapping(target="reviewDto", source="booking.review")
       })
     
     BookingDto bookingToBaseBookingDto(Booking booking);

@@ -28,7 +28,7 @@ public class BookingDto {
 	
 	private BookingStatus bookingstatus;
 	
-	private Review review;
+	private ReviewDto reviewDto;
 	
 	public BookingDto() {
 		
@@ -90,11 +90,11 @@ public class BookingDto {
 		this.bookingstatus = bookingstatus;
 	}
 
-	public Review getReview() {
-		return review;
+	public ReviewDto getReviewDto() {
+		return reviewDto;
 	}
 
-	public void setReview(Review review) {
-		this.review = review;
+	public void setReviewDto(ReviewDto reviewDto) {
+		this.reviewDto = reviewDto;
 	}
 }
