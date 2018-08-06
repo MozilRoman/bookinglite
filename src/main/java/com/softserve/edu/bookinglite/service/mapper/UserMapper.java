@@ -22,6 +22,13 @@ public interface UserMapper {
             @Mapping(target = "address",ignore = true)})
     UserDto UserToBaseUserDto(User user);
 
+    @Mappings({@Mapping(target = "roles",ignore = true),
+            @Mapping(target = "address",ignore = true),
+    @Mapping(target = "email", ignore = true),
+    @Mapping(target = "id", ignore = true),
+    @Mapping(target = "phone_number", ignore = true)})
+    UserDto UserToBaseUserDtoWithName(User user);
+
     @Mappings({@Mapping(target = "address",ignore = true)})
     UserDto UserToBaseUserDtoWithRoles(User user);
 

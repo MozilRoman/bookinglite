@@ -5,7 +5,7 @@ public class ReviewDto {
     private Long id;
     private String message;
     private Float rating;
-    private Long bookingId;
+    private UserDto userDto;
 
     public Long getId() {
         return id;
@@ -31,11 +31,11 @@ public class ReviewDto {
         this.rating = rating;
     }
 
-    public Long getBookingId() {
-        return bookingId;
+    public UserDto getUserDto() {
+        return userDto;
     }
 
-    public void setBookingId(Long bookingId) {
-        this.bookingId = bookingId;
+    public void setUserDto(UserDto userDto) {
+        this.userDto = userDto;
     }
 }
