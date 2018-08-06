@@ -28,7 +28,7 @@ public class PropertyDto {
 
 	private Set<Facility> facilities;
 
-	private List<Apartment> apartments;
+	private List<ApartmentDto> apartments;
 	
 	private List<Photo> photos;
 
@@ -80,16 +80,16 @@ public class PropertyDto {
 		this.contactEmail = contactEmail;
 	}
 
+	public PropertyType getPropertyType() {
+		return propertyType;
+	}
+
 	public UserDto getUser() {
 		return user;
 	}
 
 	public void setUser(UserDto user) {
 		this.user = user;
-	}
-
-	public PropertyType getPropertyType() {
-		return propertyType;
 	}
 
 	public void setPropertyType(PropertyType propertyType) {
@@ -112,11 +112,11 @@ public class PropertyDto {
 		this.facilities = facilities;
 	}
 
-	public List<Apartment> getApartments() {
+	public List<ApartmentDto> getApartments() {
 		return apartments;
 	}
 
-	public void setApartments(List<Apartment> apartments) {
+	public void setApartments(List<ApartmentDto> apartments) {
 		this.apartments = apartments;
 	}
 
