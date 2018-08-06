@@ -25,17 +25,14 @@ public class ApartmentService {
         this.propertyRepository = propertyRepository;
     }
 
-    private List<Apartment> findAllApartments(){
-        return apartmentRepository.findAll();
-    }
-
-    public List<ApartmentDto> findAllApartmentDtos(){
-        List<ApartmentDto> allApartmentsDto = new ArrayList<>();
-        for (Apartment apartment: findAllApartments()) {
+    public List<ApartmentDto> findAllApartmentsByPropertyId(Long propertyId) {
+        Property property = propertyRepository.findById(propertyId).get();
+        List<ApartmentDto> apartmentDtos = new ArrayList<>();
+        for (Apartment apartment: property.getApartments()) {
             ApartmentDto apartmentDto = ApartmentMapper.instance.toDto(apartment);
-            allApartmentsDto.add(apartmentDto);
+            apartmentDtos.add(apartmentDto);
         }
-        return allApartmentsDto;
+        return apartmentDtos;
     }
 
     public ApartmentDto findApartmentDtoById(Long id){
