@@ -24,9 +24,14 @@ public interface BookingMapper {
         @Mapping(target="apartmentDto", source="booking.apartment"),
         @Mapping(target="userDto", source="booking.user")
       })
+    
     BookingDto bookingToBaseBookingDto(Booking booking);
     
-    ApartmentDto apartmentToApartmentDTO(Apartment apartment);
+    
+    default ApartmentDto map(Apartment apartment){
+        return ApartmentMapper.instance.toDto( apartment);
+    }
+    
     default UserDto map(User user){
         return UserMapper.instance.UserToBaseUserDto(user);
     }

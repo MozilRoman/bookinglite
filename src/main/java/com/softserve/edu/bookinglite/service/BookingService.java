@@ -39,11 +39,6 @@ public class BookingService {
 	}
 
 	@Transactional
-	public boolean existsById(Long id) {
-		return bookingRepository.existsById(id);
-	}
-
-	@Transactional
 	public List<BookingDto> findAllBookingDto() { 
 		List<BookingDto> allBookingDto = new ArrayList<>();
 		for (Booking booking: findAllBookings()) {
