@@ -79,10 +79,10 @@ public class BookingService {
 //if booking already exist it will return true
     @Transactional
 	public boolean checkBookingIfExistByChekInandCheckOut(Long apartment_id, Date checkIn, Date checkOut) {
-		if(bookingRepository.getBookingByCheck(apartment_id,setHourAndMinToDate(checkIn,16,0))==null &&
-				bookingRepository.getBookingByCheck(apartment_id,setHourAndMinToDate(checkOut,14,0))==null &&
-				bookingRepository.INcheckBookingsExistsByDateInAndDateOut(apartment_id,setHourAndMinToDate(checkIn,16,0),setHourAndMinToDate(checkOut,14,0))==null &&
-				bookingRepository.OUTcheckBookingsExistsByDateInAndDateOut(apartment_id,setHourAndMinToDate(checkIn,16,0),setHourAndMinToDate(checkOut,14,0))==null
+		if(bookingRepository.getBookingByCheck(apartment_id,setHourAndMinToDate(checkIn,17,0))==null &&
+				bookingRepository.getBookingByCheck(apartment_id,setHourAndMinToDate(checkOut,15,0))==null &&
+				bookingRepository.INcheckBookingsExistsByDateInAndDateOut(apartment_id,setHourAndMinToDate(checkIn,17,0),setHourAndMinToDate(checkOut,15,0))==null &&
+				bookingRepository.OUTcheckBookingsExistsByDateInAndDateOut(apartment_id,setHourAndMinToDate(checkIn,17,0),setHourAndMinToDate(checkOut,15,0))==null
 				){
 		    return false;
         }
@@ -107,8 +107,8 @@ public class BookingService {
                 User user = new User();
                 user.setId(user_id);
                 booking.setUser(user); }
-            booking.setCheck_in(setHourAndMinToDate(bookingDto.getCheck_in(),16,0));
-            booking.setCheck_out(setHourAndMinToDate(bookingDto.getCheck_out(),14,0));
+            booking.setCheck_in(setHourAndMinToDate(bookingDto.getCheck_in(),17,0));
+            booking.setCheck_out(setHourAndMinToDate(bookingDto.getCheck_out(),15,0));
             booking.setTotal_price(bookingDto.getTotal_price());
             booking.setBookingstatus(bookingStatusRepository.findByName(RESERVED));
             Booking result = bookingRepository.save(booking);
@@ -131,7 +131,7 @@ public class BookingService {
 			return true;   
 		}
 		else if(booking.getCheck_in().compareTo(new Date())==0
-				&& booking.getCheck_in().before(setHourAndMinToDate(new Date(),16,0))) {
+				&& booking.getCheck_in().before(setHourAndMinToDate(new Date(),17,0))) {
 			booking.setBookingstatus(bookingStatusRepository.findByName(CANCELED));
 			return true;  
 		}
