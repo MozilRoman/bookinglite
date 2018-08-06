@@ -22,11 +22,17 @@ public interface BookingMapper {
     @Mappings({
     	@Mapping(target="booking_id", source="booking.id"),
         @Mapping(target="apartmentDto", source="booking.apartment"),
-        @Mapping(target="userDto", source="booking.user")
+        @Mapping(target="userDto", source="booking.user"),
+    	@Mapping(target="reviewDto", source="booking.review")
       })
+    
     BookingDto bookingToBaseBookingDto(Booking booking);
     
-    ApartmentDto apartmentToApartmentDTO(Apartment apartment);
+    
+    default ApartmentDto map(Apartment apartment){
+        return ApartmentMapper.instance.toDto( apartment);
+    }
+    
     default UserDto map(User user){
         return UserMapper.instance.UserToBaseUserDto(user);
     }
@@ -35,7 +41,5 @@ public interface BookingMapper {
         return ReviewMapper.instance.toDto(review);
     }
 
-   // ApartmentDto map(Apartment apartment);
-    //UserDto map(User user);
 
 }
