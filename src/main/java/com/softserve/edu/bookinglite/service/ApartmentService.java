@@ -8,7 +8,6 @@ import com.softserve.edu.bookinglite.service.dto.ApartmentDto;
 import com.softserve.edu.bookinglite.service.mapper.ApartmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +24,11 @@ public class ApartmentService {
         this.apartmentRepository = apartmentRepository;
         this.propertyRepository = propertyRepository;
     }
-@Transactional
+
     private List<Apartment> findAllApartments(){
         return apartmentRepository.findAll();
     }
-@Transactional
+
     public List<ApartmentDto> findAllApartmentDtos(){
         List<ApartmentDto> allApartmentsDto = new ArrayList<>();
         for (Apartment apartment: findAllApartments()) {
@@ -38,12 +37,22 @@ public class ApartmentService {
         }
         return allApartmentsDto;
     }
-    @Transactional
+
+    public List<ApartmentDto> findAllApartmentsByPropertyId(Long propertyId) {
+        Property property = propertyRepository.findById(propertyId).get();
+        List<ApartmentDto> apartmentDtos = new ArrayList<>();
+        for (Apartment apartment: property.getApartments()) {
+            ApartmentDto apartmentDto = ApartmentMapper.instance.toDto(apartment);
+            apartmentDtos.add(apartmentDto);
+        }
+        return apartmentDtos;
+    }
+
     public ApartmentDto findApartmentDtoById(Long id){
         Optional<Apartment> apartment = apartmentRepository.findById(id);
         return apartment.map(ApartmentMapper.instance::toDto).orElse(null);
     }
-@Transactional
+
     public boolean saveApartment (ApartmentDto apartmentDto, Long propertyId, Long userId){
         Property property = propertyRepository.findById(propertyId).get();
         if (property.getUser().getId().equals(userId)){
