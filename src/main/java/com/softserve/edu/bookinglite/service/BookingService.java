@@ -19,6 +19,7 @@ import java.util.*;
 public class BookingService {
 
 	final String RESERVED = "Reserved";
+	final String CANCELED = "Canceled";
 
 	private final BookingRepository bookingRepository;
 	private final ApartmentService apartmentService;
@@ -119,35 +120,20 @@ public class BookingService {
 	}
 	
 	@Transactional
-    public boolean updateBooking(BookingDto bookingDto){
-    	Booking booking = bookingRepository.findById(bookingDto.getBooking_id()).get();
-    		if (checkBookingIfExistByChekInandCheckOut(bookingDto.getApartmentDto().getId(),bookingDto.getCheck_in(),bookingDto.getCheck_out())==false) {
-    			if(checkValidationDate (bookingDto)) {
-    				if (apartmentService.findApartmentDtoById(bookingDto.getApartmentDto().getId()) != null) {
-						Apartment apartment = new Apartment();
-						apartment.setId(bookingDto.getApartmentDto().getId());
-						booking.setApartment(apartment);
-					}
-    				if (userService.findById(bookingDto.getUserDto().getId()) != null) {
-						User user = new User();
-						user.setId(bookingDto.getUserDto().getId());
-	    	        	booking.setUser(user);
-					}
-    	        	booking.setCheck_in(bookingDto.getCheck_in());
-    	        	booking.setCheck_out(bookingDto.getCheck_out());
-    	        	booking.setTotal_price(bookingDto.getTotal_price());   
-    	        	booking.setBookingstatus(bookingStatusRepository.findById(bookingDto.getBookingstatus().getId()).get());
-    			}
-    			else return false;
-    		} 
-    		else if( bookingDto.getBookingstatus().getId() != booking.getBookingstatus().getId()) {
-    			booking.setBookingstatus(bookingStatusRepository.findById(bookingDto.getBookingstatus().getId()).get());
-    		}
-    		else return false;
-    		
-    	bookingRepository.save(booking);
-    	return true;    	  	       	 	  	    	    		
+    public boolean cancelBooking(Long id){
+		Booking booking = bookingRepository.findById(id).get();
+		if( booking.getCheck_in().after(new Date())   ) {
+			booking.setBookingstatus(bookingStatusRepository.findByName(CANCELED));
+			return true;   
+		}
+		else if(booking.getCheck_in().compareTo(new Date())==0
+				&& booking.getCheck_in().before(setHourAndMinToDate(new Date(),16,0))) {
+			booking.setBookingstatus(bookingStatusRepository.findByName(CANCELED));
+			return true;  
+		}
+		else return false;        		  	       	 	  	    	    		
     }
+	
 	@Transactional
 	public List<ApartmentDto> findAvailableApartamentsDtoByCheckInAndCheckOutDates(Date in, Date out){
 		List<ApartmentDto> list=apartmentService.findAllApartmentDtos();// wait method find All ApartmentDtos by country and city
