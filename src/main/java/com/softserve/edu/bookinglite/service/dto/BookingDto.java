@@ -10,11 +10,11 @@ import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.BookingStatus;
 import com.softserve.edu.bookinglite.entity.Review;
 import com.softserve.edu.bookinglite.entity.User;
-@JsonInclude(JsonInclude.Include.NON_NULL)
+
 public class BookingDto {
 
 	
-	private Long booking_id; // edit booking_id to bookingId
+	private Long booking_id; 
 
 	private ApartmentDto apartmentDto;
 
