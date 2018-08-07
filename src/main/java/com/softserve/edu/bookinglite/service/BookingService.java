@@ -43,7 +43,7 @@ public class BookingService {
 	@Transactional
 	public List<BookingDto> findAllBookingsDtoByUserId(Long user_id) {
 		List<BookingDto> listBookingDto = new ArrayList<>();
-		List<Booking> listBooking = bookingRepository.getAllByUserIdOrderByCheck_inAsc(user_id);
+		List<Booking> listBooking = bookingRepository.getAllByUserIdOrderByCheck_inDesc(user_id);
 		if (listBooking.size() > 0) {
 			for (Booking booking : listBooking	) {
 				BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
@@ -84,7 +84,7 @@ public class BookingService {
                 booking.setUser(user); }
             booking.setCheck_in(setHourAndMinToDate(createBookingDto.getCheck_in(),17,0));
             booking.setCheck_out(setHourAndMinToDate(createBookingDto.getCheck_out(),15,0));
-            booking.setTotal_price(getPriceForPeriod(apartmentService.findApartmentDtoById(apartment_id).getPrice(), 
+            booking.setTotal_price(getPriceForPeriod(apartmentService.findApartmentDtoById(apartment_id).getPrice(),
             		createBookingDto.getCheck_in(),createBookingDto.getCheck_out()));
             booking.setBookingstatus(bookingStatusRepository.findByName(RESERVED));
             Booking result = bookingRepository.save(booking);
