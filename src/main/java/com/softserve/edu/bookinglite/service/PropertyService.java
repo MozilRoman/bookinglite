@@ -1,18 +1,20 @@
 package com.softserve.edu.bookinglite.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.softserve.edu.bookinglite.entity.Apartment;
+import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
+import com.softserve.edu.bookinglite.service.dto.SearchDto;
 import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PropertyService {
@@ -107,5 +109,39 @@ public class PropertyService {
 			return true;
 		}
 		return false;
+	}
+
+	@Transactional
+	public List<PropertyDto> searchProperty(SearchDto searchDto){
+		List<Property> properties = propertyRepository.getAllPropertyByCityId(2L);
+		List<PropertyDto> result = new ArrayList<>();
+		Boolean conflictboookings = false;
+		Integer unbookableApartments = 0;
+		for(Property property : properties){
+			for(Apartment apartment:property.getApartments()){
+				if(apartment.getNumberOfGuests() < searchDto.getNumberOfGuests()){
+					unbookableApartments++;
+					continue;
+				}
+				for(Booking booking: apartment.getBookingList()){
+					if ((booking.getCheck_in().after(searchDto.getCheckIn())
+							&& booking.getCheck_out().before(searchDto.getCheckIn()))
+							|| (booking.getCheck_in().after(searchDto.getCheckOut())
+							&& booking.getCheck_out().before(searchDto.getCheckOut()) ))
+					{
+						conflictboookings = true;
+					}
+				}
+				if(conflictboookings){
+					conflictboookings=false;
+					unbookableApartments++;
+				}
+			}
+			if(property.getApartments().size() > unbookableApartments){
+				unbookableApartments = 0;
+				result.add(PropertyMapper.instance.propertyToBasePropertyDtoWithAddress(property));
+			}
+		}
+		return result;
 	}
 }
