@@ -8,9 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -66,9 +66,19 @@ public class PropertyController {
 	}
 
 	@GetMapping("/property/search")
-	public List<PropertyDto> searchProperty(@Valid @RequestBody SearchDto searchDto){
+	public List<PropertyDto> searchProperty(@RequestParam("checkIn") Date checkIn,
+                                            @RequestParam("checkOut")  Date checkOut,
+                                            @RequestParam("numberOfGuests") Integer numberOfGuests,
+                                            @RequestParam("cityId") Long cityId,
+                                            @RequestParam("countryId") Long countryId){
+        SearchDto searchDto = new SearchDto();
+        searchDto.setCheckIn(checkIn);
+        searchDto.setCheckOut(checkOut);
+        searchDto.setCityId(cityId);
+        searchDto.setCountryId(countryId);
+        searchDto.setNumberOfGuests(numberOfGuests);
 		ArrayList<PropertyDto> result = new ArrayList<>();
-
-
+        propertyService.searchProperty(searchDto);
+        return result;
 	}
 }

@@ -1,18 +1,18 @@
 package com.softserve.edu.bookinglite.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
+import com.softserve.edu.bookinglite.service.dto.SearchDto;
 import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PropertyService {
@@ -107,5 +107,12 @@ public class PropertyService {
 			return true;
 		}
 		return false;
+	}
+
+	@Transactional
+	public List<PropertyDto> searchProperty(SearchDto searchDto){
+		List<Property> properties = propertyRepository.getAllPropertyByCityId(2L);
+
+		return new ArrayList<>();
 	}
 }

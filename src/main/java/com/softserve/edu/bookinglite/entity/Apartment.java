@@ -1,20 +1,10 @@
 package com.softserve.edu.bookinglite.entity;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 @Entity
 @Table(name = "apartments")
@@ -46,6 +36,9 @@ public class Apartment {
     @ManyToOne
     @JoinColumn(name = "property_id", nullable = false)
     private Property property;
+
+    @OneToMany(mappedBy = "apartment", fetch = FetchType.LAZY)
+    private List<Booking> bookingList;
 
     public Long getId() {
         return id;
@@ -103,4 +96,11 @@ public class Apartment {
         this.property = property;
     }
 
+    public List<Booking> getBookingList() {
+        return bookingList;
+    }
+
+    public void setBookingList(List<Booking> bookingList) {
+        this.bookingList = bookingList;
+    }
 }
