@@ -26,7 +26,7 @@ public class Property {
 	@Column(name = "contact_email" , length = 50, nullable = false)
 	private String contactEmail;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name = "property_type_id",nullable = false)
 	private PropertyType propertyType;
 
@@ -98,42 +98,51 @@ public class Property {
 	public void setContactEmail(String contactEmail) {
 		this.contactEmail = contactEmail;
 	}
-	/////////////////////////
+
 	public PropertyType getPropertyType() {
 		return propertyType;
 	}
+
 	public void setPropertyType(PropertyType propertyType) {
 		this.propertyType = propertyType;
 	}
+
 	public Address getAddress() {
 		return address;
 	}
+
 	public void setAddress(Address address) {
 		this.address = address;
 	}
+
 	public List<Apartment> getApartments() {
 		return apartments;
 	}
+
 	public void setApartments(List<Apartment> apartments) {
 		this.apartments = apartments;
 	}
-//	@JsonIgnore
+
 	public User getUser() {
 		return user;
 	}
+
 	public void setUser(User user) {
 		this.user = user;
 	}
-//	@JsonIgnore
+
 	public Set<Facility> getFacilities() {
 		return facilities;
 	}
+
 	public void setFacilities(Set<Facility> facilities) {
 		this.facilities = facilities;
 	}
+
 	public List<Photo> getPhotos() {
 		return photos;
 	}
+
 	public void setPhotos(List<Photo> photos) {
 		this.photos = photos;
 	}
