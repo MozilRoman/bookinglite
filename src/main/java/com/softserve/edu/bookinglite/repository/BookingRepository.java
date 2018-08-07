@@ -13,7 +13,8 @@ import java.util.List;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    List<Booking> getAllByUserIdOrderByCheck_inDesc(Long id_user);
+	@Query("Select b from Booking b where user.id= ?1 ORDER BY b.check_in desc")
+    List<Booking> getAllByUserIdOrderByCheck_inAsc(Long id_user);
 
     @Query("select b.apartment from Booking b where b.apartment.id=?1 and b.bookingstatus.id<3 and b.check_in <= ?2 and b.check_out>= ?2 ")
     Apartment getBookingByCheck(Long apartment_id, Date checkDate);

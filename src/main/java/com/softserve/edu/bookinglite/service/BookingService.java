@@ -43,7 +43,7 @@ public class BookingService {
 	@Transactional
 	public List<BookingDto> findAllBookingsDtoByUserId(Long user_id) {
 		List<BookingDto> listBookingDto = new ArrayList<>();
-		List<Booking> listBooking = bookingRepository.getAllByUserIdOrderByCheck_inDesc(user_id);
+		List<Booking> listBooking = bookingRepository.getAllByUserIdOrderByCheck_inAsc(user_id);
 		if (listBooking.size() > 0) {
 			for (Booking booking : listBooking	) {
 				BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
