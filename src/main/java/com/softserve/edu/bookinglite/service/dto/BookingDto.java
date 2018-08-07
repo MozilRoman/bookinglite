@@ -5,11 +5,7 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.BookingStatus;
-import com.softserve.edu.bookinglite.entity.Review;
-import com.softserve.edu.bookinglite.entity.User;
 
 public class BookingDto {
 

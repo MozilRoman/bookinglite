@@ -149,7 +149,7 @@ public class BookingService {
 
     public BigDecimal getPriceForPeriod(BigDecimal priceOneDay, Date checkIn, Date checkOut) {
     	BigDecimal priceForPeriod= new BigDecimal(BigInteger.ZERO,2);
-    	int diff=(int)( (checkIn.getTime() - checkOut.getTime()) / (1000 * 60 * 60 * 24));
+    	int diff=(int)( (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
     	priceOneDay= priceOneDay.multiply( new BigDecimal(diff));
     	return priceForPeriod.add(priceOneDay);
     }
