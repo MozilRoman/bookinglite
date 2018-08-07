@@ -11,13 +11,13 @@ import com.softserve.edu.bookinglite.entity.Property;
 
 @Repository
 public interface PropertyRepository extends JpaRepository<Property, Long> {
-
+	
 	public Property findByName(String name);
 
 	@Query("SELECT p from Property p where p.name = :name")
 	public List<Property> getPropertyByName(@Param("name") String name);
 
-	@Query("SELECT p FROM Property p JOIN p.address " + "a JOIN a.city c "
+	@Query("SELECT p FROM Property p JOIN p.address a JOIN a.city c "
 			+ "WHERE lower(c.name) = :name")
 	public List<Property> getAllPropertyByCityName(@Param("name") String name);
 

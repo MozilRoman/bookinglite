@@ -6,8 +6,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.softserve.edu.bookinglite.entity.Property;
@@ -28,7 +26,7 @@ public class PropertyService {
 		this.userService = userService;
 	}
 
-	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, readOnly = true)
+	@Transactional
 	public List<PropertyDto> getAllPropertyDtos() {
 		List<PropertyDto> propertyDtos = new ArrayList<>();
 		for (Property property : propertyRepository.findAll()) {
@@ -38,19 +36,19 @@ public class PropertyService {
 		return propertyDtos;
 	}
 
-	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.READ_COMMITTED,readOnly = true)
+	@Transactional
 	public Optional<Property> getPropertyById(Long id) {
 		return propertyRepository.findById(id);
 	}
 
-	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.READ_COMMITTED,readOnly = true)
+	@Transactional
 	public PropertyDto getPropertyDtoById(Long id) {
 		Optional<Property> property = getPropertyById(id);
 		return property.map(PropertyMapper
 				.instance::propertyToBasePropertyDtoWithApartmentAddressUser).orElse(null);
 	}
 
-	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.READ_COMMITTED,readOnly = true)
+	@Transactional
 	public List<PropertyDto> getPropertyDtosByCityName(String name) {
 		List<PropertyDto> propertyDtos = new ArrayList<>();
 		for (Property property : propertyRepository.getAllPropertyByCityName(name.toLowerCase())) {
@@ -61,7 +59,7 @@ public class PropertyService {
 		return propertyDtos;
 	}
 
-	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.READ_COMMITTED,readOnly = true)
+	@Transactional
    	public List<PropertyDto> getPropertyDtosByCountryName(String name) {
    		List<PropertyDto> propertyDtos = new ArrayList<>();
    		for (Property property : propertyRepository.getAllPropertyByCountryName(name.toLowerCase())) {

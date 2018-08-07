@@ -17,5 +17,4 @@ public interface ApartmentMapper {
     Set<Amenity> map(Set<Amenity> amenities);
     Amenity map(Amenity amenity);
     ApartmentType map(ApartmentType apartmentType);
-
 }

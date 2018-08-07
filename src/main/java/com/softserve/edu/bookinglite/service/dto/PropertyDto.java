@@ -80,16 +80,16 @@ public class PropertyDto {
 		this.contactEmail = contactEmail;
 	}
 
+	public PropertyType getPropertyType() {
+		return propertyType;
+	}
+
 	public UserDto getUser() {
 		return user;
 	}
 
 	public void setUser(UserDto user) {
 		this.user = user;
-	}
-
-	public PropertyType getPropertyType() {
-		return propertyType;
 	}
 
 	public void setPropertyType(PropertyType propertyType) {
