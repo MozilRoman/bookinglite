@@ -1,6 +1,5 @@
 package com.softserve.edu.bookinglite.controller;
 
-import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.service.PropertyService;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.dto.SearchDto;
@@ -35,11 +34,25 @@ public class PropertyController {
 		return propertyService.getPropertyDtoById(id);
 	}
 
+	@GetMapping("/property/city/{cityName}")
+	public List<PropertyDto> getPropertiesByCityName(@PathVariable("cityName") String cityName) {
+		return propertyService.getPropertyDtosByCityName(cityName);
+	}
+
+	@GetMapping("/property/country/{countryName}")
+	public List<PropertyDto> getPropertiesByCountryName(@PathVariable("countryName") String countryName) {
+		return propertyService.getPropertyDtosByCountryName(countryName);
+	}
+
 	@PostMapping("/property")
 	public ResponseEntity<PropertyDto> createProperty(@RequestBody PropertyDto propertyDto, Principal principal) {
 		Long userId = Long.parseLong(principal.getName());
-		propertyService.saveProperty(propertyDto, userId);
-		return new ResponseEntity<PropertyDto>(HttpStatus.CREATED);
+		if (propertyService.saveProperty(propertyDto, userId)) {
+			return new ResponseEntity<PropertyDto>(HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<PropertyDto>(HttpStatus.BAD_REQUEST);
+
+		}
 	}
 
 	@PutMapping("/property/{propertyId}")

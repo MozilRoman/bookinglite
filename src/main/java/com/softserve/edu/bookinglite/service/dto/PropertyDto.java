@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 
-//@JsonInclude(Include.NON_NULL)
 public class PropertyDto {
 	
 	private Long id;
@@ -80,8 +79,6 @@ public class PropertyDto {
 	public void setContactEmail(String contactEmail) {
 		this.contactEmail = contactEmail;
 	}
-
-	
 
 	public PropertyType getPropertyType() {
 		return propertyType;
