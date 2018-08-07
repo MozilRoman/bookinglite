@@ -55,10 +55,7 @@ public class BookingService {
 //if booking already exist it will return true
     @Transactional
 	public boolean checkBookingIfExistByChekInandCheckOut(Long apartment_id, Date checkIn, Date checkOut) {
-		if(bookingRepository.getBookingByCheck(apartment_id,setHourAndMinToDate(checkIn,17,0))==null &&
-				bookingRepository.getBookingByCheck(apartment_id,setHourAndMinToDate(checkOut,15,0))==null &&
-				bookingRepository.INcheckBookingsExistsByDateInAndDateOut(apartment_id,setHourAndMinToDate(checkIn,17,0),setHourAndMinToDate(checkOut,15,0))==null &&
-				bookingRepository.OUTcheckBookingsExistsByDateInAndDateOut(apartment_id,setHourAndMinToDate(checkIn,17,0),setHourAndMinToDate(checkOut,15,0))==null
+		if(bookingRepository.getBookingByCheck(apartment_id,setHourAndMinToDate(checkIn,17,0),setHourAndMinToDate(checkIn,17,0))==null &&
 				){
 		    return false;
         }
