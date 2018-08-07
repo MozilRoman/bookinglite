@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -77,8 +76,7 @@ public class PropertyController {
         searchDto.setCityId(cityId);
         searchDto.setCountryId(countryId);
         searchDto.setNumberOfGuests(numberOfGuests);
-		ArrayList<PropertyDto> result = new ArrayList<>();
-        propertyService.searchProperty(searchDto);
+		List<PropertyDto> result  = propertyService.searchProperty(searchDto);
         return result;
 	}
 }

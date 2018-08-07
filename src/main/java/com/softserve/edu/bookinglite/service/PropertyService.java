@@ -1,5 +1,7 @@
 package com.softserve.edu.bookinglite.service;
 
+import com.softserve.edu.bookinglite.entity.Apartment;
+import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
@@ -112,7 +114,34 @@ public class PropertyService {
 	@Transactional
 	public List<PropertyDto> searchProperty(SearchDto searchDto){
 		List<Property> properties = propertyRepository.getAllPropertyByCityId(2L);
-
-		return new ArrayList<>();
+		List<PropertyDto> result = new ArrayList<>();
+		Boolean conflictboookings = false;
+		Integer unbookableApartments = 0;
+		for(Property property : properties){
+			for(Apartment apartment:property.getApartments()){
+				if(apartment.getNumberOfGuests() < searchDto.getNumberOfGuests()){
+					unbookableApartments++;
+					continue;
+				}
+				for(Booking booking: apartment.getBookingList()){
+					if ((booking.getCheck_in().after(searchDto.getCheckIn())
+							&& booking.getCheck_out().before(searchDto.getCheckIn()))
+							|| (booking.getCheck_in().after(searchDto.getCheckOut())
+							&& booking.getCheck_out().before(searchDto.getCheckOut()) ))
+					{
+						conflictboookings = true;
+					}
+				}
+				if(conflictboookings){
+					conflictboookings=false;
+					unbookableApartments++;
+				}
+			}
+			if(property.getApartments().size() > unbookableApartments){
+				unbookableApartments = 0;
+				result.add(PropertyMapper.instance.propertyToBasePropertyDtoWithAddress(property));
+			}
+		}
+		return result;
 	}
 }

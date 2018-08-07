@@ -20,8 +20,7 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
             + "WHERE lower(c.name) = :name")
     public List<Property> getAllPropertyByCityName(@Param("name") String name);
 
-    @Query("SELECT p FROM Property p JOIN p.apartments a JOIN a.bookingList b JOIN p.address ad JOIN ad.city c "
-            + "WHERE c.id = ?1 and b.check_out > CURRENT_DATE")
+    @Query("SELECT p FROM Property p JOIN p.address ad JOIN ad.city c WHERE c.id = ?1")
     public List<Property> getAllPropertyByCityId(Long id);
 
 	@Query("SELECT p FROM Property p JOIN p.address "
