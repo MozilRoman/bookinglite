@@ -84,7 +84,7 @@ public class BookingService {
                 booking.setUser(user); }
             booking.setCheck_in(setHourAndMinToDate(createBookingDto.getCheck_in(),17,0));
             booking.setCheck_out(setHourAndMinToDate(createBookingDto.getCheck_out(),15,0));
-            booking.setTotal_price(getPriceForPeriod(apartmentService.findApartmentDtoById(apartment_id).getPrice(), //or we may initialize odj Apartment eager. We don`t must go to DB twice(line 75)
+            booking.setTotal_price(getPriceForPeriod(apartmentService.findApartmentDtoById(apartment_id).getPrice(), 
             		createBookingDto.getCheck_in(),createBookingDto.getCheck_out()));
             booking.setBookingstatus(bookingStatusRepository.findByName(RESERVED));
             Booking result = bookingRepository.save(booking);
@@ -146,17 +146,11 @@ public class BookingService {
 		calendar.set(Calendar.MINUTE,minuts);
 		return calendar.getTime();
 	}
-    
-    public int daysBetween(Date d1, Date d2){
-    	System.out.println("method day= "+ (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));//30.01- 2.02
-        return (int)( (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
-    }
+
     public BigDecimal getPriceForPeriod(BigDecimal priceOneDay, Date checkIn, Date checkOut) {
     	BigDecimal priceForPeriod= new BigDecimal(BigInteger.ZERO,2);
-    	System.out.println("priceOneDay= "+ priceOneDay);
-    	System.out.println("day= "+ daysBetween(checkIn, checkOut));
-    	priceOneDay= priceOneDay.multiply( new BigDecimal(daysBetween(checkIn, checkOut)));    
-    	System.out.println("priceOneDay= "+ priceOneDay.toString());
+    	int diff=(int)( (checkIn.getTime() - checkOut.getTime()) / (1000 * 60 * 60 * 24));
+    	priceOneDay= priceOneDay.multiply( new BigDecimal(diff));
     	return priceForPeriod.add(priceOneDay);
     }
 }
