@@ -15,17 +15,17 @@ public class BookingDto {
 
 	
 	private Long booking_id; 
-
+	@NotNull
 	private ApartmentDto apartmentDto;
-
+	@NotNull
 	private UserDto userDto;
-
+	@NotNull
 	private Date check_in;
-
+	@NotNull
 	private Date check_out;
-
+	@NotNull
 	private BigDecimal total_price;
-	
+	@NotNull
 	private BookingStatus bookingstatus;
 	
 	private ReviewDto reviewDto;

@@ -2,6 +2,8 @@ package com.softserve.edu.bookinglite.controller;
 
 import com.softserve.edu.bookinglite.service.BookingService;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
+import com.softserve.edu.bookinglite.service.dto.CreateBookingDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,7 @@ public class BookingController {
 	@GetMapping(value="/bookings")
 	public List<BookingDto> getAllBookingsDtoByUserId(Principal principal) {
     	Long user_id = Long.parseLong(principal.getName());
-		return bookingService.getAllBookingsDtoByUserId(user_id);
+		return bookingService.findAllBookingsDtoByUserId(user_id);
 	}
 	
 	@GetMapping(value="/guestarivals")
@@ -37,14 +39,14 @@ public class BookingController {
 	}
 	
 	@PostMapping(value="/booking/{apartment_id}")
-	public ResponseEntity<BookingDto> createBooking(@Valid @RequestBody BookingDto bookingDto, 
+	public ResponseEntity<CreateBookingDto> createBooking(@Valid @RequestBody CreateBookingDto createBookingDto, 
 			@PathVariable ("apartment_id") Long apartment_id,
 			Principal principal) {		 		
 		 Long userId = Long.parseLong(principal.getName());						 
-		 if(bookingService.createBooking(bookingDto, userId, apartment_id)) {
-				return new ResponseEntity<BookingDto>(HttpStatus.CREATED);
+		 if(bookingService.createBooking(createBookingDto, userId, apartment_id)) {
+				return new ResponseEntity<CreateBookingDto>(HttpStatus.CREATED);
 			}else {
-				return new ResponseEntity<BookingDto>(HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<CreateBookingDto>(HttpStatus.BAD_REQUEST);
 	              }
 	}
 	
