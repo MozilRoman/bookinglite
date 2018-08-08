@@ -57,3 +57,6 @@ pom.xml.tag
 
 #Ignore META-INF 
 */META-INF/*
+
+#Ignore file mapstruct
+*.factorypath
