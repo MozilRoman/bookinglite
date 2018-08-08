@@ -7,9 +7,9 @@ import javax.validation.constraints.NotNull;
 public class CreateBookingDto {
 
 	@NotNull
-	private Date check_in;
+	private Date checkIn;
 	@NotNull
-	private Date check_out;
+	private Date checkOut;
 	@NotNull
 	private int numberOfGuests;
 	
@@ -17,20 +17,20 @@ public class CreateBookingDto {
 		
 	}
 
-	public Date getCheck_in() {
-		return check_in;
+	public Date getCheckIn() {
+		return checkIn;
 	}
 
-	public void setCheck_in(Date check_in) {
-		this.check_in = check_in;
+	public void setCheckIn(Date checkIn) {
+		this.checkIn = checkIn;
 	}
 
-	public Date getCheck_out() {
-		return check_out;
+	public Date getCheckOut() {
+		return checkOut;
 	}
 
-	public void setCheck_out(Date check_out) {
-		this.check_out = check_out;
+	public void setCheckOut(Date checkOut) {
+		this.checkOut = checkOut;
 	}
 
 	public int getNumberOfGuests() {

@@ -26,24 +26,29 @@ public class BookingController {
         this.bookingService = bookingService;
      }
 	
+    @GetMapping(value="/booking/{bookingId}")
+	public BookingDto getBookingById(@PathVariable ("bookingId") Long bookingId ) {
+		return bookingService.findBookinDTOById(bookingId);
+	}
+    
 	@GetMapping(value="/bookings")
 	public List<BookingDto> getAllBookingsDtoByUserId(Principal principal) {
-    	Long user_id = Long.parseLong(principal.getName());
-		return bookingService.findAllBookingsDtoByUserId(user_id);
+    	Long userId = Long.parseLong(principal.getName());
+		return bookingService.findAllBookingsDtoByUserId(userId);
 	}
 	
 	@GetMapping(value="/guestarivals")
 	public List<BookingDto> getAllBookingsDtoByOwnerId(Principal principal) {
-		Long user_id = Long.parseLong(principal.getName());
-		return bookingService.getAllBookingsDtoByOwnerId(user_id);
+		Long userId = Long.parseLong(principal.getName());
+		return bookingService.getAllBookingsDtoByOwnerId(userId);
 	}
 	
-	@PostMapping(value="/booking/{apartment_id}")
+	@PostMapping(value="/booking/{apartmentId}")
 	public ResponseEntity<CreateBookingDto> createBooking(@Valid @RequestBody CreateBookingDto createBookingDto, 
-			@PathVariable ("apartment_id") Long apartment_id,
+			@PathVariable ("apartmentId") Long apartmentId,
 			Principal principal) {		 		
 		 Long userId = Long.parseLong(principal.getName());						 
-		 if(bookingService.createBooking(createBookingDto, userId, apartment_id)) {
+		 if(bookingService.createBooking(createBookingDto, userId, apartmentId)) {
 				return new ResponseEntity<CreateBookingDto>(HttpStatus.CREATED);
 			}else {
 				return new ResponseEntity<CreateBookingDto>(HttpStatus.BAD_REQUEST);

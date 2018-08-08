@@ -20,7 +20,7 @@ public interface BookingMapper {
     BookingMapper instance = Mappers.getMapper(BookingMapper.class);
     
     @Mappings({
-    	@Mapping(target="booking_id", source="booking.id"),
+    	@Mapping(target="bookingId", source="booking.id"),
         @Mapping(target="apartmentDto", source="booking.apartment"),
         @Mapping(target="userDto", source="booking.user"),
     	@Mapping(target="reviewDto", source="booking.review")
