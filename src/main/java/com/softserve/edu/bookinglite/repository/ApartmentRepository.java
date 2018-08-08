@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.softserve.edu.bookinglite.entity.Apartment;
 @Repository
 public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
+
 }
