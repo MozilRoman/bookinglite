@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.softserve.edu.bookinglite.exception.ApartmentNotFoundException;
+import com.softserve.edu.bookinglite.exception.PropertyNotFoundExceprion;
 import com.softserve.edu.bookinglite.service.ApartmentService;
 import com.softserve.edu.bookinglite.service.dto.ApartmentDto;
 
@@ -31,18 +33,19 @@ public class ApartmentController {
 	}
 
 	@GetMapping("/property/{id}/apartment")
-	public List<ApartmentDto> getAllPropertiesApartment(@PathVariable("id") Long propertyId) {
+	public List<ApartmentDto> getAllPropertiesApartment(@PathVariable("id") Long propertyId)
+			throws PropertyNotFoundExceprion {
 		return apartmentService.findAllApartmentsByPropertyId(propertyId);
 	}
 
 	@GetMapping("/apartment/{id}")
-	public ApartmentDto getApartment(@PathVariable("id") Long apartmentId) {
+	public ApartmentDto getApartment(@PathVariable("id") Long apartmentId) throws ApartmentNotFoundException {
 		return apartmentService.findApartmentDtoById(apartmentId);
 	}
 
 	@PostMapping("/property/{id}/apartment")
 	public ResponseEntity<Void> saveApartment(@Valid @RequestBody ApartmentDto apartmentDto,
-			@PathVariable("id") Long propertyId, Principal principal) {
+			@PathVariable("id") Long propertyId, Principal principal) throws PropertyNotFoundExceprion {
 		Long userId = Long.parseLong(principal.getName());
 		if (apartmentService.saveApartment(apartmentDto, propertyId, userId)) {
 			return new ResponseEntity<Void>(HttpStatus.CREATED);
@@ -53,7 +56,7 @@ public class ApartmentController {
 
 	@PutMapping("/apartment/{id}")
 	public ResponseEntity<Void> update(@Valid @RequestBody ApartmentDto apartmentDto,
-			@PathVariable("id") Long apartmentId, Principal principal) {
+			@PathVariable("id") Long apartmentId, Principal principal) throws ApartmentNotFoundException {
 		Long userId = Long.parseLong(principal.getName());
 		if (apartmentService.updateApartment(apartmentDto, apartmentId, userId)) {
 			return new ResponseEntity<Void>(HttpStatus.OK);

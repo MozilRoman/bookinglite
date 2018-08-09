@@ -44,7 +44,7 @@ public class PropertyController {
 	}
 
 	@GetMapping("/property/{propertyId}")
-	public PropertyDto getPropertyById(@PathVariable("propertyId") Long id) {
+	public PropertyDto getPropertyById(@PathVariable("propertyId") Long id) throws PropertyNotFoundExceprion {
 		return propertyService.getPropertyDtoById(id);
 	}
 

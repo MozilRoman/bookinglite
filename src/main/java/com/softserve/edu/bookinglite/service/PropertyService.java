@@ -48,9 +48,10 @@ public class PropertyService {
 	}
 
 	@Transactional
-	public PropertyDto getPropertyDtoById(Long id) {
+	public PropertyDto getPropertyDtoById(Long id) throws PropertyNotFoundExceprion {
 		Optional<Property> property = getPropertyById(id);
-		return property.map(PropertyMapper.instance::propertyToBasePropertyDtoWithApartmentAddressUser).orElse(null);
+		return property.map(PropertyMapper.instance::propertyToBasePropertyDtoWithApartmentAddressUser)
+				.orElseThrow(() -> new PropertyNotFoundExceprion(id));
 	}
 
 	@Transactional
@@ -72,7 +73,6 @@ public class PropertyService {
 		}
 		return propertyDtos;
 	}
-
 	@Transactional
 	public boolean saveProperty(PropertyDto propertyDto, Long userId) {
 		Property property = propertyRepository.save(convertToProperty(propertyDto, userId));
@@ -97,7 +97,6 @@ public class PropertyService {
 	}
 
 	@Transactional
-
 	public boolean updateProperty(PropertyDto propertyDto, Long propertyId) throws PropertyNotFoundExceprion {
 		if (propertyDto != null) {
 			Property property = null;
@@ -147,10 +146,10 @@ public class PropertyService {
 		}
 		return result;
 	}
+
 	@Transactional
-	public Page<Property> fingPropertyByPage(int page, int size){
-		return propertyRepository.findAll(PageRequest
-				.of(page, size));
-		
+	public Page<Property> fingPropertyByPage(int page, int size) {
+		return propertyRepository.findAll(PageRequest.of(page, size));
+
 	}
 }
