@@ -31,7 +31,7 @@ public interface PropertyMapper {
 	
 	@Mappings({@Mapping(target = "apartments",ignore = true),
         @Mapping(target = "user",ignore = true)})
-	PropertyDto propertyToBasePropertyDtoWithAddress(Property property);
+	public abstract PropertyDto propertyToBasePropertyDtoWithAddress(Property property);
 	
 	
 	@Mappings({@Mapping(target = "apartments",ignore = true),
@@ -43,6 +43,8 @@ public interface PropertyMapper {
 	
 	
 	PropertyDto propertyToBasePropertyDtoWithApartmentAddressUser(Property property);
+	
+	
 	
 	List<ApartmentDto> map(List<ApartmentDto> apartments);
     default ApartmentDto map(Apartment apartment) {

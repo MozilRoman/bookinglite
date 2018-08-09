@@ -42,7 +42,7 @@ public class Property {
 	@JoinColumn(name = "property_type_id",nullable = false)
 	private PropertyType propertyType;
 
-	@ManyToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+	@ManyToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST}, fetch = FetchType.LAZY)
 	@JoinColumn(name = "address_id",nullable = false)
 	private Address address;
 
