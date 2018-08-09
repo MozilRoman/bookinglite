@@ -1,28 +1,28 @@
 package com.softserve.edu.bookinglite.service;
 
-import com.softserve.edu.bookinglite.entity.Apartment;
-import com.softserve.edu.bookinglite.entity.Booking;
-import com.softserve.edu.bookinglite.entity.Property;
-import com.softserve.edu.bookinglite.entity.User;
-import com.softserve.edu.bookinglite.repository.PropertyRepository;
-import com.softserve.edu.bookinglite.service.dto.PropertyDto;
-import com.softserve.edu.bookinglite.service.dto.SearchDto;
-import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.softserve.edu.bookinglite.entity.Apartment;
+import com.softserve.edu.bookinglite.entity.Booking;
+import com.softserve.edu.bookinglite.entity.Property;
+import com.softserve.edu.bookinglite.entity.User;
+import com.softserve.edu.bookinglite.exception.PropertyNotFoundExceprion;
+import com.softserve.edu.bookinglite.repository.PropertyRepository;
+import com.softserve.edu.bookinglite.service.dto.PropertyDto;
+import com.softserve.edu.bookinglite.service.dto.SearchDto;
+import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
+
 @Service
 public class PropertyService {
 
-	private final PropertyRepository propertyRepository;
-	private final UserService userService;
+	private PropertyRepository propertyRepository;
+	private UserService userService;
 
 	@Autowired
 	public PropertyService(PropertyRepository propertyRepository, UserService userService) {
@@ -48,31 +48,28 @@ public class PropertyService {
 	@Transactional
 	public PropertyDto getPropertyDtoById(Long id) {
 		Optional<Property> property = getPropertyById(id);
-		return property.map(PropertyMapper
-				.instance::propertyToBasePropertyDtoWithApartmentAddressUser).orElse(null);
+		return property.map(PropertyMapper.instance::propertyToBasePropertyDtoWithApartmentAddressUser).orElse(null);
 	}
 
 	@Transactional
 	public List<PropertyDto> getPropertyDtosByCityName(String name) {
 		List<PropertyDto> propertyDtos = new ArrayList<>();
 		for (Property property : propertyRepository.getAllPropertyByCityName(name.toLowerCase())) {
-			PropertyDto dto = PropertyMapper.instance
-					.propertyToBasePropertyDtoWithApartmentAddressUser(property);
+			PropertyDto dto = PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(property);
 			propertyDtos.add(dto);
 		}
 		return propertyDtos;
 	}
 
 	@Transactional
-   	public List<PropertyDto> getPropertyDtosByCountryName(String name) {
-   		List<PropertyDto> propertyDtos = new ArrayList<>();
-   		for (Property property : propertyRepository.getAllPropertyByCountryName(name.toLowerCase())) {
-   			PropertyDto dto = PropertyMapper.instance
-   					.propertyToBasePropertyDtoWithApartmentAddressUser(property);
-   			propertyDtos.add(dto);
-   		}
-   		return propertyDtos;
-   	}
+	public List<PropertyDto> getPropertyDtosByCountryName(String name) {
+		List<PropertyDto> propertyDtos = new ArrayList<>();
+		for (Property property : propertyRepository.getAllPropertyByCountryName(name.toLowerCase())) {
+			PropertyDto dto = PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(property);
+			propertyDtos.add(dto);
+		}
+		return propertyDtos;
+	}
 
 	@Transactional
 	public boolean saveProperty(PropertyDto propertyDto, Long userId) {
@@ -98,9 +95,12 @@ public class PropertyService {
 	}
 
 	@Transactional
-	public boolean updateProperty(PropertyDto propertyDto, Long propertyId) {
+
+	public boolean updateProperty(PropertyDto propertyDto, Long propertyId) throws PropertyNotFoundExceprion {
 		if (propertyDto != null) {
-			Property property = propertyRepository.findById(propertyId).get();
+			Property property = null;
+			property = propertyRepository.findById(propertyId)
+					.orElseThrow(() -> new PropertyNotFoundExceprion(propertyId));
 			property.setName(propertyDto.getName());
 			property.setDescription(propertyDto.getDescription());
 			property.setPhoneNumber(propertyDto.getPhoneNumber());
@@ -114,32 +114,31 @@ public class PropertyService {
 	}
 
 	@Transactional
-	public List<PropertyDto> searchProperty(SearchDto searchDto){
+	public List<PropertyDto> searchProperty(SearchDto searchDto) {
 		List<Property> properties = propertyRepository.getAllPropertyByCityId(2L);
 		List<PropertyDto> result = new ArrayList<>();
 		Boolean conflictboookings = false;
 		Integer unbookableApartments = 0;
-		for(Property property : properties){
-			for(Apartment apartment:property.getApartments()){
-				if(apartment.getNumberOfGuests() < searchDto.getNumberOfGuests()){
+		for (Property property : properties) {
+			for (Apartment apartment : property.getApartments()) {
+				if (apartment.getNumberOfGuests() < searchDto.getNumberOfGuests()) {
 					unbookableApartments++;
 					continue;
 				}
-				for(Booking booking: apartment.getBookingList()){
+				for (Booking booking : apartment.getBookingList()) {
 					if ((booking.getCheck_in().after(searchDto.getCheckIn())
 							&& booking.getCheck_out().before(searchDto.getCheckIn()))
 							|| (booking.getCheck_in().after(searchDto.getCheckOut())
-							&& booking.getCheck_out().before(searchDto.getCheckOut()) ))
-					{
+									&& booking.getCheck_out().before(searchDto.getCheckOut()))) {
 						conflictboookings = true;
 					}
 				}
-				if(conflictboookings){
-					conflictboookings=false;
+				if (conflictboookings) {
+					conflictboookings = false;
 					unbookableApartments++;
 				}
 			}
-			if(property.getApartments().size() > unbookableApartments){
+			if (property.getApartments().size() > unbookableApartments) {
 				unbookableApartments = 0;
 				result.add(PropertyMapper.instance.propertyToBasePropertyDtoWithAddress(property));
 			}

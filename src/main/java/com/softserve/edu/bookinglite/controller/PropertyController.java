@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.softserve.edu.bookinglite.exception.PropertyNotFoundExceprion;
 import com.softserve.edu.bookinglite.service.PropertyService;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.dto.SearchDto;
@@ -52,7 +55,7 @@ public class PropertyController {
 	}
 
 	@PostMapping("/property")
-	public ResponseEntity<PropertyDto> createProperty(@RequestBody PropertyDto propertyDto, Principal principal) {
+	public ResponseEntity<PropertyDto> createProperty(@Valid @RequestBody PropertyDto propertyDto, Principal principal) {
 		Long userId = Long.parseLong(principal.getName());
 		if (propertyService.saveProperty(propertyDto, userId)) {
 			return new ResponseEntity<PropertyDto>(HttpStatus.CREATED);
@@ -64,7 +67,7 @@ public class PropertyController {
 
 	@PutMapping("/property/{propertyId}")
 	public ResponseEntity<PropertyDto> update(@RequestBody PropertyDto propertyDto,
-			@PathVariable("propertyId") Long id) {
+			@PathVariable("propertyId") Long id) throws PropertyNotFoundExceprion  {
 		if (propertyService.updateProperty(propertyDto, id)) {
 			return new ResponseEntity<PropertyDto>(HttpStatus.OK);
 		} else {
