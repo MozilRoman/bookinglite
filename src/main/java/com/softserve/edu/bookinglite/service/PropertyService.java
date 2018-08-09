@@ -21,8 +21,8 @@ import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
 @Service
 public class PropertyService {
 
-	private PropertyRepository propertyRepository;
-	private UserService userService;
+	private final PropertyRepository propertyRepository;
+	private final UserService userService;
 
 	@Autowired
 	public PropertyService(PropertyRepository propertyRepository, UserService userService) {
