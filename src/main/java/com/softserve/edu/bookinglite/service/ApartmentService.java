@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.Property;
-import com.softserve.edu.bookinglite.exception.ApartmentNotFoundException;
-import com.softserve.edu.bookinglite.exception.PropertyNotFoundExceprion;
 import com.softserve.edu.bookinglite.repository.ApartmentRepository;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.service.dto.ApartmentDto;
@@ -31,7 +29,7 @@ public class ApartmentService {
 	private List<Apartment> findAllApartments() {
 		return apartmentRepository.findAll();
 	}
-
+	
 	public List<ApartmentDto> findAllApartmentDtos() {
 		List<ApartmentDto> allApartmentsDto = new ArrayList<>();
 		for (Apartment apartment : findAllApartments()) {
@@ -41,48 +39,38 @@ public class ApartmentService {
 		return allApartmentsDto;
 	}
 
-	public List<ApartmentDto> findAllApartmentsByPropertyId(Long propertyId) throws PropertyNotFoundExceprion {
-		Optional<Property> property = propertyRepository.findById(propertyId);
-		if (property.isPresent()) {
-			List<ApartmentDto> apartmentDtos = new ArrayList<>();
-			for (Apartment apartment : property.get().getApartments()) {
-				ApartmentDto apartmentDto = ApartmentMapper.instance.toDto(apartment);
-				apartmentDtos.add(apartmentDto);
-			}
-			return apartmentDtos;
-		} else {
-			property.orElseThrow(() -> new PropertyNotFoundExceprion(propertyId));
+	public List<ApartmentDto> findAllApartmentsByPropertyId(Long propertyId) {
+		Property property = propertyRepository.findById(propertyId).get();
+		List<ApartmentDto> apartmentDtos = new ArrayList<>();
+		for (Apartment apartment : property.getApartments()) {
+			ApartmentDto apartmentDto = ApartmentMapper.instance.toDto(apartment);
+			apartmentDtos.add(apartmentDto);
 		}
-		return null;
+		return apartmentDtos;
 	}
 
-	public ApartmentDto findApartmentDtoById(Long id) throws ApartmentNotFoundException {
+	public ApartmentDto findApartmentDtoById(Long id) {
 		Optional<Apartment> apartment = apartmentRepository.findById(id);
-		return apartment.map(ApartmentMapper.instance::toDto).orElseThrow(() -> new ApartmentNotFoundException(id));
-
+		return apartment.map(ApartmentMapper.instance::toDto).orElse(null);
 	}
 
-	public boolean saveApartment(ApartmentDto apartmentDto, Long propertyId, Long userId)
-			throws PropertyNotFoundExceprion {
-		Optional<Property> property = propertyRepository.findById(propertyId);
-			if (property.isPresent() && property.get().getUser().getId().equals(userId)) {
-				Apartment apartment = new Apartment();
-				apartment.setName(apartmentDto.getName());
-				apartment.setPrice(apartmentDto.getPrice());
-				apartment.setNumberOfGuests(apartmentDto.getNumberOfGuests());
-				apartment.setApartmentType(apartmentDto.getApartmentType());
-				apartment.setAmenities(apartmentDto.getAmenities());
-				apartment.setProperty(property.get());
-				apartmentRepository.save(apartment);
+	public boolean saveApartment(ApartmentDto apartmentDto, Long propertyId, Long userId) {
+		Property property = propertyRepository.findById(propertyId).get();
+		if (property.getUser().getId().equals(userId)) {
+			Apartment apartment = new Apartment();
+			apartment.setName(apartmentDto.getName());
+			apartment.setPrice(apartmentDto.getPrice());
+			apartment.setNumberOfGuests(apartmentDto.getNumberOfGuests());
+			apartment.setApartmentType(apartmentDto.getApartmentType());
+			apartment.setAmenities(apartmentDto.getAmenities());
+			apartment.setProperty(property);
+			apartmentRepository.save(apartment);
 			return true;
-		} else {
-			property.orElseThrow(() -> new PropertyNotFoundExceprion(propertyId));
-			return false;
 		}
+		return false;
 	}
-	
-	public boolean updateApartment(ApartmentDto apartmentDto, Long apartmentId, Long userId)
-			throws ApartmentNotFoundException {
+
+	public boolean updateApartment(ApartmentDto apartmentDto, Long apartmentId, Long userId) {
 		Optional<Apartment> apartment = apartmentRepository.findById(apartmentId);
 		if (apartment.isPresent() && apartment.get().getProperty().getUser().getId().equals(userId)) {
 			apartment.get().setName(apartmentDto.getName());
@@ -92,11 +80,8 @@ public class ApartmentService {
 			apartment.get().setAmenities(apartmentDto.getAmenities());
 			apartmentRepository.save(apartment.get());
 			return true;
-		} else {
-			apartment.orElseThrow(() -> new ApartmentNotFoundException(apartmentId));
-			return false;
 		}
-
+		return false;
 	}
 
 }

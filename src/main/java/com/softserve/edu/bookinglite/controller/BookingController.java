@@ -1,6 +1,5 @@
 package com.softserve.edu.bookinglite.controller;
 
-import com.softserve.edu.bookinglite.exception.ApartmentNotFoundException;
 import com.softserve.edu.bookinglite.service.BookingService;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,7 @@ public class BookingController {
 	@PostMapping(value="/booking/{apartment_id}")
 	public ResponseEntity<BookingDto> createBooking(@Valid @RequestBody BookingDto bookingDto, 
 			@PathVariable ("apartment_id") Long apartment_id,
-			Principal principal) throws ApartmentNotFoundException {		 		
+			Principal principal) {		 		
 		 Long userId = Long.parseLong(principal.getName());						 
 		 if(bookingService.createBooking(bookingDto, userId, apartment_id)) {
 				return new ResponseEntity<BookingDto>(HttpStatus.CREATED);
@@ -60,4 +59,3 @@ public class BookingController {
 	}
 	
 }
-

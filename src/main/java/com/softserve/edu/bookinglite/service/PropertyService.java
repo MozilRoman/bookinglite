@@ -30,6 +30,8 @@ public class PropertyService {
 	public PropertyService(PropertyRepository propertyRepository, UserService userService) {
 		this.propertyRepository = propertyRepository;
 		this.userService = userService;
+		String name = Thread.currentThread().getName();
+		System.out.println("++++++++++++" + name + "+++++++++++++" + this.getClass());
 	}
 
 	@Transactional
@@ -150,6 +152,5 @@ public class PropertyService {
 	@Transactional
 	public Page<Property> fingPropertyByPage(int page, int size) {
 		return propertyRepository.findAll(PageRequest.of(page, size));
-
 	}
 }

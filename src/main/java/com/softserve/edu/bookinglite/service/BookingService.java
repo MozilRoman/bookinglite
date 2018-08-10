@@ -4,7 +4,6 @@ package com.softserve.edu.bookinglite.service;
 import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.User;
-import com.softserve.edu.bookinglite.exception.ApartmentNotFoundException;
 import com.softserve.edu.bookinglite.repository.BookingRepository;
 import com.softserve.edu.bookinglite.repository.BookingStatusRepository;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
@@ -64,7 +63,7 @@ public class BookingService {
 	}
 
 	@Transactional
-	public boolean createBooking(BookingDto bookingDto, Long user_id, Long apartment_id) throws ApartmentNotFoundException {
+	public boolean createBooking(BookingDto bookingDto, Long user_id, Long apartment_id) {
 		if(checkValidationDate (bookingDto)==false || 
 				bookingDto.getApartmentDto().getNumberOfGuests() > apartmentService.findApartmentDtoById(apartment_id).getNumberOfGuests()){
 			return false;
