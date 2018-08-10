@@ -4,6 +4,12 @@ package com.softserve.edu.bookinglite.service;
 import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.User;
+import com.softserve.edu.bookinglite.exception.ApartmentNotFoundException;
+import com.softserve.edu.bookinglite.exception.BookingNotFoundException;
+import com.softserve.edu.bookinglite.exception.BookingOwnerNotFoundException;
+import com.softserve.edu.bookinglite.exception.ExistingBookingException;
+import com.softserve.edu.bookinglite.exception.InvalidDataException;
+import com.softserve.edu.bookinglite.repository.ApartmentRepository;
 import com.softserve.edu.bookinglite.repository.BookingRepository;
 import com.softserve.edu.bookinglite.repository.BookingStatusRepository;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
@@ -12,6 +18,8 @@ import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
 import com.softserve.edu.bookinglite.util.DateUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,30 +36,29 @@ public class BookingService {
 	private final int HOUR_CHECK_OUT= 15;
 	private final int MINUTE_CHECK_IN_AND_CHECK_OUT= 0;
 
+
 	private final BookingRepository bookingRepository;
-	private final ApartmentService apartmentService;
-	private final UserService userService;
 	private final BookingStatusRepository bookingStatusRepository;
+	private final ApartmentRepository apartmentRepository;
 
 	@Autowired
 	public BookingService(BookingRepository bookingRepository,
-						  ApartmentService apartmentService,
-						  UserService userService,
-						  BookingStatusRepository bookingStatusRepository
+						  BookingStatusRepository bookingStatusRepository,
+						  ApartmentRepository apartmentRepository
 	) {
 		this.bookingRepository = bookingRepository;
-		this.apartmentService = apartmentService;
-		this.userService = userService;
 		this.bookingStatusRepository = bookingStatusRepository;
+		this.apartmentRepository = apartmentRepository;
 	}
 
+
 	@Transactional
-	public BookingDto findBookinDTOById(Long id) { 
-		Optional<Booking> booking = bookingRepository.findById(id);
-		return booking.map(BookingMapper.instance::bookingToBaseBookingDto).orElse(null);
+	public BookingDto findBookinDTOById(Long bookingId) throws BookingNotFoundException{ 
+		Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new BookingNotFoundException(bookingId)); 
+		return BookingMapper.instance.bookingToBaseBookingDto(booking);
 	}
 	
-	@Transactional//TODO spring pageable
+	@Transactional
 	public List<BookingDto> findAllBookingsDtoByUserId(Long userId) {
 		List<BookingDto> listBookingDto = new ArrayList<>();
 		List<Booking> listBooking = bookingRepository.getAllByUserIdOrderByCheckInAsc(userId);
@@ -63,6 +70,23 @@ public class BookingService {
 		}
 		return listBookingDto;
 	}
+	
+	@Transactional
+	public List<BookingDto> getAllBookingsDtoByOwnerId(Long idUserOwner) throws BookingOwnerNotFoundException{
+    	List<BookingDto> listBookingDto = new ArrayList<>();
+		List<Booking> listBooking = bookingRepository.getAllBookingsByOwnerId(idUserOwner);
+		if (!listBooking.isEmpty()) {
+			for (Booking booking : listBooking	) {
+				BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
+				listBookingDto.add(bookingDto);				
+			}
+		}
+		else {
+			throw new BookingOwnerNotFoundException();
+		}
+		return listBookingDto;
+	}
+	
 //if booking already exist it will return true
 	@Transactional
 	public boolean checkBookingIfExistByChekInandCheckOut(Long apartmentId, Date checkIn, Date checkOut) {
@@ -77,42 +101,42 @@ public class BookingService {
 	}
 
 	@Transactional
-	public boolean createBooking(CreateBookingDto createBookingDto, Long userId, Long apartmentId) {
+	public boolean createBooking(CreateBookingDto createBookingDto, Long userId, Long apartmentId) 
+			throws ApartmentNotFoundException, InvalidDataException, ExistingBookingException {
+		Apartment apartment= apartmentRepository.findById(apartmentId)
+				.orElseThrow(() -> new ApartmentNotFoundException(apartmentId));
+		
 		if(checkValidationDate (createBookingDto)==false || 
-				createBookingDto.getNumberOfGuests() > apartmentService.findApartmentDtoById(apartmentId).getNumberOfGuests()){
-			return false;
+				createBookingDto.getNumberOfGuests() > apartment.getNumberOfGuests()){
+			throw new InvalidDataException();
   		}
+		
 		if (checkBookingIfExistByChekInandCheckOut(apartmentId,createBookingDto.getCheckIn(),createBookingDto.getCheckOut())==false) {
             Booking booking = new Booking();
-            if (apartmentService.findApartmentDtoById(apartmentId) != null) {
-                Apartment apartment = new Apartment();
-                apartment.setId(apartmentId);
-                booking.setApartment(apartment);
-            }
-            if (userService.findById(userId) != null) {
-                User user = new User();
-                user.setId(userId);
-                booking.setUser(user); 
-                }
+            booking.setApartment(apartment);
+            User user = new User();
+            user.setId(userId);
+            booking.setUser(user); 
             booking.setCheckIn(DateUtil.setHourAndMinToDate(createBookingDto.getCheckIn(),HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT));
             booking.setCheckOut(DateUtil.setHourAndMinToDate(createBookingDto.getCheckOut(),HOUR_CHECK_OUT,MINUTE_CHECK_IN_AND_CHECK_OUT));
-            booking.setTotalPrice(getPriceForPeriod(apartmentService.findApartmentDtoById(apartmentId).getPrice(),
+            booking.setTotalPrice(getPriceForPeriod(apartment.getPrice(),
             		createBookingDto.getCheckIn(),createBookingDto.getCheckOut()));
             booking.setBookingStatus(bookingStatusRepository.findByName(RESERVED));
-            Booking result = bookingRepository.save(booking);
+            Booking result = bookingRepository.save(booking); //throw BookingDontSaveException????
             if (result != null){
                 return true;
             }
             else return false;
   		}
   		else {
-            return false;
+            throw new ExistingBookingException();
         }
 	}
 	
 	@Transactional
-    public boolean cancelBooking(Long id){
-		Booking booking = bookingRepository.findById(id).get();
+    public boolean cancelBooking(Long bookingId) throws BookingNotFoundException {
+		Booking booking = bookingRepository.findById(bookingId)
+				.orElseThrow(() -> new BookingNotFoundException(bookingId)); 
 		if( booking.getCheckIn().after(new Date())   ) {
 			booking.setBookingStatus(bookingStatusRepository.findByName(CANCELED));
 			return true;   
@@ -124,19 +148,7 @@ public class BookingService {
 		}
 		else return false;        		  	       	 	  	    	    		
     }
-    @Transactional
-	public List<BookingDto> getAllBookingsDtoByOwnerId(Long idUserOwner){
-    	List<BookingDto> listBookingDto = new ArrayList<>();
-		List<Booking> listBooking = bookingRepository.getAllBookingsByOwnerId(idUserOwner);
-		if (!listBooking.isEmpty()) {
-			for (Booking booking : listBooking	) {
-				BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
-				listBookingDto.add(bookingDto);				
-			}
-		}
-		return listBookingDto;
-	}
-
+    
     private boolean checkValidationDate (CreateBookingDto bookingDto){
     	boolean isValid= true;
     	

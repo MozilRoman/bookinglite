@@ -1,6 +1,10 @@
 package com.softserve.edu.bookinglite.repository;
 
 import com.softserve.edu.bookinglite.entity.Apartment;
+
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -30,3 +34,5 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
         "where p.user.id=?1 and b.bookingStatus.name!='Canceled' order by b.checkIn desc ")
     List<Booking> getAllBookingsByOwnerId(Long idOwnerUser);
 }
+
+	
