@@ -30,8 +30,6 @@ public class PropertyService {
 	public PropertyService(PropertyRepository propertyRepository, UserService userService) {
 		this.propertyRepository = propertyRepository;
 		this.userService = userService;
-		String name = Thread.currentThread().getName();
-		System.out.println("++++++++++++" + name + "+++++++++++++" + this.getClass());
 	}
 
 	@Transactional

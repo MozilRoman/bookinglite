@@ -36,8 +36,6 @@ public class PropertyController {
 	@Autowired
 	public PropertyController(PropertyService propertyService) {
 		this.propertyService = propertyService;
-		String name = Thread.currentThread().getName();
-		System.out.println("++++++++++++" + name + "+++++++++++++" + this.getClass());
 	}
 
 	@GetMapping("/property")
@@ -46,13 +44,8 @@ public class PropertyController {
 	}
 
 	@GetMapping("/property/{propertyId}")
-	public PropertyDto getPropertyById(@PathVariable("propertyId") Long id) {
-		try {
+	public PropertyDto getPropertyById(@PathVariable("propertyId") Long id) throws PropertyNotFoundExceprion {
 			return propertyService.getPropertyDtoById(id);
-		} catch (PropertyNotFoundExceprion e) {
-			e.getMessage();
-			return null;
-		}
 	}
 
 	@GetMapping("/property/city/{cityName}")
