@@ -59,4 +59,4 @@ pom.xml.tag
 */META-INF/*
 
 #Ignore file mapstruct
-*.factorypath
+.factorypath
