@@ -7,8 +7,8 @@ import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.exception.ApartmentNotFoundException;
 import com.softserve.edu.bookinglite.exception.BookingCancelException;
 import com.softserve.edu.bookinglite.exception.BookingNotFoundException;
-import com.softserve.edu.bookinglite.exception.ExistingBookingException;
-import com.softserve.edu.bookinglite.exception.InvalidDataException;
+import com.softserve.edu.bookinglite.exception.BookingExistingException;
+import com.softserve.edu.bookinglite.exception.BookingInvalidDataException;
 import com.softserve.edu.bookinglite.repository.ApartmentRepository;
 import com.softserve.edu.bookinglite.repository.BookingRepository;
 import com.softserve.edu.bookinglite.repository.BookingStatusRepository;
@@ -125,13 +125,13 @@ public class BookingService {
 
 	@Transactional
 	public boolean createBooking(CreateBookingDto createBookingDto, Long userId, Long apartmentId) 
-			throws ApartmentNotFoundException, InvalidDataException, ExistingBookingException {
+			throws ApartmentNotFoundException, BookingInvalidDataException, BookingExistingException {
 		Apartment apartment= apartmentRepository.findById(apartmentId)
 				.orElseThrow(() -> new ApartmentNotFoundException(apartmentId));
 		
 		if(checkValidationDate (createBookingDto)==false || 
 				createBookingDto.getNumberOfGuests() > apartment.getNumberOfGuests()){
-			throw new InvalidDataException();
+			throw new BookingInvalidDataException();
   		}
 		
 		if (checkBookingIfExistByChekInandCheckOut(apartmentId,createBookingDto.getCheckIn(),createBookingDto.getCheckOut())==false) {
@@ -152,7 +152,7 @@ public class BookingService {
             else return false;
   		}
   		else {
-            throw new ExistingBookingException();
+            throw new BookingExistingException();
         }
 	}
 	

@@ -126,10 +126,10 @@ public class PropertyService {
 					continue;
 				}
 				for (Booking booking : apartment.getBookingList()) {
-					if ((booking.getCheck_in().after(searchDto.getCheckIn())
-							&& booking.getCheck_out().before(searchDto.getCheckIn()))
-							|| (booking.getCheck_in().after(searchDto.getCheckOut())
-									&& booking.getCheck_out().before(searchDto.getCheckOut()))) {
+					if ((booking.getCheckIn().after(searchDto.getCheckIn())
+							&& booking.getCheckOut().before(searchDto.getCheckIn()))
+							|| (booking.getCheckIn().after(searchDto.getCheckOut())
+									&& booking.getCheckOut().before(searchDto.getCheckOut()))) {
 						conflictboookings = true;
 					}
 				}

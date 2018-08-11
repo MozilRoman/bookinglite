@@ -53,7 +53,7 @@ public class ReviewService {
         Booking booking = bookingRepository.findById(bookingId).get();
         BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
         Property property = booking.getApartment().getProperty();
-        if (booking.getUser().getId().equals(userId) && bookingDto.getCheck_out().before(new Date())){
+        if (booking.getUser().getId().equals(userId) && bookingDto.getCheckOut().before(new Date())){
             Review review = new Review();
             review.setMessage(reviewDto.getMessage());
             review.setRating(reviewDto.getRating());
