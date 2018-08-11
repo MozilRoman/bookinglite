@@ -48,12 +48,13 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public boolean existsByEmail(String email){
+    public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
+
     //TODO: REFACTOR
     @Transactional
-    public boolean registerUser(RegisterDto registerDto){
+    public boolean registerUser(RegisterDto registerDto) {
         User user = new User();
         user.setEmail(registerDto.getEmail());
         user.setFirst_name(registerDto.getFirst_name());
@@ -63,19 +64,20 @@ public class UserService implements UserDetailsService {
         user.setAddress(registerDto.getAddress());
         List<Role> roles = roleRepository.findAll();
         Set<Role> userRoles = new HashSet<Role>();
-        for(Role role : roles){
-            if(role.getName().equals("ROLE_OWNER") && registerDto.isOwner()){
+        for (Role role : roles) {
+            if (role.getName().equals("ROLE_OWNER") && registerDto.isOwner()) {
                 userRoles.add(role);
                 continue;
+            } else if (role.getName().equals("ROLE_USER")) {
+                userRoles.add(role);
             }
-            userRoles.add(role);
         }
         user.setRoles(userRoles);
 
-        if(emailverification) user.setVerified(false);
+        if(emailverification) {
+            user.setVerified(false);
+        }
         else user.setVerified(true);
-
-
         User result = userRepository.save(user);
         if(emailverification) applicationEventMulticaster.multicastEvent(new RegistrationCompleteEvent(result,appUrl));
         if(result != null)return true;
@@ -124,6 +126,18 @@ public class UserService implements UserDetailsService {
         Date expire = new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24));
         verificationToken.setExpire_at(expire);
         verificationTokenRepository.save(verificationToken);
+    }
+    public void checkVerificationToken(String email){
+       VerificationToken verificationToken = verificationTokenRepository.findByUserEmail(email);
+       if(verificationToken != null) {
+           if (verificationToken.getUser().isVerified()) {
+               verificationTokenRepository.delete(verificationToken);
+           } else {
+               User user = verificationToken.getUser();
+               verificationTokenRepository.delete(verificationToken);
+               userRepository.delete(user);
+           }
+       }
     }
 
     @Override

@@ -4,31 +4,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.softserve.edu.bookinglite.entity.Apartment;
+import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.User;
+import com.softserve.edu.bookinglite.exception.PropertyNotFoundExceprion;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
+import com.softserve.edu.bookinglite.service.dto.SearchDto;
 import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
-import com.softserve.edu.bookinglite.service.mapper.UserMapper;
 
-import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PropertyService {
 
-	private PropertyRepository propertyRepository;
-	private UserService userService;
+	private final PropertyRepository propertyRepository;
+	private final UserService userService;
 
 	@Autowired
 	public PropertyService(PropertyRepository propertyRepository, UserService userService) {
 		this.propertyRepository = propertyRepository;
 		this.userService = userService;
 	}
-    
-    @Transactional
+
+	@Transactional
 	public List<PropertyDto> getAllPropertyDtos() {
 		List<PropertyDto> propertyDtos = new ArrayList<>();
 		for (Property property : propertyRepository.findAll()) {
@@ -37,20 +39,45 @@ public class PropertyService {
 		}
 		return propertyDtos;
 	}
-    @Transactional
+
+	@Transactional
 	public Optional<Property> getPropertyById(Long id) {
 		return propertyRepository.findById(id);
 	}
-    @Transactional
+
+	@Transactional
 	public PropertyDto getPropertyDtoById(Long id) {
 		Optional<Property> property = getPropertyById(id);
-		
-		return property.map(PropertyMapper
-				.instance::propertyToBasePropertyDtoWithApartmentAddressUser).orElse(null);
+		return property.map(PropertyMapper.instance::propertyToBasePropertyDtoWithApartmentAddressUser).orElse(null);
 	}
+
 	@Transactional
-	public void saveProperty(PropertyDto propertyDto, Long userId) {
-		propertyRepository.save(convertToProperty(propertyDto, userId));
+	public List<PropertyDto> getPropertyDtosByCityName(String name) {
+		List<PropertyDto> propertyDtos = new ArrayList<>();
+		for (Property property : propertyRepository.getAllPropertyByCityName(name.toLowerCase())) {
+			PropertyDto dto = PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(property);
+			propertyDtos.add(dto);
+		}
+		return propertyDtos;
+	}
+
+	@Transactional
+	public List<PropertyDto> getPropertyDtosByCountryName(String name) {
+		List<PropertyDto> propertyDtos = new ArrayList<>();
+		for (Property property : propertyRepository.getAllPropertyByCountryName(name.toLowerCase())) {
+			PropertyDto dto = PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(property);
+			propertyDtos.add(dto);
+		}
+		return propertyDtos;
+	}
+
+	@Transactional
+	public boolean saveProperty(PropertyDto propertyDto, Long userId) {
+		Property property = propertyRepository.save(convertToProperty(propertyDto, userId));
+		if (property != null) {
+			return true;
+		} else
+			return false;
 	}
 
 	private Property convertToProperty(PropertyDto propertyDto, Long userId) {
@@ -67,26 +94,13 @@ public class PropertyService {
 		return property;
 	}
 
-//	private PropertyDto convertToPropertyDto(Property property) {
-//		PropertyDto propertyDto = new PropertyDto();
-//		propertyDto.setId(property.getId());
-//		propertyDto.setName(property.getName());
-//		propertyDto.setDescription(property.getDescription());
-//		propertyDto.setRating(property.getRating());
-//		propertyDto.setPhoneNumber(property.getPhoneNumber());
-//		propertyDto.setContactEmail(property.getContactEmail());
-//		// propertyDto.setUser(property.getUser());
-//		propertyDto.setUserDto(UserMapper.instance.UserToBaseUserDtoWithRolesAndAddress(property.getUser()));
-//		propertyDto.setPropertyType(property.getPropertyType());
-//		propertyDto.setAddress(property.getAddress());
-//		propertyDto.setFacilities(property.getFacilities());
-//		return propertyDto;
-//	}
+	@Transactional
 
-
-	public boolean updateProperty(PropertyDto propertyDto, Long propertyId) {
+	public boolean updateProperty(PropertyDto propertyDto, Long propertyId) throws PropertyNotFoundExceprion {
 		if (propertyDto != null) {
-			Property property = propertyRepository.findById(propertyId).get();
+			Property property = null;
+			property = propertyRepository.findById(propertyId)
+					.orElseThrow(() -> new PropertyNotFoundExceprion(propertyId));
 			property.setName(propertyDto.getName());
 			property.setDescription(propertyDto.getDescription());
 			property.setPhoneNumber(propertyDto.getPhoneNumber());
@@ -97,5 +111,38 @@ public class PropertyService {
 			return true;
 		}
 		return false;
+	}
+
+	@Transactional
+	public List<PropertyDto> searchProperty(SearchDto searchDto) {
+		List<Property> properties = propertyRepository.getAllPropertyByCityId(2L);
+		List<PropertyDto> result = new ArrayList<>();
+		Boolean conflictboookings = false;
+		Integer unbookableApartments = 0;
+		for (Property property : properties) {
+			for (Apartment apartment : property.getApartments()) {
+				if (apartment.getNumberOfGuests() < searchDto.getNumberOfGuests()) {
+					unbookableApartments++;
+					continue;
+				}
+				for (Booking booking : apartment.getBookingList()) {
+					if ((booking.getCheck_in().after(searchDto.getCheckIn())
+							&& booking.getCheck_out().before(searchDto.getCheckIn()))
+							|| (booking.getCheck_in().after(searchDto.getCheckOut())
+									&& booking.getCheck_out().before(searchDto.getCheckOut()))) {
+						conflictboookings = true;
+					}
+				}
+				if (conflictboookings) {
+					conflictboookings = false;
+					unbookableApartments++;
+				}
+			}
+			if (property.getApartments().size() > unbookableApartments) {
+				unbookableApartments = 0;
+				result.add(PropertyMapper.instance.propertyToBasePropertyDtoWithAddress(property));
+			}
+		}
+		return result;
 	}
 }

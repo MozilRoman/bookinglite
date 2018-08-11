@@ -16,7 +16,7 @@ public class UserDto {
     private String last_name;
     private String phone_number;
     Address address;
-    Set<Role> roles = new HashSet<>();
+    Set<Role> roles;
 
     public Long getId() {
         return id;

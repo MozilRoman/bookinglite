@@ -1,5 +1,7 @@
 package com.softserve.edu.bookinglite.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -27,6 +29,7 @@ public class Photo {
 		return url;
 	}
 
+	@JsonIgnore
 	public Property getProperty() {
 		return property;
 	}
