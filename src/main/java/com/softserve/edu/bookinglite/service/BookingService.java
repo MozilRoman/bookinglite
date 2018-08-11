@@ -162,7 +162,7 @@ public class BookingService {
 		if(booking==null){
 			throw new BookingNotFoundException(bookingId); 
 		}
-		if(!booking.getBookingStatus().getName().equals("Reserved")){
+		if(!booking.getBookingStatus().getName().equals(RESERVED)){
 			throw new BookingCancelException(booking.getBookingStatus().getName()); 
 		}
 		if( booking.getCheckIn().after(new Date())   ) {
