@@ -5,8 +5,8 @@ import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.exception.ApartmentNotFoundException;
+import com.softserve.edu.bookinglite.exception.BookingCancelException;
 import com.softserve.edu.bookinglite.exception.BookingNotFoundException;
-import com.softserve.edu.bookinglite.exception.BookingOwnerNotFoundException;
 import com.softserve.edu.bookinglite.exception.ExistingBookingException;
 import com.softserve.edu.bookinglite.exception.InvalidDataException;
 import com.softserve.edu.bookinglite.repository.ApartmentRepository;
@@ -53,8 +53,8 @@ public class BookingService {
 
 
 	@Transactional
-	public BookingDto findBookinDTOById(Long bookingId) throws BookingNotFoundException{ 
-		Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new BookingNotFoundException(bookingId)); 
+	public BookingDto findBookinDTOById(Long idUser,Long bookingId) { 
+		Booking booking = bookingRepository.findBookingById(idUser, bookingId); 
 		return BookingMapper.instance.bookingToBaseBookingDto(booking);
 	}
 	
@@ -71,8 +71,21 @@ public class BookingService {
 		return listBookingDto;
 	}
 	
+
 	@Transactional
-	public List<BookingDto> getAllBookingsDtoByOwnerId(Long idUserOwner) throws BookingOwnerNotFoundException{
+	public List<BookingDto> findPageAllBookingsDtoByUserId(Long userId, int page, int size) {
+		List<BookingDto> listBookingDto = new ArrayList<>();
+		Page<Booking> pageBooking = bookingRepository.getPageAllByUserIdOrderByCheckInAsc(userId, PageRequest.of(page, size));
+			for(Booking booking : pageBooking.getContent()) {
+				BookingDto propertyDto = BookingMapper.instance
+						.bookingToBaseBookingDto(booking);
+				listBookingDto.add(propertyDto);
+			}	
+		return listBookingDto;
+    }
+	
+	@Transactional
+	public List<BookingDto> getAllBookingsDtoByOwnerId(Long idUserOwner) {
     	List<BookingDto> listBookingDto = new ArrayList<>();
 		List<Booking> listBooking = bookingRepository.getAllBookingsByOwnerId(idUserOwner);
 		if (!listBooking.isEmpty()) {
@@ -81,11 +94,21 @@ public class BookingService {
 				listBookingDto.add(bookingDto);				
 			}
 		}
-		else {
-			throw new BookingOwnerNotFoundException();
-		}
 		return listBookingDto;
 	}
+	
+	@Transactional
+	public List<BookingDto> getPageAllBookingsDtoByOwnerId(Long ownerId, int page, int size) {
+		List<BookingDto> listBookingDto = new ArrayList<>();
+		Page<Booking> pageBooking = bookingRepository.getPageAllBookingsByOwnerId(ownerId, PageRequest.of(page, size));
+		if(pageBooking.getNumberOfElements()!=0) {
+			for(Booking booking : pageBooking.getContent()) {
+				BookingDto propertyDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
+				listBookingDto.add(propertyDto);
+			}
+		}
+		return listBookingDto;
+    }
 	
 //if booking already exist it will return true
 	@Transactional
@@ -122,7 +145,7 @@ public class BookingService {
             booking.setTotalPrice(getPriceForPeriod(apartment.getPrice(),
             		createBookingDto.getCheckIn(),createBookingDto.getCheckOut()));
             booking.setBookingStatus(bookingStatusRepository.findByName(RESERVED));
-            Booking result = bookingRepository.save(booking); //throw BookingDontSaveException????
+            Booking result = bookingRepository.save(booking); 
             if (result != null){
                 return true;
             }
@@ -134,9 +157,14 @@ public class BookingService {
 	}
 	
 	@Transactional
-    public boolean cancelBooking(Long bookingId) throws BookingNotFoundException {
-		Booking booking = bookingRepository.findById(bookingId)
-				.orElseThrow(() -> new BookingNotFoundException(bookingId)); 
+    public boolean cancelBooking(Long userId, Long bookingId) throws BookingNotFoundException, BookingCancelException {
+		Booking booking = bookingRepository.findBookingById(userId, bookingId);
+		if(booking==null){
+			throw new BookingNotFoundException(bookingId); 
+		}
+		if(!booking.getBookingStatus().getName().equals("Reserved")){
+			throw new BookingCancelException(booking.getBookingStatus().getName()); 
+		}
 		if( booking.getCheckIn().after(new Date())   ) {
 			booking.setBookingStatus(bookingStatusRepository.findByName(CANCELED));
 			return true;   
