@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +13,6 @@ import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.User;
-import com.softserve.edu.bookinglite.exception.PropertyNotFoundExceprion;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.dto.SearchDto;
@@ -96,11 +96,11 @@ public class PropertyService {
 
 	@Transactional
 
-	public boolean updateProperty(PropertyDto propertyDto, Long propertyId) throws PropertyNotFoundExceprion {
+	public boolean updateProperty(PropertyDto propertyDto, Long propertyId) throws PropertyNotFoundException {
 		if (propertyDto != null) {
 			Property property = null;
 			property = propertyRepository.findById(propertyId)
-					.orElseThrow(() -> new PropertyNotFoundExceprion(propertyId));
+					.orElseThrow(() -> new PropertyNotFoundException(propertyId));
 			property.setName(propertyDto.getName());
 			property.setDescription(propertyDto.getDescription());
 			property.setPhoneNumber(propertyDto.getPhoneNumber());
