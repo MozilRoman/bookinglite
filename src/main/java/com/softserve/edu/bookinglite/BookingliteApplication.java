@@ -23,6 +23,8 @@ public class BookingliteApplication {
 		return new JwtAuthorizationFilter();
 	}
 
+
+
 	@Bean
 	Cloudinary cloudinary() {
 		return new Cloudinary(ObjectUtils.asMap(
