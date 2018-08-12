@@ -4,44 +4,65 @@ package com.softserve.edu.bookinglite.service;
 import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.User;
+import com.softserve.edu.bookinglite.exception.ApartmentNotFoundException;
+import com.softserve.edu.bookinglite.exception.BookingCancelException;
+import com.softserve.edu.bookinglite.exception.BookingNotFoundException;
+import com.softserve.edu.bookinglite.exception.BookingExistingException;
+import com.softserve.edu.bookinglite.exception.BookingInvalidDataException;
+import com.softserve.edu.bookinglite.repository.ApartmentRepository;
 import com.softserve.edu.bookinglite.repository.BookingRepository;
 import com.softserve.edu.bookinglite.repository.BookingStatusRepository;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
+import com.softserve.edu.bookinglite.service.dto.CreateBookingDto;
 import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
+import com.softserve.edu.bookinglite.util.DateUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 @Service
 public class BookingService {
 
-	final String RESERVED = "Reserved";
-	final String CANCELED = "Canceled";
+	private final String RESERVED = "Reserved";
+	private final String CANCELED = "Canceled";
+	private final int HOUR_CHECK_IN= 17;
+	private final int HOUR_CHECK_OUT= 15;
+	private final int MINUTE_CHECK_IN_AND_CHECK_OUT= 0;
+
 
 	private final BookingRepository bookingRepository;
-	private final ApartmentService apartmentService;
-	private final UserService userService;
 	private final BookingStatusRepository bookingStatusRepository;
+	private final ApartmentRepository apartmentRepository;
 
 	@Autowired
 	public BookingService(BookingRepository bookingRepository,
-						  ApartmentService apartmentService,
-						  UserService userService,
-						  BookingStatusRepository bookingStatusRepository
+						  BookingStatusRepository bookingStatusRepository,
+						  ApartmentRepository apartmentRepository
 	) {
 		this.bookingRepository = bookingRepository;
-		this.apartmentService = apartmentService;
-		this.userService = userService;
 		this.bookingStatusRepository = bookingStatusRepository;
+		this.apartmentRepository = apartmentRepository;
 	}
 
+
 	@Transactional
-	public List<BookingDto> getAllBookingsDtoByUserId(Long user_id) {
+	public BookingDto findBookinDTOById(Long idUser,Long bookingId) { 
+		Booking booking = bookingRepository.findBookingById(idUser, bookingId); 
+		return BookingMapper.instance.bookingToBaseBookingDto(booking);
+	}
+	
+	@Transactional
+	public List<BookingDto> findAllBookingsDtoByUserId(Long userId) {
 		List<BookingDto> listBookingDto = new ArrayList<>();
-		List<Booking> listBooking = bookingRepository.getAllByUserIdOrderByCheck_inAsc(user_id);
-		if (listBooking.size() > 0) {
+		List<Booking> listBooking = bookingRepository.getAllByUserIdOrderByCheckInAsc(userId);
+		if ( !listBooking.isEmpty()) {
 			for (Booking booking : listBooking	) {
 				BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
 				listBookingDto.add(bookingDto);				
@@ -49,13 +70,53 @@ public class BookingService {
 		}
 		return listBookingDto;
 	}
+	
+
+	@Transactional
+	public List<BookingDto> findPageAllBookingsDtoByUserId(Long userId, int page, int size) {
+		List<BookingDto> listBookingDto = new ArrayList<>();
+		Page<Booking> pageBooking = bookingRepository.getPageAllByUserIdOrderByCheckInAsc(userId, PageRequest.of(page, size));
+			for(Booking booking : pageBooking.getContent()) {
+				BookingDto propertyDto = BookingMapper.instance
+						.bookingToBaseBookingDto(booking);
+				listBookingDto.add(propertyDto);
+			}	
+		return listBookingDto;
+    }
+	
+	@Transactional
+	public List<BookingDto> getAllBookingsDtoByOwnerId(Long idUserOwner) {
+    	List<BookingDto> listBookingDto = new ArrayList<>();
+		List<Booking> listBooking = bookingRepository.getAllBookingsByOwnerId(idUserOwner);
+		if (!listBooking.isEmpty()) {
+			for (Booking booking : listBooking	) {
+				BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
+				listBookingDto.add(bookingDto);				
+			}
+		}
+		return listBookingDto;
+	}
+	
+	@Transactional
+	public List<BookingDto> getPageAllBookingsDtoByOwnerId(Long ownerId, int page, int size) {
+		List<BookingDto> listBookingDto = new ArrayList<>();
+		Page<Booking> pageBooking = bookingRepository.getPageAllBookingsByOwnerId(ownerId, PageRequest.of(page, size));
+		if(pageBooking.getNumberOfElements()!=0) {
+			for(Booking booking : pageBooking.getContent()) {
+				BookingDto propertyDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
+				listBookingDto.add(propertyDto);
+			}
+		}
+		return listBookingDto;
+    }
+	
 //if booking already exist it will return true
-    @Transactional
-	public boolean checkBookingIfExistByChekInandCheckOut(Long apartment_id, Date checkIn, Date checkOut) {
-		if(bookingRepository.getBookingByCheck(apartment_id,setHourAndMinToDate(checkIn,17,0))==null &&
-				bookingRepository.getBookingByCheck(apartment_id,setHourAndMinToDate(checkOut,15,0))==null &&
-				bookingRepository.INcheckBookingsExistsByDateInAndDateOut(apartment_id,setHourAndMinToDate(checkIn,17,0),setHourAndMinToDate(checkOut,15,0))==null &&
-				bookingRepository.OUTcheckBookingsExistsByDateInAndDateOut(apartment_id,setHourAndMinToDate(checkIn,17,0),setHourAndMinToDate(checkOut,15,0))==null
+	@Transactional
+	public boolean checkBookingIfExistByChekInandCheckOut(Long apartmentId, Date checkIn, Date checkOut) {
+		if(bookingRepository.getBookingByCheck(apartmentId,DateUtil.setHourAndMinToDate(checkIn,HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT),
+				DateUtil.setHourAndMinToDate(checkOut,HOUR_CHECK_OUT,MINUTE_CHECK_IN_AND_CHECK_OUT))==null &&
+				bookingRepository.checkBookingsExistsByDateInAndDateOut(apartmentId,DateUtil.setHourAndMinToDate(checkIn,HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT),
+						DateUtil.setHourAndMinToDate(checkOut,HOUR_CHECK_OUT,MINUTE_CHECK_IN_AND_CHECK_OUT))==null
 				){
 		    return false;
         }
@@ -63,83 +124,79 @@ public class BookingService {
 	}
 
 	@Transactional
-	public boolean createBooking(BookingDto bookingDto, Long user_id, Long apartment_id) {
-		if(checkValidationDate (bookingDto)==false || 
-				bookingDto.getApartmentDto().getNumberOfGuests() > apartmentService.findApartmentDtoById(apartment_id).getNumberOfGuests()){
-			return false;
+	public boolean createBooking(CreateBookingDto createBookingDto, Long userId, Long apartmentId) 
+			throws ApartmentNotFoundException, BookingInvalidDataException, BookingExistingException {
+		Apartment apartment= apartmentRepository.findById(apartmentId)
+				.orElseThrow(() -> new ApartmentNotFoundException(apartmentId));
+		
+		if(checkValidationDate (createBookingDto)==false || 
+				createBookingDto.getNumberOfGuests() > apartment.getNumberOfGuests()){
+			throw new BookingInvalidDataException();
   		}
-		if (checkBookingIfExistByChekInandCheckOut(apartment_id,bookingDto.getCheck_in(),bookingDto.getCheck_out())==false) {
+		
+		if (checkBookingIfExistByChekInandCheckOut(apartmentId,createBookingDto.getCheckIn(),createBookingDto.getCheckOut())==false) {
             Booking booking = new Booking();
-            if (apartmentService.findApartmentDtoById(apartment_id) != null) {
-                Apartment apartment = new Apartment();
-                apartment.setId(apartment_id);
-                booking.setApartment(apartment);
-            }
-            if (userService.findById(user_id) != null) {
-                User user = new User();
-                user.setId(user_id);
-                booking.setUser(user); }
-            booking.setCheck_in(setHourAndMinToDate(bookingDto.getCheck_in(),17,0));
-            booking.setCheck_out(setHourAndMinToDate(bookingDto.getCheck_out(),15,0));
-            booking.setTotal_price(bookingDto.getTotal_price());
-            booking.setBookingstatus(bookingStatusRepository.findByName(RESERVED));
-            Booking result = bookingRepository.save(booking);
+            booking.setApartment(apartment);
+            User user = new User();
+            user.setId(userId);
+            booking.setUser(user); 
+            booking.setCheckIn(DateUtil.setHourAndMinToDate(createBookingDto.getCheckIn(),HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT));
+            booking.setCheckOut(DateUtil.setHourAndMinToDate(createBookingDto.getCheckOut(),HOUR_CHECK_OUT,MINUTE_CHECK_IN_AND_CHECK_OUT));
+            booking.setTotalPrice(getPriceForPeriod(apartment.getPrice(),
+            		createBookingDto.getCheckIn(),createBookingDto.getCheckOut()));
+            booking.setBookingStatus(bookingStatusRepository.findByName(RESERVED));
+            Booking result = bookingRepository.save(booking); 
             if (result != null){
                 return true;
             }
             else return false;
   		}
   		else {
-            return false;
+            throw new BookingExistingException();
         }
 	}
 	
 	@Transactional
-    public boolean cancelBooking(Long id){
-		Booking booking = bookingRepository.findById(id).get();
-		if( booking.getCheck_in().after(new Date())   ) {
-			booking.setBookingstatus(bookingStatusRepository.findByName(CANCELED));
+    public boolean cancelBooking(Long userId, Long bookingId) throws BookingNotFoundException, BookingCancelException {
+		Booking booking = bookingRepository.findBookingById(userId, bookingId);
+		if(booking==null){
+			throw new BookingNotFoundException(bookingId); 
+		}
+		if(!booking.getBookingStatus().getName().equals(RESERVED)){
+			throw new BookingCancelException(booking.getBookingStatus().getName()); 
+		}
+		if( booking.getCheckIn().after(new Date())   ) {
+			booking.setBookingStatus(bookingStatusRepository.findByName(CANCELED));
 			return true;   
 		}
-		else if(booking.getCheck_in().compareTo(new Date())==0
-				&& booking.getCheck_in().before(setHourAndMinToDate(new Date(),17,0))) {
-			booking.setBookingstatus(bookingStatusRepository.findByName(CANCELED));
+		else if(booking.getCheckIn().compareTo(new Date())==0
+				&& booking.getCheckIn().before(DateUtil.setHourAndMinToDate(new Date(),HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT))) {
+			booking.setBookingStatus(bookingStatusRepository.findByName(CANCELED));
 			return true;  
 		}
 		else return false;        		  	       	 	  	    	    		
     }
-    @Transactional
-	public List<BookingDto> getAllBookingsDtoByOwnerId(Long id_user_owner){
-    	List<BookingDto> listBookingDto = new ArrayList<>();
-		List<Booking> listBooking = bookingRepository.getAllBookingsByOwnerId(id_user_owner);
-		if (listBooking.size() > 0) {
-			for (Booking booking : listBooking	) {
-				BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
-				listBookingDto.add(bookingDto);				
-			}
-		}
-		return listBookingDto;
-	}
-
-    public boolean checkValidationDate (BookingDto bookingDto){
-    	boolean validation= true;
+    
+    private boolean checkValidationDate (CreateBookingDto bookingDto){
+    	boolean isValid= true;
     	
-    	if(bookingDto.getCheck_out().before(bookingDto.getCheck_in())) {
-    		validation= false;
+    	if(bookingDto.getCheckOut().before(bookingDto.getCheckIn())) {
+    		isValid= false;
     	}
-    	if(bookingDto.getCheck_in().before(new Date()) ) {
-    		validation= false;
+    	if(bookingDto.getCheckIn().before(new Date()) ) {
+    		isValid= false;
     	}
-    	if(bookingDto.getCheck_out().compareTo(bookingDto.getCheck_in())==0) {
-    		validation= false;
+    	if(bookingDto.getCheckOut().compareTo(bookingDto.getCheckIn())==0) {
+    		isValid= false;
     	}  	
-    	return validation;
+    	return isValid;
+    }    
+
+    public BigDecimal getPriceForPeriod(BigDecimal priceOneDay, Date checkIn, Date checkOut) {
+    	BigDecimal priceForPeriod= new BigDecimal(BigInteger.ZERO,2);
+    	int diff= DateUtil.countDay(checkIn, checkOut); 
+    	priceOneDay= priceOneDay.multiply( new BigDecimal(diff));
+    	return priceForPeriod.add(priceOneDay);
     }
-    public Date setHourAndMinToDate(Date date,int hour,int minuts){
-		Calendar calendar=Calendar.getInstance();
-		calendar.setTime(date);
-		calendar.set(Calendar.HOUR_OF_DAY, hour);
-		calendar.set(Calendar.MINUTE,minuts);
-		return calendar.getTime();
-	}
 }
+
