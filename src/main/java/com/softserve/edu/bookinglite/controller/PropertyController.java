@@ -37,7 +37,12 @@ public class PropertyController {
 	public PropertyController(PropertyService propertyService) {
 		this.propertyService = propertyService;
 	}
-
+	
+	@GetMapping("/test")
+	public String getHello() {
+		return "Hello Angular from Spring Boot";
+	}
+	
 	@GetMapping("/property")
 	public List<PropertyDto> getAllProperties() {
 		return propertyService.getAllPropertyDtos();
