@@ -1,9 +1,11 @@
 package com.softserve.edu.bookinglite.service;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.softserve.edu.bookinglite.exception.PropertyConfirmOwnerException;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -97,11 +99,11 @@ public class PropertyService {
 	}
 
 	@Transactional
-	public boolean updateProperty(PropertyDto propertyDto, Long propertyId) throws PropertyNotFoundException {
-		if (propertyDto != null) {
-			Property property = null;
-			property = propertyRepository.findById(propertyId)
-					.orElseThrow(() -> new PropertyNotFoundException(propertyId));
+	public boolean updateProperty(PropertyDto propertyDto, Long propertyId, Principal principal)
+			throws PropertyNotFoundException, PropertyConfirmOwnerException {
+		Property property = propertyRepository.findById(propertyId)
+				.orElseThrow(() -> new PropertyNotFoundException(propertyId));
+		if (propertyDto != null && property.getUser().getId() == Long.parseLong(principal.getName())) {
 			property.setName(propertyDto.getName());
 			property.setDescription(propertyDto.getDescription());
 			property.setPhoneNumber(propertyDto.getPhoneNumber());
@@ -110,10 +112,11 @@ public class PropertyService {
 			property.setFacilities(propertyDto.getFacilities());
 			propertyRepository.save(property);
 			return true;
+		} else {
+			throw new PropertyConfirmOwnerException();
 		}
-		return false;
 	}
-
+	
 	@Transactional
 	public List<PropertyDto> searchProperty(SearchDto searchDto) {
 		List<Property> properties = propertyRepository.getAllPropertyByCityId(2L);
