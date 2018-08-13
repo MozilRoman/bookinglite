@@ -11,6 +11,5 @@ public class PropertyNotFoundException extends Exception {
 	public PropertyNotFoundException(Long prodertyId) {
 		super("Property with id = " + prodertyId + " is not exist");
 	}
-
-	
 }
+

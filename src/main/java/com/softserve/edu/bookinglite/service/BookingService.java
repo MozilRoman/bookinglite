@@ -198,5 +198,12 @@ public class BookingService {
     	priceOneDay= priceOneDay.multiply( new BigDecimal(diff));
     	return priceForPeriod.add(priceOneDay);
     }
-}
 
+    public Date setHourAndMinToDate(Date date,int hour,int minuts){
+		Calendar calendar=Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.set(Calendar.HOUR_OF_DAY, hour);
+		calendar.set(Calendar.MINUTE,minuts);
+		return calendar.getTime();
+	}
+}

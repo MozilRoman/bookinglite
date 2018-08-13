@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,9 +48,10 @@ public class PropertyService {
 	}
 
 	@Transactional
-	public PropertyDto getPropertyDtoById(Long id) {
+	public PropertyDto getPropertyDtoById(Long id) throws PropertyNotFoundException {
 		Optional<Property> property = getPropertyById(id);
-		return property.map(PropertyMapper.instance::propertyToBasePropertyDtoWithApartmentAddressUser).orElse(null);
+		return property.map(PropertyMapper.instance::propertyToBasePropertyDtoWithApartmentAddressUser)
+				.orElseThrow(() -> new PropertyNotFoundException(id));
 	}
 
 	@Transactional
@@ -70,7 +73,7 @@ public class PropertyService {
 		}
 		return propertyDtos;
 	}
-
+	
 	@Transactional
 	public boolean saveProperty(PropertyDto propertyDto, Long userId) {
 		Property property = propertyRepository.save(convertToProperty(propertyDto, userId));
@@ -95,7 +98,6 @@ public class PropertyService {
 	}
 
 	@Transactional
-
 	public boolean updateProperty(PropertyDto propertyDto, Long propertyId) throws PropertyNotFoundException {
 		if (propertyDto != null) {
 			Property property = null;
@@ -144,5 +146,10 @@ public class PropertyService {
 			}
 		}
 		return result;
+	}
+
+	@Transactional
+	public Page<Property> fingPropertyByPage(int page, int size) {
+		return propertyRepository.findAll(PageRequest.of(page, size));
 	}
 }

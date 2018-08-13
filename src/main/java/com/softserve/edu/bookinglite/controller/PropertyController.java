@@ -1,18 +1,32 @@
 package com.softserve.edu.bookinglite.controller;
 
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import com.softserve.edu.bookinglite.service.PropertyService;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.dto.SearchDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
 
-import javax.validation.Valid;
-import java.security.Principal;
-import java.util.Date;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -24,15 +38,20 @@ public class PropertyController {
 	public PropertyController(PropertyService propertyService) {
 		this.propertyService = propertyService;
 	}
-
+	
+	@GetMapping("/test")
+	public String getHello() {
+		return "Hello Angular from Spring Boot";
+	}
+	
 	@GetMapping("/property")
 	public List<PropertyDto> getAllProperties() {
 		return propertyService.getAllPropertyDtos();
 	}
 
 	@GetMapping("/property/{propertyId}")
-	public PropertyDto getPropertyById(@PathVariable("propertyId") Long id) {
-		return propertyService.getPropertyDtoById(id);
+	public PropertyDto getPropertyById(@PathVariable("propertyId") Long id) throws PropertyNotFoundException {
+			return propertyService.getPropertyDtoById(id);
 	}
 
 	@GetMapping("/property/city/{cityName}")
@@ -80,5 +99,19 @@ public class PropertyController {
         searchDto.setNumberOfGuests(numberOfGuests);
 		List<PropertyDto> result  = propertyService.searchProperty(searchDto);
         return result;
+	}
+	
+	@GetMapping("/property/pages")
+	public List<PropertyDto> getPropertiesByPage(
+			@RequestParam("getPageNumber") int getPageNumber,
+			@RequestParam("getPageSize") int getPageSize){
+		List<PropertyDto> dtos = new ArrayList<>();
+		Page<Property> page = propertyService.fingPropertyByPage(getPageNumber,getPageSize);
+		for(Property property : page.getContent()) {
+			PropertyDto propertyDto = PropertyMapper.instance
+					.propertyToBasePropertyDto(property);
+			dtos.add(propertyDto);
+		}
+		return dtos;
 	}
 }
