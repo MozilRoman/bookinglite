@@ -3,6 +3,10 @@ package com.softserve.edu.bookinglite.service;
 import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.Review;
+import com.softserve.edu.bookinglite.exception.BookingNotFoundException;
+import com.softserve.edu.bookinglite.exception.CantLeaveReviewException;
+import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
+import com.softserve.edu.bookinglite.exception.ReviewOwnerException;
 import com.softserve.edu.bookinglite.repository.BookingRepository;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.repository.ReviewRepository;
@@ -40,37 +44,53 @@ public class ReviewService {
         return reviewDtos;
     }
 
-    public List<ReviewDto> findReviewsByProperty(Long propertyId){
+    public List<ReviewDto> findAllReviewsByPropertyId(Long propertyId) throws PropertyNotFoundException {
+        Property property = propertyRepository.findById(propertyId)
+                .orElseThrow(() -> new PropertyNotFoundException(propertyId));
         List<ReviewDto> reviewDtos = new ArrayList<>();
-        for (Review review : reviewRepository.findAllReviewsByIdProperty(propertyId)) {
+        for (Review review : reviewRepository.findAllReviewsByIdProperty(property.getId())) {
             ReviewDto reviewDto = ReviewMapper.instance.toDto(review);
             reviewDtos.add(reviewDto);
         }
         return reviewDtos;
     }
 
-    public boolean addReview(ReviewDto reviewDto, Long bookingId, Long userId){
-        Booking booking = bookingRepository.findById(bookingId).get();
+    public boolean addReview(ReviewDto reviewDto, Long bookingId, Long userId)
+            throws BookingNotFoundException, ReviewOwnerException, CantLeaveReviewException {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(()-> new BookingNotFoundException(bookingId));
         BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
         Property property = booking.getApartment().getProperty();
-        if (booking.getUser().getId().equals(userId) && bookingDto.getCheckOut().before(new Date())){
-            Review review = new Review();
-            review.setMessage(reviewDto.getMessage());
-            review.setRating(reviewDto.getRating());
-            review.setBooking(booking);
-            reviewRepository.save(review);
-            booking.setReview(review);
-            bookingRepository.save(booking);
+        if (booking.getUser().getId().equals(userId)){
+            if (bookingDto.getCheckOut().before(new Date())) {
+                Review review = new Review();
+                review.setMessage(reviewDto.getMessage());
+                review.setRating(reviewDto.getRating());
+                review.setBooking(booking);
+                reviewRepository.save(review);
+                booking.setReview(review);
+                bookingRepository.save(booking);
 
-            if (property.getRating() == null){
-                property.setRating(review.getRating());
+                if (property.getRating() == null) {
+                    property.setRating(review.getRating());
+                } else {
+                    List<Review> reviews = reviewRepository.findAllReviewsByIdProperty(property.getId());
+                    Float sum = 0.0f;
+                    int quantity = reviews.size();
+                    for (Review r : reviews) {
+                        sum += r.getRating();
+                    }
+                    Float newRating = sum / quantity;
+                    property.setRating(newRating);
+                }
+                propertyRepository.save(property);
+                return true;
             }else {
-                property.setRating((property.getRating() + review.getRating()) / 2);
+                throw new CantLeaveReviewException();
             }
-            propertyRepository.save(property);
-            return true;
+        }else {
+            throw new ReviewOwnerException();
         }
-        return false;
     }
 
 }
