@@ -1,7 +1,6 @@
 package com.softserve.edu.bookinglite.entity;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -12,35 +11,34 @@ public class Booking {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;//
+	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="apartment_id",referencedColumnName = "id",nullable = false)
+    @JoinColumn(name="apartment_id",nullable = false)
 	private Apartment apartment;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id", referencedColumnName = "id",nullable = false)
+    @JoinColumn(name="user_id",nullable = false)
 	private User user;
 
 	@Column(nullable = false)
-    private Date check_in;
+    private Date checkIn;
 
 	@Column(nullable = false)
-    private Date check_out;
+    private Date checkOut;
 
 	@Column(columnDefinition= "DECIMAL(8,2)",nullable = false)
 	@NotNull
-    private BigDecimal total_price;
+    private BigDecimal totalPrice;
 
 	@ManyToOne
-    @JoinColumn(name="status_id", referencedColumnName = "id",nullable = false)
-	private BookingStatus bookingstatus;
+    @JoinColumn(name="status_id",nullable = false)
+	private BookingStatus bookingStatus;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "review_id")
 	private Review review;
-	
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -65,39 +63,36 @@ public class Booking {
 		this.user = user;
 	}
 
-
-	public Date getCheck_in() {
-		return check_in;
+	public Date getCheckIn() {
+		return checkIn;
 	}
 
-	public void setCheck_in(Date check_in) {
-		this.check_in = check_in;
+	public void setCheckIn(Date checkIn) {
+		this.checkIn = checkIn;
 	}
 
-
-	public Date getCheck_out() {
-		return check_out;
+	public Date getCheckOut() {
+		return checkOut;
 	}
 
-	public void setCheck_out(Date check_out) {
-		this.check_out = check_out;
+	public void setCheckOut(Date checkOut) {
+		this.checkOut = checkOut;
 	}
 
-	public BigDecimal getTotal_price() {
-		return total_price;
+	public BigDecimal getTotalPrice() {
+		return totalPrice;
 	}
 
-	public void setTotal_price(BigDecimal total_price) {
-		this.total_price = total_price;
+	public void setTotalPrice(BigDecimal totalPrice) {
+		this.totalPrice = totalPrice;
 	}
 
-
-	public BookingStatus getBookingstatus() {
-		return bookingstatus;
+	public BookingStatus getBookingStatus() {
+		return bookingStatus;
 	}
 
-	public void setBookingstatus(BookingStatus bookingstatus) {
-		this.bookingstatus = bookingstatus;
+	public void setBookingStatus(BookingStatus bookingStatus) {
+		this.bookingStatus = bookingStatus;
 	}
 
 	public Review getReview() {
@@ -106,6 +101,5 @@ public class Booking {
 
 	public void setReview(Review review) {
 		this.review = review;
-	}
-	
+	}	
 }

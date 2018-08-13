@@ -57,4 +57,11 @@ pom.xml.tag
 
 #Ignore META-INF 
 */META-INF/*
+
+
 application-local.properties
+
+#Ignore file mapstruct
+.factorypath
+
+/logs

@@ -5,28 +5,24 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.BookingStatus;
-import com.softserve.edu.bookinglite.entity.Review;
-import com.softserve.edu.bookinglite.entity.User;
 
 public class BookingDto {
 
 	
-	private Long booking_id; 
-
+	private Long bookingId; 
+	@NotNull
 	private ApartmentDto apartmentDto;
-
+	@NotNull
 	private UserDto userDto;
-
-	private Date check_in;
-
-	private Date check_out;
-
-	private BigDecimal total_price;
-	
-	private BookingStatus bookingstatus;
+	@NotNull
+	private Date checkIn;
+	@NotNull
+	private Date checkOut;
+	@NotNull
+	private BigDecimal totalPrice;
+	@NotNull
+	private BookingStatus bookingStatus;
 	
 	private ReviewDto reviewDto;
 	
@@ -34,12 +30,12 @@ public class BookingDto {
 		
 	}
 
-	public Long getBooking_id() {
-		return booking_id;
+	public Long getBookingId() {
+		return bookingId;
 	}
 
-	public void setBooking_id(Long booking_id) {
-		this.booking_id = booking_id;
+	public void setBookingId(Long bookingId) {
+		this.bookingId = bookingId;
 	}
 
 	public ApartmentDto getApartmentDto() {
@@ -58,36 +54,36 @@ public class BookingDto {
 		this.userDto = userDto;
 	}
 
-	public Date getCheck_in() {
-		return check_in;
+	public Date getCheckIn() {
+		return checkIn;
 	}
 
-	public void setCheck_in(Date check_in) {
-		this.check_in = check_in;
+	public void setCheckIn(Date checkIn) {
+		this.checkIn = checkIn;
 	}
 
-	public Date getCheck_out() {
-		return check_out;
+	public Date getCheckOut() {
+		return checkOut;
 	}
 
-	public void setCheck_out(Date check_out) {
-		this.check_out = check_out;
+	public void setCheckOut(Date checkOut) {
+		this.checkOut = checkOut;
 	}
 
-	public BigDecimal getTotal_price() {
-		return total_price;
+	public BigDecimal getTotalPrice() {
+		return totalPrice;
 	}
 
-	public void setTotal_price(BigDecimal total_price) {
-		this.total_price = total_price;
+	public void setTotalPrice(BigDecimal totalPrice) {
+		this.totalPrice = totalPrice;
 	}
 
-	public BookingStatus getBookingstatus() {
-		return bookingstatus;
+	public BookingStatus getBookingStatus() {
+		return bookingStatus;
 	}
 
-	public void setBookingstatus(BookingStatus bookingstatus) {
-		this.bookingstatus = bookingstatus;
+	public void setBookingStatus(BookingStatus bookingStatus) {
+		this.bookingStatus = bookingStatus;
 	}
 
 	public ReviewDto getReviewDto() {
@@ -97,4 +93,6 @@ public class BookingDto {
 	public void setReviewDto(ReviewDto reviewDto) {
 		this.reviewDto = reviewDto;
 	}
+
+	
 }

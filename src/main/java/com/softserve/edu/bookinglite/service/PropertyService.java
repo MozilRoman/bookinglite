@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,7 +15,6 @@ import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.User;
-import com.softserve.edu.bookinglite.exception.PropertyNotFoundExceprion;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.dto.SearchDto;
@@ -48,10 +48,10 @@ public class PropertyService {
 	}
 
 	@Transactional
-	public PropertyDto getPropertyDtoById(Long id) throws PropertyNotFoundExceprion {
+	public PropertyDto getPropertyDtoById(Long id) throws PropertyNotFoundException {
 		Optional<Property> property = getPropertyById(id);
 		return property.map(PropertyMapper.instance::propertyToBasePropertyDtoWithApartmentAddressUser)
-				.orElseThrow(() -> new PropertyNotFoundExceprion(id));
+				.orElseThrow(() -> new PropertyNotFoundException(id));
 	}
 
 	@Transactional
@@ -97,11 +97,11 @@ public class PropertyService {
 	}
 
 	@Transactional
-	public boolean updateProperty(PropertyDto propertyDto, Long propertyId) throws PropertyNotFoundExceprion {
+	public boolean updateProperty(PropertyDto propertyDto, Long propertyId) throws PropertyNotFoundException {
 		if (propertyDto != null) {
 			Property property = null;
 			property = propertyRepository.findById(propertyId)
-					.orElseThrow(() -> new PropertyNotFoundExceprion(propertyId));
+					.orElseThrow(() -> new PropertyNotFoundException(propertyId));
 			property.setName(propertyDto.getName());
 			property.setDescription(propertyDto.getDescription());
 			property.setPhoneNumber(propertyDto.getPhoneNumber());
@@ -127,10 +127,10 @@ public class PropertyService {
 					continue;
 				}
 				for (Booking booking : apartment.getBookingList()) {
-					if ((booking.getCheck_in().after(searchDto.getCheckIn())
-							&& booking.getCheck_out().before(searchDto.getCheckIn()))
-							|| (booking.getCheck_in().after(searchDto.getCheckOut())
-									&& booking.getCheck_out().before(searchDto.getCheckOut()))) {
+					if ((booking.getCheckIn().after(searchDto.getCheckIn())
+							&& booking.getCheckOut().before(searchDto.getCheckIn()))
+							|| (booking.getCheckIn().after(searchDto.getCheckOut())
+									&& booking.getCheckOut().before(searchDto.getCheckOut()))) {
 						conflictboookings = true;
 					}
 				}

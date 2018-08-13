@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.softserve.edu.bookinglite.entity.Property;
-import com.softserve.edu.bookinglite.exception.PropertyNotFoundExceprion;
+import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import com.softserve.edu.bookinglite.service.PropertyService;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.dto.SearchDto;
@@ -49,7 +49,7 @@ public class PropertyController {
 	}
 
 	@GetMapping("/property/{propertyId}")
-	public PropertyDto getPropertyById(@PathVariable("propertyId") Long id) throws PropertyNotFoundExceprion {
+	public PropertyDto getPropertyById(@PathVariable("propertyId") Long id) throws PropertyNotFoundException {
 			return propertyService.getPropertyDtoById(id);
 	}
 
@@ -76,7 +76,7 @@ public class PropertyController {
 
 	@PutMapping("/property/{propertyId}")
 	public ResponseEntity<PropertyDto> update(@RequestBody PropertyDto propertyDto,
-			@PathVariable("propertyId") Long id) throws PropertyNotFoundExceprion  {
+			@PathVariable("propertyId") Long id) throws PropertyNotFoundException {
 		if (propertyService.updateProperty(propertyDto, id)) {
 			return new ResponseEntity<PropertyDto>(HttpStatus.OK);
 		} else {
