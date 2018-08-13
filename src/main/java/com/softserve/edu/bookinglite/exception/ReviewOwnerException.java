@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class ReviewException extends Exception {
+public class ReviewOwnerException extends Exception {
 
-    public ReviewException() {
-        super("You don't have  permission");
+    public ReviewOwnerException() {
+        super("You are not owner of this booking.");
     }
 }
