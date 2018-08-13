@@ -5,6 +5,7 @@ import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.Review;
 import com.softserve.edu.bookinglite.exception.BookingNotFoundException;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
+import com.softserve.edu.bookinglite.exception.ReviewException;
 import com.softserve.edu.bookinglite.repository.BookingRepository;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.repository.ReviewRepository;
@@ -53,7 +54,8 @@ public class ReviewService {
         return reviewDtos;
     }
 
-    public boolean addReview(ReviewDto reviewDto, Long bookingId, Long userId) throws BookingNotFoundException {
+    public boolean addReview(ReviewDto reviewDto, Long bookingId, Long userId)
+            throws BookingNotFoundException, ReviewException {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(()-> new BookingNotFoundException(bookingId));
         BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
@@ -81,8 +83,9 @@ public class ReviewService {
             }
             propertyRepository.save(property);
             return true;
+        }else {
+            throw new ReviewException();
         }
-        return false;
     }
 
 }
