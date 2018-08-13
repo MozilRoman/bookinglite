@@ -75,6 +75,7 @@ public class PropertyService {
 		}
 		return propertyDtos;
 	}
+	
 	@Transactional
 	public boolean saveProperty(PropertyDto propertyDto, Long userId) {
 		Property property = propertyRepository.save(convertToProperty(propertyDto, userId));

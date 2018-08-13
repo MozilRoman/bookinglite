@@ -206,4 +206,3 @@ public class BookingService {
 		return calendar.getTime();
 	}
 }
-
