@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.softserve.edu.bookinglite.exception.ApartmentNotFoundException;
+import com.softserve.edu.bookinglite.exception.ApartmentUpdateException;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -62,7 +63,7 @@ public class ApartmentService {
 		return false;
 	}
 
-	public boolean updateApartment(ApartmentDto apartmentDto, Long apartmentId, Long userId) throws ApartmentNotFoundException {
+	public boolean updateApartment(ApartmentDto apartmentDto, Long apartmentId, Long userId) throws ApartmentNotFoundException, ApartmentUpdateException {
 		Apartment apartment = apartmentRepository.findById(apartmentId)
 				.orElseThrow(()-> new ApartmentNotFoundException(apartmentId));
 		if (apartment.getProperty().getUser().getId().equals(userId)) {
@@ -73,8 +74,9 @@ public class ApartmentService {
 			apartment.setAmenities(apartmentDto.getAmenities());
 			apartmentRepository.save(apartment);
 			return true;
+		}else {
+			throw new ApartmentUpdateException();
 		}
-		return false;
 	}
 
 }

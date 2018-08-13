@@ -72,10 +72,9 @@ public class ReviewService {
             }else {
                 List<Review> reviews = reviewRepository.findAllReviewsByIdProperty(property.getId());
                 Float sum = 0.0f;
-                int quantity = 0;
+                int quantity = reviews.size();
                 for(Review r : reviews){
                     sum += r.getRating();
-                    quantity ++;
                 }
                 Float newRating = sum/quantity;
                 property.setRating(newRating);

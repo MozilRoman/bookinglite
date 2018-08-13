@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.exception.ApartmentNotFoundException;
+import com.softserve.edu.bookinglite.exception.ApartmentUpdateException;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -56,7 +57,7 @@ public class ApartmentController {
 	@PutMapping("/apartment/{id}")
 	public ResponseEntity<Void> update(@Valid @RequestBody ApartmentDto apartmentDto,
 									   @PathVariable("id") Long apartmentId,
-									   Principal principal) throws ApartmentNotFoundException {
+									   Principal principal) throws ApartmentNotFoundException, ApartmentUpdateException {
 		Long userId = Long.parseLong(principal.getName());
 		if (apartmentService.updateApartment(apartmentDto, apartmentId, userId)) {
 			return new ResponseEntity<Void>(HttpStatus.OK);
