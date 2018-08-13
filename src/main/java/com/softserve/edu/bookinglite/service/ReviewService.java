@@ -3,6 +3,8 @@ package com.softserve.edu.bookinglite.service;
 import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.Review;
+import com.softserve.edu.bookinglite.exception.BookingNotFoundException;
+import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import com.softserve.edu.bookinglite.repository.BookingRepository;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.repository.ReviewRepository;
@@ -40,17 +42,20 @@ public class ReviewService {
         return reviewDtos;
     }
 
-    public List<ReviewDto> findReviewsByProperty(Long propertyId){
+    public List<ReviewDto> findAllReviewsByPropertyId(Long propertyId) throws PropertyNotFoundException {
+        Property property = propertyRepository.findById(propertyId)
+                .orElseThrow(() -> new PropertyNotFoundException(propertyId));
         List<ReviewDto> reviewDtos = new ArrayList<>();
-        for (Review review : reviewRepository.findAllReviewsByIdProperty(propertyId)) {
+        for (Review review : reviewRepository.findAllReviewsByIdProperty(property.getId())) {
             ReviewDto reviewDto = ReviewMapper.instance.toDto(review);
             reviewDtos.add(reviewDto);
         }
         return reviewDtos;
     }
 
-    public boolean addReview(ReviewDto reviewDto, Long bookingId, Long userId){
-        Booking booking = bookingRepository.findById(bookingId).get();
+    public boolean addReview(ReviewDto reviewDto, Long bookingId, Long userId) throws BookingNotFoundException {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(()-> new BookingNotFoundException(bookingId));
         BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
         Property property = booking.getApartment().getProperty();
         if (booking.getUser().getId().equals(userId) && bookingDto.getCheckOut().before(new Date())){
@@ -65,7 +70,15 @@ public class ReviewService {
             if (property.getRating() == null){
                 property.setRating(review.getRating());
             }else {
-                property.setRating((property.getRating() + review.getRating()) / 2);
+                List<Review> reviews = reviewRepository.findAllReviewsByIdProperty(property.getId());
+                Float sum = 0.0f;
+                int quantity = 0;
+                for(Review r : reviews){
+                    sum += r.getRating();
+                    quantity ++;
+                }
+                Float newRating = sum/quantity;
+                property.setRating(newRating);
             }
             propertyRepository.save(property);
             return true;
