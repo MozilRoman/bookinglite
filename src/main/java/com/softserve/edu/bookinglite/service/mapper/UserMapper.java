@@ -9,8 +9,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
-import org.springframework.security.core.authority.AuthorityUtils;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
@@ -45,10 +45,6 @@ public interface UserMapper {
 
 
     default org.springframework.security.core.userdetails.User UsertoSecurityUser(User user){
-        String[] roles  = new String[user.getRoles().size()];
-        for(int i = 0;i<user.getRoles().size();i++){
-            roles[i] = user.getRoles().iterator().next().getName();
-        }
-        return new org.springframework.security.core.userdetails.User(user.getId().toString(),user.getPassword(),AuthorityUtils.createAuthorityList(roles));
+        return new org.springframework.security.core.userdetails.User(user.getId().toString(),user.getPassword(),new ArrayList<>());
     }
 }

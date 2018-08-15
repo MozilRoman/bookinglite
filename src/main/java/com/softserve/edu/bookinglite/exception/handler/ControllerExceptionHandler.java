@@ -16,6 +16,9 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionDto> handleAppException(Exception ex, WebRequest request){
         logger.error("Exception: " + ex.getClass().getName() + " Message: " + ex.getMessage() + " Request: " + request.toString());
         HttpStatus status = ex.getClass().getAnnotation(ResponseStatus.class).value();
+        if(status == null){
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
         ExceptionDto dto = new ExceptionDto();
         dto.setException(ex.getClass().getName());
         dto.setMessage(ex.getMessage());

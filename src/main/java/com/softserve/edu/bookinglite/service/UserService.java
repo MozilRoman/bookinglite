@@ -5,6 +5,9 @@ import com.softserve.edu.bookinglite.entity.Role;
 import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.entity.VerificationToken;
 import com.softserve.edu.bookinglite.events.RegistrationCompleteEvent;
+import com.softserve.edu.bookinglite.exception.EmailAlreadyUsedException;
+import com.softserve.edu.bookinglite.exception.UserIsNotVerifiedException;
+import com.softserve.edu.bookinglite.exception.UserNotFoundException;
 import com.softserve.edu.bookinglite.repository.RoleRepository;
 import com.softserve.edu.bookinglite.repository.UserRepository;
 import com.softserve.edu.bookinglite.repository.VerificationTokenRepository;
@@ -54,7 +57,7 @@ public class UserService implements UserDetailsService {
 
     //TODO: REFACTOR
     @Transactional
-    public boolean registerUser(RegisterDto registerDto) {
+    public void registerUser(RegisterDto registerDto) {
         User user = new User();
         user.setEmail(registerDto.getEmail());
         user.setFirst_name(registerDto.getFirst_name());
@@ -65,23 +68,18 @@ public class UserService implements UserDetailsService {
         List<Role> roles = roleRepository.findAll();
         Set<Role> userRoles = new HashSet<Role>();
         for (Role role : roles) {
-            if (role.getName().equals("ROLE_OWNER") && registerDto.isOwner()) {
+            if ("ROLE_OWNER".equals(role.getName()) && registerDto.isOwner()) {
                 userRoles.add(role);
-                continue;
-            } else if (role.getName().equals("ROLE_USER")) {
+            } else if ("ROLE_USER".equals(role.getName())) {
                 userRoles.add(role);
             }
         }
         user.setRoles(userRoles);
 
-        if(emailverification) {
-            user.setVerified(false);
-        }
-        else user.setVerified(true);
+        user.setVerified(!emailverification);
         User result = userRepository.save(user);
         if(emailverification) applicationEventMulticaster.multicastEvent(new RegistrationCompleteEvent(result,appUrl));
-        if(result != null)return true;
-        else return false;
+
     }
     @Transactional
     public boolean verifyUser(String token){
@@ -106,13 +104,19 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public User findByEmail(String email){
-        return userRepository.findByEmail(email);
+    public User findByEmail(String email) throws UserNotFoundException{
+        User user = userRepository.findByEmail(email);
+        if(user != null){
+            return user;
+        }
+        else {
+            throw new UserNotFoundException(email);
+        }
     }
     @Transactional
-    public String[] getUserRoles(Long userid){
+    public String[] getUserRoles(Long userid) throws UserNotFoundException{
         ArrayList<String> roles = new ArrayList<>();
-        Set<Role> roleSet = userRepository.findById(userid).get().getRoles();
+        Set<Role> roleSet = userRepository.findById(userid).orElseThrow(() -> new UserNotFoundException()).getRoles();
         for(Role role : roleSet){
             roles.add(role.getName());
         }
@@ -127,16 +131,16 @@ public class UserService implements UserDetailsService {
         verificationToken.setExpire_at(expire);
         verificationTokenRepository.save(verificationToken);
     }
-    public void checkVerificationToken(String email){
+    public void checkUser(String email) throws UserIsNotVerifiedException,EmailAlreadyUsedException{
        VerificationToken verificationToken = verificationTokenRepository.findByUserEmail(email);
        if(verificationToken != null) {
-           if (verificationToken.getUser().isVerified()) {
-               verificationTokenRepository.delete(verificationToken);
+           if (!verificationToken.getUser().isVerified()) {
+               throw new UserIsNotVerifiedException();
            } else {
-               User user = verificationToken.getUser();
-               verificationTokenRepository.delete(verificationToken);
-               userRepository.delete(user);
+               throw new EmailAlreadyUsedException(email);
            }
+       } else if(!userRepository.existsByEmail(email)) {
+           throw new EmailAlreadyUsedException(email);
        }
     }
 
@@ -147,7 +151,7 @@ public class UserService implements UserDetailsService {
         if(user != null){
            return UserMapper.instance.UsertoSecurityUser(user);
         } else {
-            throw new UsernameNotFoundException("User with this email not exist: " + email);
+            throw new UsernameNotFoundException("User with email'"+ email +"' not found");
         }
     }
     

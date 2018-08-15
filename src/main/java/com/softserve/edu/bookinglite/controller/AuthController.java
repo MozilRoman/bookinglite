@@ -1,6 +1,10 @@
 package com.softserve.edu.bookinglite.controller;
 
 import com.softserve.edu.bookinglite.entity.User;
+import com.softserve.edu.bookinglite.exception.BadUserCredentialsException;
+import com.softserve.edu.bookinglite.exception.EmailAlreadyUsedException;
+import com.softserve.edu.bookinglite.exception.UserIsNotVerifiedException;
+import com.softserve.edu.bookinglite.exception.UserNotFoundException;
 import com.softserve.edu.bookinglite.security.JwtTokenProvider;
 import com.softserve.edu.bookinglite.service.UserService;
 import com.softserve.edu.bookinglite.service.dto.LoginDto;
@@ -10,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -42,10 +47,10 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto){
+    public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto) throws UserNotFoundException,UserIsNotVerifiedException,BadUserCredentialsException {
         User user = userService.findByEmail(loginDto.getEmail());
         if(user != null && !user.isVerified()){
-            return ResponseEntity.status(401).body("Unverified");
+            throw new UserIsNotVerifiedException();
         }
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -58,22 +63,18 @@ public class AuthController {
             String jwt = jwtTokenProvider.generateToken(authentication);
             return ResponseEntity.ok().body(jwt);
         } catch (AuthenticationException ex){
-            return ResponseEntity.status(401).body(ex.getMessage());
+            if(ex instanceof BadCredentialsException){
+                throw new BadUserCredentialsException();
+            }
         }
+        return ResponseEntity.badRequest().body("");
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@Valid @RequestBody RegisterDto registerDto){
-        if(userService.existsByEmail(registerDto.getEmail())){
-            userService.checkVerificationToken(registerDto.getEmail());
-        	return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        if (userService.registerUser(registerDto)){
-            return new ResponseEntity<Void>(HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Void> register(@Valid @RequestBody RegisterDto registerDto) throws EmailAlreadyUsedException,UserIsNotVerifiedException {
+        userService.checkUser(registerDto.getEmail());
+        userService.registerUser(registerDto);
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
     @GetMapping("/registrationconfirm")
     public ResponseEntity<Void> registrationconfirm(@RequestParam(name = "token") String token){

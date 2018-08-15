@@ -1,6 +1,7 @@
 package com.softserve.edu.bookinglite.security;
 
 
+import com.softserve.edu.bookinglite.exception.UserNotFoundException;
 import com.softserve.edu.bookinglite.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,7 +36,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if(ex instanceof UserNotFoundException) {
+                response.sendError(400);
+            }
         }
 
         filterChain.doFilter(request, response);
