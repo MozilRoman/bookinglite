@@ -49,7 +49,7 @@ public class ApartmentService {
 	public boolean saveApartment(ApartmentDto apartmentDto, Long propertyId, Long userId) throws PropertyNotFoundException {
 		Property property = propertyRepository.findById(propertyId)
 				.orElseThrow(() -> new PropertyNotFoundException(propertyId));
-		if (property.getUser().getId().equals(userId)) {
+		if (property.getOwner().getId().equals(userId)) {
 			Apartment apartment = new Apartment();
 			apartment.setName(apartmentDto.getName());
 			apartment.setPrice(apartmentDto.getPrice());
@@ -66,7 +66,7 @@ public class ApartmentService {
 	public boolean updateApartment(ApartmentDto apartmentDto, Long apartmentId, Long userId) throws ApartmentNotFoundException, ApartmentUpdateException {
 		Apartment apartment = apartmentRepository.findById(apartmentId)
 				.orElseThrow(()-> new ApartmentNotFoundException(apartmentId));
-		if (apartment.getProperty().getUser().getId().equals(userId)) {
+		if (apartment.getProperty().getOwner().getId().equals(userId)) {
 			apartment.setName(apartmentDto.getName());
 			apartment.setPrice(apartmentDto.getPrice());
 			apartment.setNumberOfGuests(apartmentDto.getNumberOfGuests());

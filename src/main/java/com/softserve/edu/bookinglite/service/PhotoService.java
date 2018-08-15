@@ -1,14 +1,13 @@
 package com.softserve.edu.bookinglite.service;
 import java.io.IOException;
-import java.util.Map;
-import com.cloudinary.*;
-import com.cloudinary.utils.ObjectUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ApplicationEventMulticaster;
-import org.springframework.core.task.TaskExecutor;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.softserve.edu.bookinglite.config.CloudinaryConfig.UploadOptions;
 import com.softserve.edu.bookinglite.entity.Photo;
 import com.softserve.edu.bookinglite.events.UploadPhotoEvent;
@@ -31,7 +30,7 @@ public class PhotoService {
 	public boolean uploadPhoto(MultipartFile file, Long property_id, Long user_id) {
 		
 		
-		if(!propertyRepository.getOne(property_id).getUser().getId().equals(user_id) 
+		if(!propertyRepository.getOne(property_id).getOwner().getId().equals(user_id) 
 				|| file==null 
 				|| file.getContentType().indexOf(AVAILABLE_TYPE)==-1 
 				|| file.getSize()>MAX_BYTES) {
@@ -52,7 +51,7 @@ public class PhotoService {
 		try {
 			Photo photo = photoRepository.findByUrlLike(name).get(0);
 			
-			if(!photo.getProperty().getUser().getId().equals(user_id))
+			if(!photo.getProperty().getOwner().getId().equals(user_id))
 				throw new Exception("not secure");
 			
 			cloudinary.uploader().destroy(UploadOptions.FOLDER_OPTION.getValue()+"/"+name, ObjectUtils.emptyMap());

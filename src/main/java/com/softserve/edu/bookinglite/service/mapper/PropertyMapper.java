@@ -22,15 +22,15 @@ public interface PropertyMapper {
 	
 	@Mappings({@Mapping(target = "apartments",ignore = true),
         @Mapping(target = "address",ignore = true),
-        @Mapping(target = "user",ignore = true)})
+        @Mapping(target = "owner",ignore = true)})
 	PropertyDto propertyToBasePropertyDto(Property property);
 	
 	@Mappings({@Mapping(target = "address",ignore = true),
-        @Mapping(target = "user",ignore = true)})
+        @Mapping(target = "owner",ignore = true)})
 	PropertyDto propertyToBasePropertyDtoWithApartment(Property property);
 	
 	@Mappings({@Mapping(target = "apartments",ignore = true),
-        @Mapping(target = "user",ignore = true)})
+        @Mapping(target = "owner",ignore = true)})
 	public abstract PropertyDto propertyToBasePropertyDtoWithAddress(Property property);
 	
 	
@@ -38,7 +38,7 @@ public interface PropertyMapper {
         @Mapping(target = "address",ignore = true)})
 	PropertyDto propertyToBasePropertyDtoWithUser(Property property);
 	
-	@Mapping(target = "user",ignore = true)
+	@Mapping(target = "owner",ignore = true)
 	PropertyDto propertyToBasePropertyDtoWithAddressApartment(Property property);
 	
 	
@@ -51,7 +51,7 @@ public interface PropertyMapper {
        return ApartmentMapper.instance.toDto(apartment);
     }
 	Address map(Address address);
-	default UserDto map(User user){
-		return UserMapper.instance.UserToBaseUserDto(user);
+	default UserDto map(User owner){
+		return UserMapper.instance.UserToBaseUserDto(owner);
 	}
 }

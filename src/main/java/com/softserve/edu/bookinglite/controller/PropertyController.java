@@ -39,11 +39,6 @@ public class PropertyController {
 		this.propertyService = propertyService;
 	}
 	
-	@GetMapping("/test")
-	public String getHello() {
-		return "Hello Angular from Spring Boot";
-	}
-	
 	@GetMapping("/property")
 	public List<PropertyDto> getAllProperties() {
 		return propertyService.getAllPropertyDtos();
@@ -106,7 +101,7 @@ public class PropertyController {
 			@RequestParam("getPageNumber") int getPageNumber,
 			@RequestParam("getPageSize") int getPageSize){
 		List<PropertyDto> dtos = new ArrayList<>();
-		Page<Property> page = propertyService.fingPropertyByPage(getPageNumber,getPageSize);
+		Page<Property> page = propertyService.findPropertyByPage(getPageNumber,getPageSize);
 		for(Property property : page.getContent()) {
 			PropertyDto propertyDto = PropertyMapper.instance
 					.propertyToBasePropertyDto(property);

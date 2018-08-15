@@ -92,7 +92,7 @@ public class PropertyService {
 		property.setPhoneNumber(propertyDto.getPhoneNumber());
 		property.setContactEmail(propertyDto.getContactEmail());
 		Optional<User> user = userService.getUserById(userId);
-		property.setUser(user.get());
+		property.setOwner(user.get());
 		property.setPropertyType(propertyDto.getPropertyType());
 		property.setAddress(propertyDto.getAddress());
 		property.setFacilities(propertyDto.getFacilities());
@@ -104,7 +104,7 @@ public class PropertyService {
 			throws PropertyNotFoundException, PropertyConfirmOwnerException {
 		Property property = propertyRepository.findById(propertyId)
 				.orElseThrow(() -> new PropertyNotFoundException(propertyId));
-		if (propertyDto != null && property.getUser().getId() == Long.parseLong(principal.getName())) {
+		if (propertyDto != null && property.getOwner().getId() == Long.parseLong(principal.getName())) {
 			property.setName(propertyDto.getName());
 			property.setDescription(propertyDto.getDescription());
 			property.setPhoneNumber(propertyDto.getPhoneNumber());
@@ -152,7 +152,7 @@ public class PropertyService {
 	}
 
 	@Transactional
-	public Page<Property> fingPropertyByPage(int page, int size) {
+	public Page<Property> findPropertyByPage(int page, int size) {
 		return propertyRepository.findAll(PageRequest.of(page, size));
 	}
 }

@@ -8,7 +8,7 @@ public class PropertyNotFoundException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
-	public PropertyNotFoundException(Long prodertyId) {
-		super("Property with id = " + prodertyId + " is not exist");
+	public PropertyNotFoundException(Long propertyId) {
+		super("Property with id = " + propertyId + " is not exist");
 	}
 }
