@@ -30,7 +30,7 @@ public class PhotoService {
 	public boolean uploadPhoto(MultipartFile file, Long property_id, Long user_id) {
 		
 		
-		if(!propertyRepository.getOne(property_id).getOwner().getId().equals(user_id) 
+		if(!propertyRepository.getOne(property_id).getUser().getId().equals(user_id) 
 				|| file==null 
 				|| file.getContentType().indexOf(AVAILABLE_TYPE)==-1 
 				|| file.getSize()>MAX_BYTES) {
@@ -51,7 +51,7 @@ public class PhotoService {
 		try {
 			Photo photo = photoRepository.findByUrlLike(name).get(0);
 			
-			if(!photo.getProperty().getOwner().getId().equals(user_id))
+			if(!photo.getProperty().getUser().getId().equals(user_id))
 				throw new Exception("not secure");
 			
 			cloudinary.uploader().destroy(UploadOptions.FOLDER_OPTION.getValue()+"/"+name, ObjectUtils.emptyMap());

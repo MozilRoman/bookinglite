@@ -21,7 +21,7 @@ public class PropertyDto {
 	@NotBlank
 	private String contactEmail;
 	
-	private UserDto owner;
+	private UserDto user;
 	@NotNull
 	private PropertyType propertyType;
 	@NotNull
@@ -85,12 +85,12 @@ public class PropertyDto {
 		return propertyType;
 	}
 
-	public UserDto getOwner() {
-		return owner;
+	public UserDto getUser() {
+		return user;
 	}
 
-	public void setOwner(UserDto owner) {
-		this.owner = owner;
+	public void setUser(UserDto user) {
+		this.user = user;
 	}
 
 	public void setPropertyType(PropertyType propertyType) {

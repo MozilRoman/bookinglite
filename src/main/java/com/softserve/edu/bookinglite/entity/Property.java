@@ -52,7 +52,7 @@ public class Property {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "owner_id",nullable = false)
-	private User owner; 
+	private User user; 
 
 	@ManyToMany
 	@JoinTable(name = "property_facilities",
@@ -135,12 +135,12 @@ public class Property {
 		this.apartments = apartments;
 	}
 
-	public User getOwner() {
-		return owner;
+	public User getUser() {
+		return user;
 	}
 
-	public void setOwner(User owner) {
-		this.owner = owner;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public Set<Facility> getFacilities() {
