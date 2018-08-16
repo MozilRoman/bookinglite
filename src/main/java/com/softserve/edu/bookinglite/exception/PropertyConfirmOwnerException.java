@@ -4,11 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class PropertyNotFoundException extends Exception {
+public class PropertyConfirmOwnerException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
-	public PropertyNotFoundException(Long propertyId) {
-		super("Property with id = " + propertyId + " is not exist");
+	public PropertyConfirmOwnerException() {
+		super("You don't have permission to manipulate this property ");
 	}
 }

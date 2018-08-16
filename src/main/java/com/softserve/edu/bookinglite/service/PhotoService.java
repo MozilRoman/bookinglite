@@ -1,14 +1,13 @@
 package com.softserve.edu.bookinglite.service;
 import java.io.IOException;
-import java.util.Map;
-import com.cloudinary.*;
-import com.cloudinary.utils.ObjectUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ApplicationEventMulticaster;
-import org.springframework.core.task.TaskExecutor;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.softserve.edu.bookinglite.config.CloudinaryConfig.UploadOptions;
 import com.softserve.edu.bookinglite.entity.Photo;
 import com.softserve.edu.bookinglite.events.UploadPhotoEvent;

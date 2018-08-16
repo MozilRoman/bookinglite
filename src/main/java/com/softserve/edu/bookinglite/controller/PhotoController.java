@@ -29,7 +29,6 @@ public class PhotoController {
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	//name example: 047059ef-6950-469c-8d44-90a311f39982
 	@DeleteMapping("/photo/{name}")
 	public ResponseEntity<Void> deletePhoto(@PathVariable("name") String name, Principal principal){
 		if(photoService.deletePtoto(name, Long.parseLong(principal.getName()))) {
