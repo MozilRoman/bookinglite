@@ -199,4 +199,3 @@ public class BookingService {
     	return priceForPeriod.add(priceOneDay);
     }
 }
-

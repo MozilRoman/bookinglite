@@ -14,12 +14,13 @@ public class PropertyDto {
 	private String name;
 	@NotBlank
 	private String description;
+	
 	private Float rating;
 	@NotBlank
 	private String phoneNumber;
 	@NotBlank
 	private String contactEmail;
-	@NotNull
+	
 	private UserDto user;
 	@NotNull
 	private PropertyType propertyType;
