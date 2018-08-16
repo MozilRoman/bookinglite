@@ -24,8 +24,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class UserServiceUnitTest {
 
 
-
-
     @Mock
     private UserRepository userRepository;
     @Mock

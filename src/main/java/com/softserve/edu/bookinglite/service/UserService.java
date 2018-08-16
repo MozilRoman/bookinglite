@@ -36,7 +36,7 @@ import java.util.*;
 
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -174,16 +174,7 @@ public class UserService implements UserDetailsService {
        }
     }
 
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user =  userRepository.findByEmail(email);
-        if(user != null){
-           return UserMapper.instance.UsertoSecurityUser(user);
-        } else {
-            throw new UsernameNotFoundException("User with email'"+ email +"' not found");
-        }
-    }
+
     
     public Optional<User> getUserById(Long id) {
     	return userRepository.findById(id);

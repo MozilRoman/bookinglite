@@ -2,6 +2,7 @@ package com.softserve.edu.bookinglite.config;
 
 import com.softserve.edu.bookinglite.security.JwtAuthenticationEntryPoint;
 import com.softserve.edu.bookinglite.security.JwtAuthorizationFilter;
+import com.softserve.edu.bookinglite.security.SecurityUserService;
 import com.softserve.edu.bookinglite.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -23,11 +24,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
-    UserService userService;
+    SecurityUserService userService;
     @Autowired
     JwtAuthorizationFilter jwtAuthorizationFilter;
     @Autowired
     JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+
 
     @Bean
     public AuthenticationManager customAuthenticationManager() throws Exception {

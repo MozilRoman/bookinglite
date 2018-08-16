@@ -22,15 +22,15 @@ public interface PropertyMapper {
 	
 	@Mappings({@Mapping(target = "apartments",ignore = true),
         @Mapping(target = "address",ignore = true),
-        @Mapping(target = "owner",ignore = true)})
+        @Mapping(target = "user",ignore = true)})
 	PropertyDto propertyToBasePropertyDto(Property property);
 	
 	@Mappings({@Mapping(target = "address",ignore = true),
-        @Mapping(target = "owner",ignore = true)})
+        @Mapping(target = "user",ignore = true)})
 	PropertyDto propertyToBasePropertyDtoWithApartment(Property property);
 	
 	@Mappings({@Mapping(target = "apartments",ignore = true),
-        @Mapping(target = "owner",ignore = true)})
+        @Mapping(target = "user",ignore = true)})
 	public abstract PropertyDto propertyToBasePropertyDtoWithAddress(Property property);
 	
 	
@@ -38,7 +38,7 @@ public interface PropertyMapper {
         @Mapping(target = "address",ignore = true)})
 	PropertyDto propertyToBasePropertyDtoWithUser(Property property);
 	
-	@Mapping(target = "owner",ignore = true)
+	@Mapping(target = "user",ignore = true)
 	PropertyDto propertyToBasePropertyDtoWithAddressApartment(Property property);
 	
 	
