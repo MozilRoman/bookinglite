@@ -5,18 +5,26 @@ import com.softserve.edu.bookinglite.entity.Role;
 import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.entity.VerificationToken;
 import com.softserve.edu.bookinglite.events.RegistrationCompleteEvent;
+import com.softserve.edu.bookinglite.exception.BadUserCredentialsException;
 import com.softserve.edu.bookinglite.exception.EmailAlreadyUsedException;
 import com.softserve.edu.bookinglite.exception.UserIsNotVerifiedException;
 import com.softserve.edu.bookinglite.exception.UserNotFoundException;
 import com.softserve.edu.bookinglite.repository.RoleRepository;
 import com.softserve.edu.bookinglite.repository.UserRepository;
 import com.softserve.edu.bookinglite.repository.VerificationTokenRepository;
+import com.softserve.edu.bookinglite.security.JwtTokenProvider;
+import com.softserve.edu.bookinglite.service.dto.LoginDto;
 import com.softserve.edu.bookinglite.service.dto.RegisterDto;
 import com.softserve.edu.bookinglite.service.dto.UserDto;
 import com.softserve.edu.bookinglite.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ApplicationEventMulticaster;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,6 +42,8 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final VerificationTokenRepository verificationTokenRepository;
     private final ApplicationEventMulticaster applicationEventMulticaster;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Value("${app.emailverification}")
     private Boolean emailverification;
@@ -42,12 +52,14 @@ public class UserService implements UserDetailsService {
     private String appUrl;
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, VerificationTokenRepository verificationTokenRepository, ApplicationEventMulticaster applicationEventMulticaster) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, VerificationTokenRepository verificationTokenRepository, ApplicationEventMulticaster applicationEventMulticaster, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.applicationEventMulticaster = applicationEventMulticaster;
         this.passwordEncoder = passwordEncoder;
         this.verificationTokenRepository = verificationTokenRepository;
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
 
@@ -55,7 +67,34 @@ public class UserService implements UserDetailsService {
         return userRepository.existsByEmail(email);
     }
 
-    //TODO: REFACTOR
+    @Transactional
+    public String loginUser (LoginDto loginDto) throws UserNotFoundException,UserIsNotVerifiedException,BadUserCredentialsException{
+        User user = userRepository.findByEmail(loginDto.getEmail());
+        if(user == null){
+            throw new UserNotFoundException(loginDto.getEmail());
+        }
+        if(user != null && !user.isVerified()){
+            throw new UserIsNotVerifiedException();
+        }
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginDto.getEmail(),
+                            loginDto.getPassword()
+                    )
+            );
+
+            String jwt = jwtTokenProvider.generateToken(authentication);
+            return jwt;
+        } catch (AuthenticationException ex){
+            if(ex instanceof BadCredentialsException){
+                throw new BadUserCredentialsException();
+            }
+        }
+        return "";
+    }
+
+
     @Transactional
     public void registerUser(RegisterDto registerDto) {
         User user = new User();
@@ -104,15 +143,6 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public User findByEmail(String email) throws UserNotFoundException{
-        User user = userRepository.findByEmail(email);
-        if(user != null){
-            return user;
-        }
-        else {
-            throw new UserNotFoundException(email);
-        }
-    }
     @Transactional
     public String[] getUserRoles(Long userid) throws UserNotFoundException{
         ArrayList<String> roles = new ArrayList<>();

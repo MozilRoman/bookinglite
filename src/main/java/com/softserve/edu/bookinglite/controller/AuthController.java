@@ -27,14 +27,11 @@ import java.security.Principal;
 @RequestMapping("/api")
 public class AuthController {
     private final UserService userService;
-    private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider;
+
 
     @Autowired
-    public AuthController(UserService userService, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+    public AuthController(UserService userService) {
         this.userService = userService;
-        this.authenticationManager = authenticationManager;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
 
@@ -48,26 +45,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto) throws UserNotFoundException,UserIsNotVerifiedException,BadUserCredentialsException {
-        User user = userService.findByEmail(loginDto.getEmail());
-        if(user != null && !user.isVerified()){
-            throw new UserIsNotVerifiedException();
-        }
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            loginDto.getEmail(),
-                            loginDto.getPassword()
-                    )
-            );
 
-            String jwt = jwtTokenProvider.generateToken(authentication);
-            return ResponseEntity.ok().body(jwt);
-        } catch (AuthenticationException ex){
-            if(ex instanceof BadCredentialsException){
-                throw new BadUserCredentialsException();
-            }
-        }
-        return ResponseEntity.badRequest().body("");
+        return ResponseEntity.ok().body(userService.loginUser(loginDto));
     }
 
     @PostMapping("/register")
