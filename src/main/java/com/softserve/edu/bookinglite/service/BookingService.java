@@ -15,8 +15,11 @@ import com.softserve.edu.bookinglite.repository.BookingStatusRepository;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
 import com.softserve.edu.bookinglite.service.dto.CreateBookingDto;
 import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
+import com.softserve.edu.bookinglite.util.BookingUtil;
 import com.softserve.edu.bookinglite.util.DateUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,6 +44,7 @@ public class BookingService {
 	private final BookingStatusRepository bookingStatusRepository;
 	private final ApartmentRepository apartmentRepository;
 
+	private Logger logger = LoggerFactory.getLogger(BookingService.class);
 	@Autowired
 	public BookingService(BookingRepository bookingRepository,
 						  BookingStatusRepository bookingStatusRepository,
@@ -109,32 +113,19 @@ public class BookingService {
 		}
 		return listBookingDto;
     }
-	
-//if booking already exist it will return true
-	@Transactional
-	public boolean checkBookingIfExistByChekInandCheckOut(Long apartmentId, Date checkIn, Date checkOut) {
-		if(bookingRepository.getBookingByCheck(apartmentId,DateUtil.setHourAndMinToDate(checkIn,HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT),
-				DateUtil.setHourAndMinToDate(checkOut,HOUR_CHECK_OUT,MINUTE_CHECK_IN_AND_CHECK_OUT))==null &&
-				bookingRepository.checkBookingsExistsByDateInAndDateOut(apartmentId,DateUtil.setHourAndMinToDate(checkIn,HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT),
-						DateUtil.setHourAndMinToDate(checkOut,HOUR_CHECK_OUT,MINUTE_CHECK_IN_AND_CHECK_OUT))==null
-				){
-		    return false;
-        }
-        return true;
-	}
 
 	@Transactional
-	public boolean createBooking(CreateBookingDto createBookingDto, Long userId, Long apartmentId) 
-			throws ApartmentNotFoundException, BookingInvalidDataException, BookingExistingException {
+	public boolean createBooking(CreateBookingDto createBookingDto, Long userId, Long apartmentId)
+			throws ApartmentNotFoundException, BookingExistingException, BookingInvalidDataException {
 		Apartment apartment= apartmentRepository.findById(apartmentId)
 				.orElseThrow(() -> new ApartmentNotFoundException(apartmentId));
-		
-		if(checkValidationDate (createBookingDto)==false || 
-				createBookingDto.getNumberOfGuests() > apartment.getNumberOfGuests()){
+		if(DateUtil.checkValidationDate(createBookingDto.getCheckIn(),createBookingDto.getCheckOut())==false){
 			throw new BookingInvalidDataException();
-  		}
-		
-		if (checkBookingIfExistByChekInandCheckOut(apartmentId,createBookingDto.getCheckIn(),createBookingDto.getCheckOut())==false) {
+		}
+		if (createBookingDto.getNumberOfGuests() <= apartment.getNumberOfGuests()
+		        && bookingRepository.getBookingByCheck(apartmentId,
+				DateUtil.setHourAndMinToDate(createBookingDto.getCheckIn(),HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT),
+				DateUtil.setHourAndMinToDate(createBookingDto.getCheckOut(),HOUR_CHECK_OUT,MINUTE_CHECK_IN_AND_CHECK_OUT))==false) {
             Booking booking = new Booking();
             booking.setApartment(apartment);
             User user = new User();
@@ -142,17 +133,16 @@ public class BookingService {
             booking.setUser(user); 
             booking.setCheckIn(DateUtil.setHourAndMinToDate(createBookingDto.getCheckIn(),HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT));
             booking.setCheckOut(DateUtil.setHourAndMinToDate(createBookingDto.getCheckOut(),HOUR_CHECK_OUT,MINUTE_CHECK_IN_AND_CHECK_OUT));
-            booking.setTotalPrice(getPriceForPeriod(apartment.getPrice(),
+            booking.setTotalPrice(BookingUtil.getPriceForPeriod(apartment.getPrice(),
             		createBookingDto.getCheckIn(),createBookingDto.getCheckOut()));
             booking.setBookingStatus(bookingStatusRepository.findByName(RESERVED));
-            Booking result = bookingRepository.save(booking); 
-            if (result != null){
+            Booking result = bookingRepository.save(booking);
+            logger.info("booking was created successful "+result.getId());
                 return true;
             }
-            else return false;
-  		}
+
   		else {
-            throw new BookingExistingException();
+			throw new BookingExistingException();
         }
 	}
 	
@@ -175,27 +165,5 @@ public class BookingService {
 			return true;  
 		}
 		else return false;        		  	       	 	  	    	    		
-    }
-    
-    private boolean checkValidationDate (CreateBookingDto bookingDto){
-    	boolean isValid= true;
-    	
-    	if(bookingDto.getCheckOut().before(bookingDto.getCheckIn())) {
-    		isValid= false;
-    	}
-    	if(bookingDto.getCheckIn().before(new Date()) ) {
-    		isValid= false;
-    	}
-    	if(bookingDto.getCheckOut().compareTo(bookingDto.getCheckIn())==0) {
-    		isValid= false;
-    	}  	
-    	return isValid;
-    }    
-
-    public BigDecimal getPriceForPeriod(BigDecimal priceOneDay, Date checkIn, Date checkOut) {
-    	BigDecimal priceForPeriod= new BigDecimal(BigInteger.ZERO,2);
-    	int diff= DateUtil.countDay(checkIn, checkOut); 
-    	priceOneDay= priceOneDay.multiply( new BigDecimal(diff));
-    	return priceForPeriod.add(priceOneDay);
     }
 }
