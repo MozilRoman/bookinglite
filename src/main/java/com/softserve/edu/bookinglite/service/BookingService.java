@@ -119,7 +119,6 @@ public class BookingService {
 			throws ApartmentNotFoundException, BookingExistingException, BookingInvalidDataException {
 		Apartment apartment= apartmentRepository.findById(apartmentId)
 				.orElseThrow(() -> new ApartmentNotFoundException(apartmentId));
-		logger.error(""+new ApartmentNotFoundException(apartmentId));
 		if(DateUtil.checkValidationDate(createBookingDto.getCheckIn(),createBookingDto.getCheckOut())==false){
 			throw new BookingInvalidDataException();
 		}
@@ -143,7 +142,6 @@ public class BookingService {
             }
 
   		else {
-  			logger.warn(""+new BookingExistingException());
 			throw new BookingExistingException();
         }
 	}
