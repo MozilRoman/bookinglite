@@ -113,14 +113,9 @@ public class BookingService {
 //if booking already exist it will return true
 	@Transactional
 	public boolean checkBookingIfExistByChekInandCheckOut(Long apartmentId, Date checkIn, Date checkOut) {
-		if(bookingRepository.getBookingByCheck(apartmentId,DateUtil.setHourAndMinToDate(checkIn,HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT),
-				DateUtil.setHourAndMinToDate(checkOut,HOUR_CHECK_OUT,MINUTE_CHECK_IN_AND_CHECK_OUT))==null &&
-				bookingRepository.checkBookingsExistsByDateInAndDateOut(apartmentId,DateUtil.setHourAndMinToDate(checkIn,HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT),
-						DateUtil.setHourAndMinToDate(checkOut,HOUR_CHECK_OUT,MINUTE_CHECK_IN_AND_CHECK_OUT))==null
-				){
-		    return false;
-        }
-        return true;
+		return bookingRepository.getBookingByCheck(apartmentId,DateUtil.setHourAndMinToDate(checkIn,HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT),
+				DateUtil.setHourAndMinToDate(checkOut,HOUR_CHECK_OUT,MINUTE_CHECK_IN_AND_CHECK_OUT));
+
 	}
 
 	@Transactional
@@ -129,12 +124,11 @@ public class BookingService {
 		Apartment apartment= apartmentRepository.findById(apartmentId)
 				.orElseThrow(() -> new ApartmentNotFoundException(apartmentId));
 		
-		if(checkValidationDate (createBookingDto)==false || 
-				createBookingDto.getNumberOfGuests() > apartment.getNumberOfGuests()){
-			throw new BookingInvalidDataException();
-  		}
-		
-		if (checkBookingIfExistByChekInandCheckOut(apartmentId,createBookingDto.getCheckIn(),createBookingDto.getCheckOut())==false) {
+		if (checkValidationDate(createBookingDto.getCheckIn(),createBookingDto.getCheckOut())
+				&& createBookingDto.getNumberOfGuests() > apartment.getNumberOfGuests()
+		        && bookingRepository.getBookingByCheck(apartmentId,
+				DateUtil.setHourAndMinToDate(createBookingDto.getCheckIn(),HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT),
+				DateUtil.setHourAndMinToDate(createBookingDto.getCheckOut(),HOUR_CHECK_OUT,MINUTE_CHECK_IN_AND_CHECK_OUT))) {
             Booking booking = new Booking();
             booking.setApartment(apartment);
             User user = new User();
@@ -177,16 +171,16 @@ public class BookingService {
 		else return false;        		  	       	 	  	    	    		
     }
     
-    private boolean checkValidationDate (CreateBookingDto bookingDto){
+    private boolean checkValidationDate (Date in, Date out){
     	boolean isValid= true;
     	
-    	if(bookingDto.getCheckOut().before(bookingDto.getCheckIn())) {
+    	if(out.before(in)) {
     		isValid= false;
     	}
-    	if(bookingDto.getCheckIn().before(new Date()) ) {
+    	if(in.before(new Date()) ) {
     		isValid= false;
     	}
-    	if(bookingDto.getCheckOut().compareTo(bookingDto.getCheckIn())==0) {
+    	if(out.compareTo(in)==0) {
     		isValid= false;
     	}  	
     	return isValid;
