@@ -25,4 +25,18 @@ public class DateUtil {
     public static int countDay(Date checkIn, Date checkOut) {
     	return (int)(checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24);
     }
+    public static boolean checkValidationDate (Date in, Date out){
+        boolean isValid= true;
+
+        if(out.before(in)) {
+            isValid= false;
+        }
+        if(in.before(new Date()) ) {
+            isValid= false;
+        }
+        if(out.compareTo(in)==0) {
+            isValid= false;
+        }
+        return isValid;
+    }
 }

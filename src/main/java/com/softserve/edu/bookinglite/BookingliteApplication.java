@@ -5,8 +5,14 @@ package com.softserve.edu.bookinglite;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.softserve.edu.bookinglite.config.CloudinaryConfig.CloudinaryData;
+import com.softserve.edu.bookinglite.entity.Booking;
+import com.softserve.edu.bookinglite.exception.ApartmentNotFoundException;
+import com.softserve.edu.bookinglite.exception.BookingExistingException;
+import com.softserve.edu.bookinglite.exception.BookingInvalidDataException;
 import com.softserve.edu.bookinglite.repository.BookingRepository;
 import com.softserve.edu.bookinglite.security.JwtAuthorizationFilter;
+import com.softserve.edu.bookinglite.service.BookingService;
+import com.softserve.edu.bookinglite.service.dto.CreateBookingDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -40,14 +46,27 @@ public class BookingliteApplication {
 				CloudinaryData.API_SECRET.getName(), CloudinaryData.API_SECRET.getValue()));
 	}
 	@Autowired
-	private BookingRepository bookingRepository;
+	private BookingService bookingService;
 
 	@PostConstruct
 	public void init(){
-		Date in=new Date(118,8,1);
-		Date out=new Date(118,8,21);
+		Date in=new Date(118,7,27);
+		Date out=new Date(118,8,5);
 		System.out.println("date in : "+in);
-		System.out.println(bookingRepository.getBookingByCheck(1l,in,out));
+		CreateBookingDto booking=new CreateBookingDto();
+		booking.setCheckIn(in);
+		booking.setCheckOut(out);
+		booking.setNumberOfGuests(1);
+
+		try {
+			System.out.println(bookingService.createBooking(booking,7l,1l));
+		} catch (ApartmentNotFoundException e) {
+			e.printStackTrace();
+		} catch (BookingExistingException e) {
+			e.printStackTrace();
+		} catch (BookingInvalidDataException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {

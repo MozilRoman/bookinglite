@@ -112,14 +112,6 @@ public class BookingService {
 		}
 		return listBookingDto;
     }
-	
-//if booking already exist it will return true
-	@Transactional
-	public boolean checkBookingIfExistByChekInandCheckOut(Long apartmentId, Date checkIn, Date checkOut) {
-		return bookingRepository.getBookingByCheck(apartmentId,DateUtil.setHourAndMinToDate(checkIn,HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT),
-				DateUtil.setHourAndMinToDate(checkOut,HOUR_CHECK_OUT,MINUTE_CHECK_IN_AND_CHECK_OUT));
-
-	}
 
 	@Transactional
 	public boolean createBooking(CreateBookingDto createBookingDto, Long userId, Long apartmentId)
@@ -127,7 +119,7 @@ public class BookingService {
 		Apartment apartment= apartmentRepository.findById(apartmentId)
 				.orElseThrow(() -> new ApartmentNotFoundException(apartmentId));
 		logger.error(""+new ApartmentNotFoundException(apartmentId));
-		if(checkValidationDate(createBookingDto.getCheckIn(),createBookingDto.getCheckOut())==false){
+		if(DateUtil.checkValidationDate(createBookingDto.getCheckIn(),createBookingDto.getCheckOut())==false){
 			throw new BookingInvalidDataException();
 		}
 		if (createBookingDto.getNumberOfGuests() <= apartment.getNumberOfGuests()
@@ -176,20 +168,7 @@ public class BookingService {
 		else return false;        		  	       	 	  	    	    		
     }
     
-    private boolean checkValidationDate (Date in, Date out){
-    	boolean isValid= true;
-    	
-    	if(out.before(in)) {
-    		isValid= false;
-    	}
-    	if(in.before(new Date()) ) {
-    		isValid= false;
-    	}
-    	if(out.compareTo(in)==0) {
-    		isValid= false;
-    	}  	
-    	return isValid;
-    }    
+
 
     public BigDecimal getPriceForPeriod(BigDecimal priceOneDay, Date checkIn, Date checkOut) {
     	BigDecimal priceForPeriod= new BigDecimal(BigInteger.ZERO,2);
