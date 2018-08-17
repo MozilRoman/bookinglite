@@ -15,6 +15,7 @@ import com.softserve.edu.bookinglite.repository.BookingStatusRepository;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
 import com.softserve.edu.bookinglite.service.dto.CreateBookingDto;
 import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
+import com.softserve.edu.bookinglite.util.BookingUtil;
 import com.softserve.edu.bookinglite.util.DateUtil;
 
 import org.slf4j.Logger;
@@ -133,7 +134,7 @@ public class BookingService {
             booking.setUser(user); 
             booking.setCheckIn(DateUtil.setHourAndMinToDate(createBookingDto.getCheckIn(),HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT));
             booking.setCheckOut(DateUtil.setHourAndMinToDate(createBookingDto.getCheckOut(),HOUR_CHECK_OUT,MINUTE_CHECK_IN_AND_CHECK_OUT));
-            booking.setTotalPrice(getPriceForPeriod(apartment.getPrice(),
+            booking.setTotalPrice(BookingUtil.getPriceForPeriod(apartment.getPrice(),
             		createBookingDto.getCheckIn(),createBookingDto.getCheckOut()));
             booking.setBookingStatus(bookingStatusRepository.findByName(RESERVED));
             Booking result = bookingRepository.save(booking);
@@ -166,14 +167,5 @@ public class BookingService {
 			return true;  
 		}
 		else return false;        		  	       	 	  	    	    		
-    }
-    
-
-
-    public BigDecimal getPriceForPeriod(BigDecimal priceOneDay, Date checkIn, Date checkOut) {
-    	BigDecimal priceForPeriod= new BigDecimal(BigInteger.ZERO,2);
-    	int diff= DateUtil.countDay(checkIn, checkOut); 
-    	priceOneDay= priceOneDay.multiply( new BigDecimal(diff));
-    	return priceForPeriod.add(priceOneDay);
     }
 }

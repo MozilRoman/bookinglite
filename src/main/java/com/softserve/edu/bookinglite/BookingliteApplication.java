@@ -45,29 +45,6 @@ public class BookingliteApplication {
 				CloudinaryData.API_KEY.getName(), CloudinaryData.API_KEY.getValue(),
 				CloudinaryData.API_SECRET.getName(), CloudinaryData.API_SECRET.getValue()));
 	}
-	@Autowired
-	private BookingService bookingService;
-
-	@PostConstruct
-	public void init(){
-		Date in=new Date(118,7,27);
-		Date out=new Date(118,8,5);
-		System.out.println("date in : "+in);
-		CreateBookingDto booking=new CreateBookingDto();
-		booking.setCheckIn(in);
-		booking.setCheckOut(out);
-		booking.setNumberOfGuests(1);
-
-		try {
-			System.out.println(bookingService.createBooking(booking,7l,1l));
-		} catch (ApartmentNotFoundException e) {
-			e.printStackTrace();
-		} catch (BookingExistingException e) {
-			e.printStackTrace();
-		} catch (BookingInvalidDataException e) {
-			e.printStackTrace();
-		}
-	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(BookingliteApplication.class, args);
