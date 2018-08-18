@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.softserve.edu.bookinglite.exception.PropertyConfirmOwnerException;
-import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +15,8 @@ import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.User;
+import com.softserve.edu.bookinglite.exception.PropertyConfirmOwnerException;
+import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.dto.SearchDto;
@@ -24,7 +24,7 @@ import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
 
 @Service
 public class PropertyService {
-
+	
 	private final PropertyRepository propertyRepository;
 	private final UserService userService;
 

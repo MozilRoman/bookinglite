@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/login","/api/register","/api/registrationconfirm").permitAll()
+                .antMatchers("/api/login","/api/register","/api/registrationconfirm","/api/property/*","/api/property","/api/countries").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/property","property/*/photo","/property/*/apartment").hasAuthority("ROLE_OWNER")
                 .antMatchers(HttpMethod.PUT,"/apartment/*","/property/*").hasAuthority("ROLE_OWNER")
                 .antMatchers(HttpMethod.DELETE,"/photo/*").hasAuthority("ROLE_OWNER")
