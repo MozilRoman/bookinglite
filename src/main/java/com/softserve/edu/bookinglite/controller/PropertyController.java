@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.softserve.edu.bookinglite.entity.Country;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.exception.PropertyConfirmOwnerException;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
+import com.softserve.edu.bookinglite.service.CountryService;
 import com.softserve.edu.bookinglite.service.PropertyService;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.dto.SearchDto;
@@ -31,12 +33,19 @@ import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
 @RestController
 @RequestMapping("/api")
 public class PropertyController {
-
+	@Autowired
+	private  CountryService countryService; 
+	
 	private final PropertyService propertyService;
 
 	@Autowired
 	public PropertyController(PropertyService propertyService) {
 		this.propertyService = propertyService;
+	}
+	
+	@GetMapping("/countries")
+	public List<Country> getAllCountry(){
+		return countryService.getCountry();
 	}
 	
 	@GetMapping("/property")

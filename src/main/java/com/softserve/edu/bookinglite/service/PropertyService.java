@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.softserve.edu.bookinglite.exception.PropertyConfirmOwnerException;
-import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +15,8 @@ import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.User;
+import com.softserve.edu.bookinglite.exception.PropertyConfirmOwnerException;
+import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.dto.SearchDto;
@@ -37,10 +37,8 @@ public class PropertyService {
 	@Transactional
 	public List<PropertyDto> getAllPropertyDtos() {
 		List<PropertyDto> propertyDtos = new ArrayList<>();
-		for (Property property : propertyRepository.findAll()) {
-			PropertyDto dto = PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(property);
-			propertyDtos.add(dto);
-		}
+		propertyRepository.findAll().forEach(
+				p -> propertyDtos.add(PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(p)));
 		return propertyDtos;
 	}
 
@@ -59,44 +57,30 @@ public class PropertyService {
 	@Transactional
 	public List<PropertyDto> getPropertyDtosByCityName(String name) {
 		List<PropertyDto> propertyDtos = new ArrayList<>();
-		for (Property property : propertyRepository.getAllPropertyByCityName(name.toLowerCase())) {
-			PropertyDto dto = PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(property);
-			propertyDtos.add(dto);
-		}
+		propertyRepository.getAllPropertyByCityName(name.toLowerCase()).forEach(
+				p -> propertyDtos.add(PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(p)));
 		return propertyDtos;
 	}
 
 	@Transactional
 	public List<PropertyDto> getPropertyDtosByCountryName(String name) {
 		List<PropertyDto> propertyDtos = new ArrayList<>();
-		for (Property property : propertyRepository.getAllPropertyByCountryName(name.toLowerCase())) {
-			PropertyDto dto = PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(property);
-			propertyDtos.add(dto);
-		}
+		propertyRepository.getAllPropertyByCountryName(name.toLowerCase()).forEach(
+				p -> propertyDtos.add(PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(p)));
 		return propertyDtos;
 	}
-	
+
+	@SuppressWarnings("unused")
 	@Transactional
 	public boolean saveProperty(PropertyDto propertyDto, Long userId) {
-		Property property = propertyRepository.save(convertToProperty(propertyDto, userId));
+		Optional<User> user = userService.getUserById(userId);
+		Property property = PropertyMapper.instance.toEntity(propertyDto);
+		property.setUser(user.get());
+		propertyRepository.save(property);
 		if (property != null) {
 			return true;
-		} else
-			return false;
-	}
-
-	private Property convertToProperty(PropertyDto propertyDto, Long userId) {
-		Property property = new Property();
-		property.setName(propertyDto.getName());
-		property.setDescription(propertyDto.getDescription());
-		property.setPhoneNumber(propertyDto.getPhoneNumber());
-		property.setContactEmail(propertyDto.getContactEmail());
-		Optional<User> user = userService.getUserById(userId);
-		property.setUser(user.get());
-		property.setPropertyType(propertyDto.getPropertyType());
-		property.setAddress(propertyDto.getAddress());
-		property.setFacilities(propertyDto.getFacilities());
-		return property;
+		}
+		return false;
 	}
 
 	@Transactional
@@ -117,7 +101,7 @@ public class PropertyService {
 			throw new PropertyConfirmOwnerException();
 		}
 	}
-	
+
 	@Transactional
 	public List<PropertyDto> searchProperty(SearchDto searchDto) {
 		List<Property> properties = propertyRepository.getAllPropertyByCityId(2L);
