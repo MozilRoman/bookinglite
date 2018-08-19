@@ -44,6 +44,8 @@ public interface PropertyMapper {
 	
 	PropertyDto propertyToBasePropertyDtoWithApartmentAddressUser(Property property);
 	
+	Property toEntity(PropertyDto propertyDto);
+	
 	List<ApartmentDto> map(List<ApartmentDto> apartments);
     default ApartmentDto map(Apartment apartment) {
        return ApartmentMapper.instance.toDto(apartment);

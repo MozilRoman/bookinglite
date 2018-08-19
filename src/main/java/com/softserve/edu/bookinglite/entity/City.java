@@ -50,45 +50,15 @@ public class City {
 		return result;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		City other = (City) obj;
-		if (country == null) {
-			if (other.country != null)
-				return false;
-		} else if (!country.equals(other.country))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
-	}
-
-    
-    
-
-//    @Override
-//    public boolean equals(Object obj){
-//        if (this == obj)
-//            return true;
-//        if (obj == null)
-//            return false;
-//        if (!(obj instanceof City))
-//            return false;
-//        City other = (City) obj;
-//        return this.name.equals(other.name);
-//    }
+    @Override
+    public boolean equals(Object obj){
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof City))
+            return false;
+        City other = (City) obj;
+        return this.name.equals(other.name);
+    }
 }
