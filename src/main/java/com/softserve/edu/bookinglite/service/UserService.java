@@ -169,7 +169,7 @@ public class UserService {
            } else {
                throw new EmailAlreadyUsedException(email);
            }
-       } else if(!userRepository.existsByEmail(email)) {
+       } else if(userRepository.existsByEmail(email)) {
            throw new EmailAlreadyUsedException(email);
        }
     }
