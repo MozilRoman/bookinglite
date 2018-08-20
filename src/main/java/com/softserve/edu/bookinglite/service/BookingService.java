@@ -155,15 +155,14 @@ public class BookingService {
 		if(!booking.getBookingStatus().getName().equals(RESERVED)){
 			throw new BookingCancelException(booking.getBookingStatus().getName()); 
 		}
-		if( booking.getCheckIn().after(new Date())   ) {
+		if( (booking.getCheckIn().compareTo(new Date())==0 &&
+				booking.getCheckIn().before(DateUtil.setHourAndMinToDate
+						(new Date(),HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT))) ||
+				booking.getCheckIn().after(new Date())) {
 			booking.setBookingStatus(bookingStatusRepository.findByName(CANCELED));
+			bookingRepository.save(booking);
 			return true;   
 		}
-		else if(booking.getCheckIn().compareTo(new Date())==0
-				&& booking.getCheckIn().before(DateUtil.setHourAndMinToDate(new Date(),HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT))) {
-			booking.setBookingStatus(bookingStatusRepository.findByName(CANCELED));
-			return true;  
-		}
-		else return false;        		  	       	 	  	    	    		
+		else throw new BookingCancelException();      		  	       	 	  	    	    		
     }
 }
