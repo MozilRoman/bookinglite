@@ -1,4 +1,4 @@
-package com.softserve.edu.bookinglite.service;
+package com.softserve.edu.bookinglite.test.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,6 +26,7 @@ import com.softserve.edu.bookinglite.entity.Role;
 import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
+import com.softserve.edu.bookinglite.service.PropertyService;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
 
@@ -126,6 +127,7 @@ public class PropertyServiceTest {
 
 	@Test
 	public void getPropertyDtosByCountryNameTest() {
+		// Arrange
 		Property property = getPropertyInstance();
 		List<Property> properties = new ArrayList<>();
 		properties.add(property);
