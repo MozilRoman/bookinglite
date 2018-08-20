@@ -39,10 +39,7 @@ public class ApartmentService {
 		Property property = propertyRepository.findById(propertyId)
 				.orElseThrow(() -> new PropertyNotFoundException(propertyId));
 		List<ApartmentDto> apartmentDtos = new ArrayList<>();
-		for (Apartment apartment : property.getApartments()) {
-			ApartmentDto apartmentDto = ApartmentMapper.instance.toDto(apartment);
-			apartmentDtos.add(apartmentDto);
-		}
+		property.getApartments().forEach(a -> apartmentDtos.add(ApartmentMapper.instance.toDto(a)));
 		return apartmentDtos;
 	}
 
