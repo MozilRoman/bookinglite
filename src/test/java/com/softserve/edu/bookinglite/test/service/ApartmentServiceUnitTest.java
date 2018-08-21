@@ -13,6 +13,7 @@ import com.softserve.edu.bookinglite.service.dto.ApartmentDto;
 import com.softserve.edu.bookinglite.service.mapper.ApartmentMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,7 +41,7 @@ public class ApartmentServiceUnitTest {
     public void findByIdTestException() throws ApartmentNotFoundException {
         Apartment apartment = getApartment();
         apartment.setId(1L);
-        apartmentRepository.delete(apartment);
+        Mockito.when(apartmentRepository.findById(1L)).thenReturn(Optional.empty());
         apartmentService.findApartmentDtoById(1L);
     }
 
@@ -48,7 +49,7 @@ public class ApartmentServiceUnitTest {
     public void findAllApartmentsByPropertyIdTestException () throws PropertyNotFoundException {
         Property property = new Property();
         property.setId(1L);
-        propertyRepository.delete(property);
+        Mockito.when(propertyRepository.findById(1L)).thenReturn(Optional.empty());
         propertyService.getPropertyDtoById(1L);
     }
 
