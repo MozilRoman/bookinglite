@@ -26,8 +26,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.*;
 
 @Service
@@ -136,8 +134,7 @@ public class BookingService {
             booking.setTotalPrice(BookingUtil.getPriceForPeriod(apartment.getPrice(),
             		createBookingDto.getCheckIn(),createBookingDto.getCheckOut()));
             booking.setBookingStatus(bookingStatusRepository.findByName(RESERVED));
-            Booking result = bookingRepository.save(booking);
-            logger.info("booking was created successful "+result.getId());
+            bookingRepository.save(booking);
                 return true;
             }
 

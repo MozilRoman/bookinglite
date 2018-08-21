@@ -5,12 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.softserve.edu.bookinglite.exception.*;
+import com.softserve.edu.bookinglite.repository.ApartmentRepository;
+import com.softserve.edu.bookinglite.service.dto.CreateBookingDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
