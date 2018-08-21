@@ -59,6 +59,4 @@ public class Amenity {
 			return false;
 		return true;
 	}
-
-    
 }

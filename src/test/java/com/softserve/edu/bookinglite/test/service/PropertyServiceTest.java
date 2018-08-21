@@ -3,7 +3,6 @@ package com.softserve.edu.bookinglite.test.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -59,16 +58,6 @@ public class PropertyServiceTest {
 		List<PropertyDto> expectedPropertyDto = propertyService.getAllPropertyDtos();
 		// Assert
 		assertThat(actualPropertyDto).isEqualTo(expectedPropertyDto.get(INDEX));
-	}
-
-	@Test(expected = IndexOutOfBoundsException.class)
-	public void getAllPropertyDtosIndexOfBoundsExceptionsTest() {
-		// Arrange
-		Mockito.when(propertyRepository.findAll()).thenReturn(Collections.emptyList());
-		// Act
-		List<PropertyDto> expectedPropertyDto = propertyService.getAllPropertyDtos();
-		// Assert
-		assertThat(expectedPropertyDto.get(INDEX));
 	}
 
 	@Test

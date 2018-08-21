@@ -164,17 +164,11 @@ public class Property {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
-		result = prime * result + ((apartments == null) ? 0 : apartments.hashCode());
 		result = prime * result + ((contactEmail == null) ? 0 : contactEmail.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((facilities == null) ? 0 : facilities.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
-		result = prime * result + ((photos == null) ? 0 : photos.hashCode());
-		result = prime * result + ((propertyType == null) ? 0 : propertyType.hashCode());
-		result = prime * result + ((rating == null) ? 0 : rating.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -192,11 +186,6 @@ public class Property {
 				return false;
 		} else if (!address.equals(other.address))
 			return false;
-		if (apartments == null) {
-			if (other.apartments != null)
-				return false;
-		} else if (!apartments.equals(other.apartments))
-			return false;
 		if (contactEmail == null) {
 			if (other.contactEmail != null)
 				return false;
@@ -206,11 +195,6 @@ public class Property {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
-			return false;
-		if (facilities == null) {
-			if (other.facilities != null)
-				return false;
-		} else if (!facilities.equals(other.facilities))
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -227,29 +211,8 @@ public class Property {
 				return false;
 		} else if (!phoneNumber.equals(other.phoneNumber))
 			return false;
-		if (photos == null) {
-			if (other.photos != null)
-				return false;
-		} else if (!photos.equals(other.photos))
-			return false;
-		if (propertyType == null) {
-			if (other.propertyType != null)
-				return false;
-		} else if (!propertyType.equals(other.propertyType))
-			return false;
-		if (rating == null) {
-			if (other.rating != null)
-				return false;
-		} else if (!rating.equals(other.rating))
-			return false;
-		if (user == null) {
-			if (other.user != null)
-				return false;
-		} else if (!user.equals(other.user))
-			return false;
 		return true;
 	}
-	
-	
 
+	
 }
