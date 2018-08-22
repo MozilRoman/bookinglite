@@ -1,5 +1,14 @@
 package com.softserve.edu.bookinglite.service;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.Review;
@@ -12,14 +21,8 @@ import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.repository.ReviewRepository;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
 import com.softserve.edu.bookinglite.service.dto.ReviewDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.softserve.edu.bookinglite.service.mapper.ReviewMapper;
 import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.softserve.edu.bookinglite.service.mapper.ReviewMapper;
 
 @Service
 public class ReviewService {
@@ -53,6 +56,13 @@ public class ReviewService {
             reviewDtos.add(reviewDto);
         }
         return reviewDtos;
+    }
+    
+    @Transactional
+    public int findCountReviewsByPropertyId(Long propertyId) throws PropertyNotFoundException {
+    	 Property property = propertyRepository.findById(propertyId)
+                 .orElseThrow(() -> new PropertyNotFoundException(propertyId));
+    	return reviewRepository.findAllReviewsByIdProperty(property.getId()).size();
     }
 
     public boolean addReview(ReviewDto reviewDto, Long bookingId, Long userId)

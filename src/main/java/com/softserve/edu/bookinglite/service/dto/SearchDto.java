@@ -55,4 +55,55 @@ public class SearchDto {
     public void setNumberOfGuests(Integer numberOfGuests) {
         this.numberOfGuests = numberOfGuests;
     }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((checkIn == null) ? 0 : checkIn.hashCode());
+		result = prime * result + ((checkOut == null) ? 0 : checkOut.hashCode());
+		result = prime * result + ((cityId == null) ? 0 : cityId.hashCode());
+		result = prime * result + ((countryId == null) ? 0 : countryId.hashCode());
+		result = prime * result + ((numberOfGuests == null) ? 0 : numberOfGuests.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SearchDto other = (SearchDto) obj;
+		if (checkIn == null) {
+			if (other.checkIn != null)
+				return false;
+		} else if (!checkIn.equals(other.checkIn))
+			return false;
+		if (checkOut == null) {
+			if (other.checkOut != null)
+				return false;
+		} else if (!checkOut.equals(other.checkOut))
+			return false;
+		if (cityId == null) {
+			if (other.cityId != null)
+				return false;
+		} else if (!cityId.equals(other.cityId))
+			return false;
+		if (countryId == null) {
+			if (other.countryId != null)
+				return false;
+		} else if (!countryId.equals(other.countryId))
+			return false;
+		if (numberOfGuests == null) {
+			if (other.numberOfGuests != null)
+				return false;
+		} else if (!numberOfGuests.equals(other.numberOfGuests))
+			return false;
+		return true;
+	}
+
+    
 }

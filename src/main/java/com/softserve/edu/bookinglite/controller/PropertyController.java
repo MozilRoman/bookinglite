@@ -31,7 +31,7 @@ import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
 @RestController
 @RequestMapping("/api")
 public class PropertyController {
-
+	
 	private final PropertyService propertyService;
 
 	@Autowired
@@ -66,7 +66,6 @@ public class PropertyController {
 			return new ResponseEntity<PropertyDto>(HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity<PropertyDto>(HttpStatus.BAD_REQUEST);
-
 		}
 	}
 
