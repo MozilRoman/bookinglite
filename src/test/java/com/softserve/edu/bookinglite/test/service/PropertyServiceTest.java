@@ -10,11 +10,10 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import com.softserve.edu.bookinglite.entity.Address;
 import com.softserve.edu.bookinglite.entity.City;
@@ -23,14 +22,14 @@ import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.PropertyType;
 import com.softserve.edu.bookinglite.entity.Role;
 import com.softserve.edu.bookinglite.entity.User;
+import com.softserve.edu.bookinglite.exception.PropertyConfirmOwnerException;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.service.PropertyService;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(MockitoJUnitRunner.class)
 public class PropertyServiceTest {
 
 	private static final String CITY_NAME = "Lviv";
@@ -39,10 +38,11 @@ public class PropertyServiceTest {
 	private static final int INDEX = 0;
 	private static final Long ID = 1L;
 
-	@Autowired
-	private PropertyService propertyService;
-	@MockBean
+	
+	@Mock
 	private PropertyRepository propertyRepository;
+	@InjectMocks
+	private PropertyService propertyService;
 
 	@Test
 	public void getAllPropertyDtosTest() {
@@ -85,7 +85,7 @@ public class PropertyServiceTest {
 		// Assert
 		assertThat(actualPropertyDto).isEqualTo(expectedPropertyDto);
 	}
-
+	
 	@Test
 	public void getPropertyDtosByCityNameTest() {
 		// Arrange
@@ -137,11 +137,44 @@ public class PropertyServiceTest {
 		Mockito.when(propertyRepository.getAllPropertyByCountryName(INCORRECT_NAME.toLowerCase()))
 				.thenReturn(properties);
 		// Act
-		List<PropertyDto> expected = propertyService.getPropertyDtosByCityName(INCORRECT_NAME.toLowerCase());
+		List<PropertyDto> expected = propertyService.getPropertyDtosByCountryName(INCORRECT_NAME.toLowerCase());
 		// Assert
 		assertThat(expected).isEmpty();
 	}
+	
+	@Test(expected = PropertyNotFoundException.class)
+	public void getPropertyDtoByIdExceptionTest() throws PropertyNotFoundException {
+		// Arrange
+		Mockito.when(propertyRepository.findById(ID)).thenReturn(Optional.empty());
+		// Act
+		@SuppressWarnings("unused")
+		PropertyDto expectedPropertyDto = propertyService.getPropertyDtoById(ID);
+		// Assert
+	}
 
+	@Test(expected = PropertyNotFoundException.class)
+	public void updatePropertyExceptionTest() throws PropertyNotFoundException, PropertyConfirmOwnerException {
+		// Arrange
+		Property property = getPropertyInstance();
+		PropertyDto actualPropertyDto = PropertyMapper.instance
+				.propertyToBasePropertyDtoWithApartmentAddressUser(property);
+		Mockito.when(propertyRepository.findById(ID)).thenReturn(Optional.empty());
+		
+		// Act
+		propertyService.updateProperty(actualPropertyDto, ID,ID);
+	}
+	@Test(expected = PropertyConfirmOwnerException.class)
+	public void updatePropertyConfirmOwnerExceptionTest() throws PropertyNotFoundException, PropertyConfirmOwnerException {
+		// Arrange
+		Property property = getPropertyInstance();
+		Optional<Property> optinalProperty = Optional.of(property);
+		PropertyDto actualPropertyDto = PropertyMapper.instance
+				.propertyToBasePropertyDtoWithApartmentAddressUser(property);
+		Long ownerId = 12L;
+		Mockito.when(propertyRepository.findById(ID)).thenReturn(optinalProperty);
+		//Act
+		propertyService.updateProperty(actualPropertyDto, ID, ownerId);
+	}
 	
 	private Property getPropertyInstance() {
 		// Country
@@ -171,6 +204,7 @@ public class PropertyServiceTest {
 		role.setName("Owner");
 		// User
 		User user = new User();
+		user.setId(13L);
 		user.setFirst_name("Marian");
 		user.setLast_name("Mazurak");
 		user.setPassword("qwerty");

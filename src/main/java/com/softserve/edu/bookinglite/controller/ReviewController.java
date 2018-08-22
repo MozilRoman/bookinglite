@@ -41,6 +41,11 @@ public class ReviewController {
 			throws PropertyNotFoundException {
 		return reviewService.findAllReviewsByPropertyId(propertyId);
 	}
+	
+	@GetMapping("property/{id}/reviews/count")
+	public int findCountReviewsByIdProperty(@PathVariable("id") Long propertyId) throws PropertyNotFoundException {
+		return reviewService.findCountReviewsByPropertyId(propertyId);
+	}
 
 	@PostMapping("/booking/{id}/review")
 	public ResponseEntity<Void> saveReview(@RequestBody ReviewDto reviewDto, @PathVariable("id") Long bookingId,
