@@ -1,4 +1,5 @@
 package com.softserve.edu.bookinglite.service;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,11 @@ import com.cloudinary.utils.ObjectUtils;
 import com.softserve.edu.bookinglite.config.CloudinaryConfig.UploadOptions;
 import com.softserve.edu.bookinglite.entity.Photo;
 import com.softserve.edu.bookinglite.events.UploadPhotoEvent;
+import com.softserve.edu.bookinglite.exception.PhotoNotFoundException;
+import com.softserve.edu.bookinglite.exception.PropertyConfirmOwnerException;
+import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
+import com.softserve.edu.bookinglite.exception.TooLargePhotoSizeException;
+import com.softserve.edu.bookinglite.exception.WrongPhotoFormatException;
 import com.softserve.edu.bookinglite.repository.PhotoRepository;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 @Service
@@ -27,38 +33,38 @@ public class PhotoService {
 	private final int MAX_BYTES = 1024*1024*15;
 	private final String AVAILABLE_TYPE = "image";
 	
-	public boolean uploadPhoto(MultipartFile file, Long property_id, Long user_id) {
-		
-		
-		if(!propertyRepository.getOne(property_id).getUser().getId().equals(user_id) 
-				|| file==null 
-				|| file.getContentType().indexOf(AVAILABLE_TYPE)==-1 
-				|| file.getSize()>MAX_BYTES) {
-			return false;
-		}else {
-			
-			try {
-				applicationEventMulticaster.multicastEvent(new UploadPhotoEvent(file.getBytes(), property_id));
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}
+	public void uploadPhoto(MultipartFile file, Long property_id, Long user_id) throws TooLargePhotoSizeException, WrongPhotoFormatException, PropertyConfirmOwnerException, PropertyNotFoundException, IOException {
+		if(file==null) {
+			throw new FileNotFoundException();
 		}
-		return true;
+		if(!propertyRepository.findById(property_id).isPresent()) {
+			throw new PropertyNotFoundException(property_id);
+		}
+		if(!propertyRepository.findById(property_id).get().getUser().getId().equals(user_id)) {
+			throw new PropertyConfirmOwnerException();
+		}
+		if(file.getContentType().indexOf(AVAILABLE_TYPE)==-1) {
+			throw new WrongPhotoFormatException(file.getContentType());
+		}
+		if( file.getSize()>MAX_BYTES) {
+			throw new TooLargePhotoSizeException(file.getSize());
+		}
+		applicationEventMulticaster.multicastEvent(new UploadPhotoEvent(file.getBytes(), property_id));
 	}
 	
-	public boolean deletePtoto(String name, Long user_id) {
-		try {
-			Photo photo = photoRepository.findByUrlLike(name).get(0);
+	public boolean deletePtoto(String name, Long user_id) throws PhotoNotFoundException, PropertyConfirmOwnerException, IOException {
+		
 			
-			if(!photo.getProperty().getUser().getId().equals(user_id))
-				throw new Exception("not secure");
-			
-			cloudinary.uploader().destroy(UploadOptions.FOLDER_OPTION.getValue()+"/"+name, ObjectUtils.emptyMap());
-			photoRepository.delete(photo);
-		}catch(Exception exc) {
-			return false;
+		if(photoRepository.findByUrlLike(name).isEmpty()) {
+			throw new PhotoNotFoundException(name);
 		}
+		Photo photo = photoRepository.findByUrlLike(name).get(0);
+		if(!photo.getProperty().getUser().getId().equals(user_id))
+			throw new PropertyConfirmOwnerException();
+		
+		cloudinary.uploader().destroy(UploadOptions.FOLDER_OPTION.getValue()+"/"+name, ObjectUtils.emptyMap());
+		photoRepository.delete(photo);
+		
 		return true;
 	}
 }
