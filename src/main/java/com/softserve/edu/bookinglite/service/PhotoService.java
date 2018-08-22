@@ -29,13 +29,13 @@ public class PhotoService {
 	private Cloudinary cloudinary;
 	@Autowired
 	private ApplicationEventMulticaster applicationEventMulticaster;
-	
+	private static final String FILE_NOT_FOUND_EXCEPTION = "File not found!";
 	private final int MAX_BYTES = 1024*1024*15;
 	private final String AVAILABLE_TYPE = "image";
 	
 	public void uploadPhoto(MultipartFile file, Long property_id, Long user_id) throws TooLargePhotoSizeException, WrongPhotoFormatException, PropertyConfirmOwnerException, PropertyNotFoundException, IOException {
 		if(file==null) {
-			throw new FileNotFoundException();
+			throw new FileNotFoundException(FILE_NOT_FOUND_EXCEPTION);
 		}
 		if(!propertyRepository.findById(property_id).isPresent()) {
 			throw new PropertyNotFoundException(property_id);

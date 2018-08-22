@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class WrongPhotoFormatException extends Exception {
 
 	private static final long serialVersionUID = 1L;
-
+	private static final String MESSAGE = "%s is wrong format for photo";
 	public WrongPhotoFormatException(String format) {
-		super(format+ " is wrong format for photo");
+		super(String.format(MESSAGE, format));
 	}
 }
