@@ -142,6 +142,7 @@ public class PropertyServiceTest {
 		assertThat(expected).isEmpty();
 	}
 
+	
 	private Property getPropertyInstance() {
 		// Country
 		Country country = new Country();

@@ -20,7 +20,8 @@ public class CityService {
 	}
 	
 	@Transactional
-	public List<City> getCity(){
-		return cityRepository.findAll();
+	public List<City> getCitiesByCountryId(Long id){
+		return cityRepository.getAllCitiesByCountryId(id);
 	}
+	
 }
