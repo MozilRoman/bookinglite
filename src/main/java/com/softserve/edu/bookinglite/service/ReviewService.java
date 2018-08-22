@@ -3,10 +3,7 @@ package com.softserve.edu.bookinglite.service;
 import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.Review;
-import com.softserve.edu.bookinglite.exception.BookingNotFoundException;
-import com.softserve.edu.bookinglite.exception.CantLeaveReviewException;
-import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
-import com.softserve.edu.bookinglite.exception.ReviewOwnerException;
+import com.softserve.edu.bookinglite.exception.*;
 import com.softserve.edu.bookinglite.repository.BookingRepository;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.repository.ReviewRepository;
@@ -35,13 +32,12 @@ public class ReviewService {
         this.propertyRepository = propertyRepository;
     }
 
-    public List<ReviewDto> findReviewByBookingId(Long bookingId){
-        List<ReviewDto> reviewDtos = new ArrayList<>();
-        for (Review review :reviewRepository.findByBookingId(bookingId)) {
-            ReviewDto reviewDto = ReviewMapper.instance.toDto(review);
-            reviewDtos.add(reviewDto);
+    public ReviewDto findReviewByBookingId(Long bookingId) throws ReviewNotFoundExeption {
+        Review review =reviewRepository.findByBookingId(bookingId);
+        if(review==null){
+            throw new ReviewNotFoundExeption();
         }
-        return reviewDtos;
+            return ReviewMapper.instance.toDto(review);
     }
 
     public List<ReviewDto> findAllReviewsByPropertyId(Long propertyId) throws PropertyNotFoundException {

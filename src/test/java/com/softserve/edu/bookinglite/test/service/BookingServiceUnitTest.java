@@ -10,6 +10,7 @@ import java.util.*;
 import com.softserve.edu.bookinglite.exception.*;
 import com.softserve.edu.bookinglite.repository.ApartmentRepository;
 import com.softserve.edu.bookinglite.service.dto.CreateBookingDto;
+import com.softserve.edu.bookinglite.util.DateUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -39,10 +40,12 @@ import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
 @SpringBootTest
 public class BookingServiceUnitTest {
 	
-	private static final int INDEX = 0;
-	private static final Long ID = 1L;
+	private final int INDEX = 0;
+	private final Long ID = 1L;
 	private final String RESERVED = "Reserved";
 	private final String CANCELED = "Canceled";
+	private final int HOUR_CHECK_IN= 17;
+	private final int HOUR_CHECK_OUT= 15;
 	
 	@Autowired
 	private BookingService bookingService;
@@ -103,19 +106,33 @@ public class BookingServiceUnitTest {
 		Mockito.when(apartmentRepository.findById(ID)).thenReturn(Optional.empty());
 		assertThat(bookingService.createBooking(createBookingDto,1l,ID));
 	}
-	//@Test(expected = BookingExistingException.class)
-	/*@Test
+	@Test(expected = BookingExistingException.class)
+	//@Test
 	public void createBookingInvalidGetBookingByCheckTest() throws BookingInvalidDataException, ApartmentNotFoundException, BookingExistingException {
 		CreateBookingDto createBookingDto=new CreateBookingDto();
-		createBookingDto.setCheckIn(setDate("2019-02-01"));
-		createBookingDto.setCheckOut(setDate("2019-02-02"));
+		Date in= DateUtil.setHourAndMinToDate(new Date(2018,11,8),HOUR_CHECK_IN);
+		Date out = DateUtil.setHourAndMinToDate(new Date(2018,11,11),HOUR_CHECK_OUT);
+		createBookingDto.setCheckIn(in);
+		createBookingDto.setCheckOut(out);
+		createBookingDto.setNumberOfGuests(2);
+		Booking booking = getBookingInstance();
+		Mockito.when(apartmentRepository.findById(ID)).thenReturn(Optional.of(booking.getApartment()));
+		Mockito.when(bookingRepository.getBookingByCheck(ID,createBookingDto.getCheckIn(),createBookingDto.getCheckOut())).thenReturn(true);
+		assertThat(bookingService.createBooking(createBookingDto,ID,ID));
+	}
+	@Test
+	public void createBooking() throws BookingInvalidDataException, ApartmentNotFoundException, BookingExistingException {
+		CreateBookingDto createBookingDto=new CreateBookingDto();
+		Date in= DateUtil.setHourAndMinToDate(new Date(2018,11,8),HOUR_CHECK_IN);
+		Date out = DateUtil.setHourAndMinToDate(new Date(2018,11,11),HOUR_CHECK_OUT);
+		createBookingDto.setCheckIn(in);
+		createBookingDto.setCheckOut(out);
 		createBookingDto.setNumberOfGuests(2);
 		Booking booking = getBookingInstance();
 		Mockito.when(apartmentRepository.findById(ID)).thenReturn(Optional.of(booking.getApartment()));
 		Mockito.when(bookingRepository.getBookingByCheck(ID,createBookingDto.getCheckIn(),createBookingDto.getCheckOut())).thenReturn(false);
-		assertThat(bookingService.createBooking(createBookingDto,ID,ID)).isEqualTo(new BookingExistingException());
-	}*/
-
+		assertThat(bookingService.createBooking(createBookingDto,ID,ID)).isTrue();
+	}
 	@Test
 	public void findAllBookingsDtoByUserIdTest() {
 		// Arrange

@@ -1,9 +1,6 @@
 package com.softserve.edu.bookinglite.controller;
 
-import com.softserve.edu.bookinglite.exception.BookingNotFoundException;
-import com.softserve.edu.bookinglite.exception.CantLeaveReviewException;
-import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
-import com.softserve.edu.bookinglite.exception.ReviewOwnerException;
+import com.softserve.edu.bookinglite.exception.*;
 import com.softserve.edu.bookinglite.service.ReviewService;
 import com.softserve.edu.bookinglite.service.dto.ReviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +23,7 @@ public class ReviewController {
     }
 
     @GetMapping("/booking/{id}/review")
-    public List<ReviewDto> getReviewForBooking(@PathVariable ("id") Long bookingId){
+    public ReviewDto getReviewForBooking(@PathVariable ("id") Long bookingId) throws ReviewNotFoundExeption {
         return reviewService.findReviewByBookingId(bookingId);
     }
 

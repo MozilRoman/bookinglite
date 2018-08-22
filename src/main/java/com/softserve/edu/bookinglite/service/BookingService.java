@@ -35,7 +35,6 @@ public class BookingService {
 	private final String CANCELED = "Canceled";
 	private final int HOUR_CHECK_IN= 17;
 	private final int HOUR_CHECK_OUT= 15;
-	private final int MINUTE_CHECK_IN_AND_CHECK_OUT= 0;
 
 
 	private final BookingRepository bookingRepository;
@@ -122,15 +121,15 @@ public class BookingService {
 		}
 		if (createBookingDto.getNumberOfGuests() <= apartment.getNumberOfGuests()
 		        && bookingRepository.getBookingByCheck(apartmentId,
-				DateUtil.setHourAndMinToDate(createBookingDto.getCheckIn(),HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT),
-				DateUtil.setHourAndMinToDate(createBookingDto.getCheckOut(),HOUR_CHECK_OUT,MINUTE_CHECK_IN_AND_CHECK_OUT))==false) {
+				DateUtil.setHourAndMinToDate(createBookingDto.getCheckIn(),HOUR_CHECK_IN),
+				DateUtil.setHourAndMinToDate(createBookingDto.getCheckOut(),HOUR_CHECK_OUT))==false) {
             Booking booking = new Booking();
             booking.setApartment(apartment);
             User user = new User();
             user.setId(userId);
             booking.setUser(user); 
-            booking.setCheckIn(DateUtil.setHourAndMinToDate(createBookingDto.getCheckIn(),HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT));
-            booking.setCheckOut(DateUtil.setHourAndMinToDate(createBookingDto.getCheckOut(),HOUR_CHECK_OUT,MINUTE_CHECK_IN_AND_CHECK_OUT));
+            booking.setCheckIn(DateUtil.setHourAndMinToDate(createBookingDto.getCheckIn(),HOUR_CHECK_IN));
+            booking.setCheckOut(DateUtil.setHourAndMinToDate(createBookingDto.getCheckOut(),HOUR_CHECK_OUT));
             booking.setTotalPrice(BookingUtil.getPriceForPeriod(apartment.getPrice(),
             		createBookingDto.getCheckIn(),createBookingDto.getCheckOut()));
             booking.setBookingStatus(bookingStatusRepository.findByName(RESERVED));
@@ -154,7 +153,7 @@ public class BookingService {
 		}
 		if( (booking.getCheckIn().compareTo(new Date())==0 &&
 				booking.getCheckIn().before(DateUtil.setHourAndMinToDate
-						(new Date(),HOUR_CHECK_IN,MINUTE_CHECK_IN_AND_CHECK_OUT))) ||
+						(new Date(),HOUR_CHECK_IN))) ||
 				booking.getCheckIn().after(new Date())) {
 			booking.setBookingStatus(bookingStatusRepository.findByName(CANCELED));
 			bookingRepository.save(booking);

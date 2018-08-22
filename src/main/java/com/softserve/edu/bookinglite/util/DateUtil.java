@@ -14,11 +14,11 @@ public class DateUtil {
       return   new Date();
     }
     
-    public static Date setHourAndMinToDate(Date date,int hour,int minuts){ 
+    public static Date setHourAndMinToDate(Date date,int hour){
 		Calendar calendar=Calendar.getInstance();
 		calendar.setTime(date);
 		calendar.set(Calendar.HOUR_OF_DAY, hour);
-		calendar.set(Calendar.MINUTE,minuts);
+		calendar.set(Calendar.MINUTE,0);
 		return calendar.getTime();
 	}
     
