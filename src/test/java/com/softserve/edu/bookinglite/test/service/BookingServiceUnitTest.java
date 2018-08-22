@@ -67,7 +67,7 @@ public class BookingServiceUnitTest {
 		// Assert
 		assertThat(actualBookingDto).isEqualTo(expectedBookingDto);
 	}
-
+//
 	@Test
 	public void  getAllBookingsDtoByOwnerIdTest(){
 		Booking booking = getBookingInstance();
