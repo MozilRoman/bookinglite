@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-    List<Review> findByBookingId(Long bookingId);
+    Review findByBookingId(Long bookingId);
 
     @Query("select r from Review r join r.booking b join b.apartment a join a.property p where p.id=:propertyId")
     List<Review> findAllReviewsByIdProperty (@Param("propertyId") Long propertyId);

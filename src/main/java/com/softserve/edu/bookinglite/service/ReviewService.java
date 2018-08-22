@@ -35,13 +35,10 @@ public class ReviewService {
         this.propertyRepository = propertyRepository;
     }
 
-    public List<ReviewDto> findReviewByBookingId(Long bookingId){
-        List<ReviewDto> reviewDtos = new ArrayList<>();
-        for (Review review :reviewRepository.findByBookingId(bookingId)) {
-            ReviewDto reviewDto = ReviewMapper.instance.toDto(review);
-            reviewDtos.add(reviewDto);
-        }
-        return reviewDtos;
+    public ReviewDto findReviewByBookingId(Long bookingId){
+        Review review = reviewRepository.findByBookingId(bookingId);
+        ReviewDto reviewDto = ReviewMapper.instance.toDto(review);
+        return reviewDto;
     }
 
     public List<ReviewDto> findAllReviewsByPropertyId(Long propertyId) throws PropertyNotFoundException {

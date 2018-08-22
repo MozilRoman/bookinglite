@@ -26,7 +26,7 @@ public class ReviewController {
     }
 
     @GetMapping("/booking/{id}/review")
-    public List<ReviewDto> getReviewForBooking(@PathVariable ("id") Long bookingId){
+    public ReviewDto getReviewForBooking(@PathVariable ("id") Long bookingId){
         return reviewService.findReviewByBookingId(bookingId);
     }
 
