@@ -72,7 +72,8 @@ public class PropertyController {
 	@PutMapping("/property/{propertyId}")
 	public ResponseEntity<PropertyDto> update(@RequestBody PropertyDto propertyDto, @PathVariable("propertyId") Long id,
 			Principal principal) throws PropertyNotFoundException, PropertyConfirmOwnerException {
-		if (propertyService.updateProperty(propertyDto, id, principal)) {
+		Long ownerId = Long.parseLong(principal.getName());
+		if (propertyService.updateProperty(propertyDto, id, ownerId)) {
 			return new ResponseEntity<PropertyDto>(HttpStatus.OK);
 		} else {
 			return new ResponseEntity<PropertyDto>(HttpStatus.BAD_REQUEST);

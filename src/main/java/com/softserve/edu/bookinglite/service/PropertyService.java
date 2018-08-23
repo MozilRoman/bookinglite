@@ -1,6 +1,5 @@
 package com.softserve.edu.bookinglite.service;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -84,11 +83,11 @@ public class PropertyService {
 	}
 
 	@Transactional
-	public boolean updateProperty(PropertyDto propertyDto, Long propertyId, Principal principal)
+	public boolean updateProperty(PropertyDto propertyDto, Long propertyId, Long ownerId)
 			throws PropertyNotFoundException, PropertyConfirmOwnerException {
 		Property property = propertyRepository.findById(propertyId)
 				.orElseThrow(() -> new PropertyNotFoundException(propertyId));
-		if (propertyDto != null && property.getUser().getId() == Long.parseLong(principal.getName())) {
+		if (propertyDto != null && property.getUser().getId() == ownerId) {
 			property.setName(propertyDto.getName());
 			property.setDescription(propertyDto.getDescription());
 			property.setPhoneNumber(propertyDto.getPhoneNumber());
