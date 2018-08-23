@@ -13,8 +13,10 @@ import com.softserve.edu.bookinglite.service.dto.ApartmentDto;
 import com.softserve.edu.bookinglite.service.mapper.ApartmentMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -24,18 +26,17 @@ import javax.swing.text.html.Option;
 import java.math.BigDecimal;
 import java.util.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(MockitoJUnitRunner.class)
 public class ApartmentServiceUnitTest {
 
-    @Autowired
-    private ApartmentService apartmentService;
-    @Autowired
-    private PropertyService propertyService;
-    @MockBean
+    @Mock
     private ApartmentRepository apartmentRepository;
-    @MockBean
+    @Mock
     private PropertyRepository propertyRepository;
+    @InjectMocks
+    private ApartmentService apartmentService;
+    @InjectMocks
+    private PropertyService propertyService;
 
     @Test(expected = ApartmentNotFoundException.class)
     public void findByIdTestException() throws ApartmentNotFoundException {

@@ -5,7 +5,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.softserve.edu.bookinglite.entity.Amenity;
 import com.softserve.edu.bookinglite.entity.Apartment;
+import com.softserve.edu.bookinglite.entity.ApartmentType;
 import com.softserve.edu.bookinglite.exception.ApartmentNotFoundException;
 import com.softserve.edu.bookinglite.exception.ApartmentUpdateException;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
@@ -64,6 +66,16 @@ public class ApartmentController {
 		} else {
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@GetMapping("/create-apartment/apartment-type")
+	public List<ApartmentType> getApartmentTypes(){
+		return apartmentService.findApartmentTypes();
+	}
+
+	@GetMapping("/create-apartment/amenities")
+	public List<Amenity> getAmenities(){
+		return apartmentService.findAmenities();
 	}
 
 }

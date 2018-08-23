@@ -3,9 +3,13 @@ package com.softserve.edu.bookinglite.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.softserve.edu.bookinglite.entity.Amenity;
+import com.softserve.edu.bookinglite.entity.ApartmentType;
 import com.softserve.edu.bookinglite.exception.ApartmentNotFoundException;
 import com.softserve.edu.bookinglite.exception.ApartmentUpdateException;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
+import com.softserve.edu.bookinglite.repository.AmenityRepository;
+import com.softserve.edu.bookinglite.repository.ApartmentTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -22,11 +26,15 @@ public class ApartmentService {
 
 	private final ApartmentRepository apartmentRepository;
 	private final PropertyRepository propertyRepository;
+	private final ApartmentTypeRepository apartmentTypeRepository;
+	private final AmenityRepository amenityRepository;
 
 	@Autowired
-	public ApartmentService(ApartmentRepository apartmentRepository, PropertyRepository propertyRepository) {
+	public ApartmentService(ApartmentRepository apartmentRepository, PropertyRepository propertyRepository, ApartmentTypeRepository apartmentTypeRepository, AmenityRepository amenityRepository) {
 		this.apartmentRepository = apartmentRepository;
 		this.propertyRepository = propertyRepository;
+		this.apartmentTypeRepository = apartmentTypeRepository;
+		this.amenityRepository = amenityRepository;
 	}
 
 	public ApartmentDto findApartmentDtoById(Long apartmentId) throws ApartmentNotFoundException {
@@ -74,6 +82,14 @@ public class ApartmentService {
 		}else {
 			throw new ApartmentUpdateException();
 		}
+	}
+
+	public List<ApartmentType> findApartmentTypes(){
+		return apartmentTypeRepository.findAll();
+	}
+
+	public List<Amenity> findAmenities(){
+		return amenityRepository.findAll();
 	}
 
 }
