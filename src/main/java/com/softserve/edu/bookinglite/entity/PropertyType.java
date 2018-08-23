@@ -60,6 +60,4 @@ public class PropertyType {
 		return true;
 	}
 	
-	
-
 }

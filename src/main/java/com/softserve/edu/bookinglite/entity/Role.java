@@ -38,7 +38,6 @@ public class Role {
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -60,8 +59,4 @@ public class Role {
 			return false;
 		return true;
 	}
-
-    
-
-
 }
