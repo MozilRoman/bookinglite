@@ -1,5 +1,6 @@
 package com.softserve.edu.bookinglite.test.service;
 
+
 import com.softserve.edu.bookinglite.entity.*;
 import com.softserve.edu.bookinglite.exception.*;
 import com.softserve.edu.bookinglite.repository.BookingRepository;
@@ -11,30 +12,30 @@ import com.softserve.edu.bookinglite.service.mapper.ReviewMapper;
 import com.softserve.edu.bookinglite.util.DateUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@RunWith(SpringRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class ReviewServiceTest {
 
-    @Autowired
+    @InjectMocks
     ReviewService reviewService;
-    @MockBean
+    @Mock
     private BookingRepository bookingRepository;
-    @MockBean
+    @Mock
     private ReviewRepository reviewRepository;
-    @MockBean
+    @Mock
     private PropertyRepository propertyRepository;
 
     private final String MESSAGE = "Test message";
@@ -98,17 +99,6 @@ public class ReviewServiceTest {
     public void addReviewBookingCantLeaveReviewExceptionWhenBookingStatusIsCanceledTest() throws BookingNotFoundException, ReviewOwnerException, CantLeaveReviewException {
         Booking booking=initBooking(ID,VALID_DATE);
         Mockito.when(bookingRepository.findById(ID)).thenReturn(Optional.of(booking));
-        ReviewDto reviewDto=new ReviewDto();
-        assertThat(reviewService.addReview(reviewDto,ID,ID));
-    }
-    @Test
-    public void addReviewTest() throws BookingNotFoundException, ReviewOwnerException, CantLeaveReviewException {
-        Booking booking=initBooking(ID,VALID_DATE);
-        BookingStatus bookingStatus=new BookingStatus();
-        bookingStatus.setName(RESERVED);
-        booking.setBookingStatus(bookingStatus);
-        Mockito.when(bookingRepository.findById(ID)).thenReturn(Optional.of(booking));
-        //OngoingStubbing<T> tOngoingStubbing = Mockito.when(reviewRepository.save(booking)).thenReturn("");
         ReviewDto reviewDto=new ReviewDto();
         assertThat(reviewService.addReview(reviewDto,ID,ID));
     }
