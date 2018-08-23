@@ -37,7 +37,6 @@ import com.softserve.edu.bookinglite.service.dto.BookingDto;
 import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
 
 @RunWith(MockitoJUnitRunner.class)
-@SpringBootTest
 public class BookingServiceUnitTest {
 	
 	private final int INDEX = 0;

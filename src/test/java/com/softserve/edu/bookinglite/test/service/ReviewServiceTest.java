@@ -26,7 +26,6 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
-@SpringBootTest
 public class ReviewServiceTest {
 
     @InjectMocks
