@@ -107,14 +107,7 @@ public class Booking {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((apartment == null) ? 0 : apartment.hashCode());
-		result = prime * result + ((bookingStatus == null) ? 0 : bookingStatus.hashCode());
-		result = prime * result + ((checkIn == null) ? 0 : checkIn.hashCode());
-		result = prime * result + ((checkOut == null) ? 0 : checkOut.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((review == null) ? 0 : review.hashCode());
-		result = prime * result + ((totalPrice == null) ? 0 : totalPrice.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -127,48 +120,11 @@ public class Booking {
 		if (getClass() != obj.getClass())
 			return false;
 		Booking other = (Booking) obj;
-		if (apartment == null) {
-			if (other.apartment != null)
-				return false;
-		} else if (!apartment.equals(other.apartment))
-			return false;
-		if (bookingStatus == null) {
-			if (other.bookingStatus != null)
-				return false;
-		} else if (!bookingStatus.equals(other.bookingStatus))
-			return false;
-		if (checkIn == null) {
-			if (other.checkIn != null)
-				return false;
-		} else if (!checkIn.equals(other.checkIn))
-			return false;
-		if (checkOut == null) {
-			if (other.checkOut != null)
-				return false;
-		} else if (!checkOut.equals(other.checkOut))
-			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (review == null) {
-			if (other.review != null)
-				return false;
-		} else if (!review.equals(other.review))
-			return false;
-		if (totalPrice == null) {
-			if (other.totalPrice != null)
-				return false;
-		} else if (!totalPrice.equals(other.totalPrice))
-			return false;
-		if (user == null) {
-			if (other.user != null)
-				return false;
-		} else if (!user.equals(other.user))
-			return false;
 		return true;
-	}	
-	
-	
+	}
 }

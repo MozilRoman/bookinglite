@@ -12,16 +12,16 @@ import com.softserve.edu.bookinglite.repository.CountryRepository;
 @Service
 public class CountryService {
 
-	private CountryRepository countryRepositor;
+	private final CountryRepository countryRepository;
 
 	@Autowired
-	public CountryService(CountryRepository countryRepositor) {
-		this.countryRepositor = countryRepositor;
+	public CountryService(CountryRepository countryRepository) {
+		this.countryRepository = countryRepository;
 	}
 	
 	@Transactional
 	public List<Country> getCountry(){
-		return countryRepositor.findAll();
+		return countryRepository.findAll();
 	}
-	
+
 }

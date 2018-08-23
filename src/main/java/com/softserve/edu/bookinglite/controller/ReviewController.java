@@ -40,9 +40,9 @@ public class ReviewController {
             throws BookingNotFoundException, ReviewOwnerException, CantLeaveReviewException {
         Long userId = Long.parseLong(principal.getName());
         if (reviewService.addReview(reviewDto, bookingId, userId)){
-            return new ResponseEntity<Void>(HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }
-        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 }

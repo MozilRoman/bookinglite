@@ -51,7 +51,6 @@ public class Photo {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((property == null) ? 0 : property.hashCode());
 		result = prime * result + ((url == null) ? 0 : url.hashCode());
 		return result;
 	}
@@ -69,11 +68,6 @@ public class Photo {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
-			return false;
-		if (property == null) {
-			if (other.property != null)
-				return false;
-		} else if (!property.equals(other.property))
 			return false;
 		if (url == null) {
 			if (other.url != null)

@@ -44,8 +44,8 @@ public class BookingServiceUnitTest {
 	private final Long ID = 1L;
 	private final String RESERVED = "Reserved";
 	private final String CANCELED = "Canceled";
-	private final int HOUR_CHECK_IN= 17;
-	private final int HOUR_CHECK_OUT= 15;
+	private final int HOUR_CHECK_IN= 14;
+	private final int HOUR_CHECK_OUT= 12;
 	
 	@Mock
 	private BookingRepository bookingRepository;

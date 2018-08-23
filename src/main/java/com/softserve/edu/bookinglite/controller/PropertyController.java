@@ -20,11 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.softserve.edu.bookinglite.entity.Country;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.exception.PropertyConfirmOwnerException;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
-import com.softserve.edu.bookinglite.service.CountryService;
 import com.softserve.edu.bookinglite.service.PropertyService;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.dto.SearchDto;
@@ -33,19 +31,12 @@ import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
 @RestController
 @RequestMapping("/api")
 public class PropertyController {
-	@Autowired
-	private  CountryService countryService; 
 	
 	private final PropertyService propertyService;
 
 	@Autowired
 	public PropertyController(PropertyService propertyService) {
 		this.propertyService = propertyService;
-	}
-	
-	@GetMapping("/countries")
-	public List<Country> getAllCountry(){
-		return countryService.getCountry();
 	}
 	
 	@GetMapping("/property")
@@ -75,14 +66,14 @@ public class PropertyController {
 			return new ResponseEntity<PropertyDto>(HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity<PropertyDto>(HttpStatus.BAD_REQUEST);
-
 		}
 	}
 
 	@PutMapping("/property/{propertyId}")
 	public ResponseEntity<PropertyDto> update(@RequestBody PropertyDto propertyDto, @PathVariable("propertyId") Long id,
 			Principal principal) throws PropertyNotFoundException, PropertyConfirmOwnerException {
-		if (propertyService.updateProperty(propertyDto, id, principal)) {
+		Long ownerId = Long.parseLong(principal.getName());
+		if (propertyService.updateProperty(propertyDto, id, ownerId)) {
 			return new ResponseEntity<PropertyDto>(HttpStatus.OK);
 		} else {
 			return new ResponseEntity<PropertyDto>(HttpStatus.BAD_REQUEST);
