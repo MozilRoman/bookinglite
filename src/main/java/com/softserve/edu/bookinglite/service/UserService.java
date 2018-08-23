@@ -73,7 +73,7 @@ public class UserService {
         if(user == null){
             throw new UserNotFoundException(loginDto.getEmail());
         }
-        if(user != null && !user.isVerified()){
+        if(!user.isVerified()){
             throw new UserIsNotVerifiedException();
         }
         try {
@@ -96,7 +96,8 @@ public class UserService {
 
 
     @Transactional
-    public void registerUser(RegisterDto registerDto) {
+    public void registerUser(RegisterDto registerDto) throws EmailAlreadyUsedException, UserIsNotVerifiedException {
+        checkUser(registerDto.getEmail());
         User user = new User();
         user.setEmail(registerDto.getEmail());
         user.setFirst_name(registerDto.getFirst_name());
@@ -114,11 +115,9 @@ public class UserService {
             }
         }
         user.setRoles(userRoles);
-
         user.setVerified(!emailverification);
         User result = userRepository.save(user);
         if(emailverification) applicationEventMulticaster.multicastEvent(new RegistrationCompleteEvent(result,appUrl));
-
     }
     @Transactional
     public boolean verifyUser(String token){
@@ -138,7 +137,7 @@ public class UserService {
         }
     }
     @Transactional
-    public  UserDto findById(Long id){
+    public UserDto findById(Long id){
         UserDto user = userRepository.findById(id).map(UserMapper.instance::UserToBaseUserDtoWithRoles).orElse(new UserDto());
         return user;
     }

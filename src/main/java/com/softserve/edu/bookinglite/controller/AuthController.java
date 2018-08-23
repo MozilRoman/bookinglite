@@ -51,7 +51,6 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<Void> register(@Valid @RequestBody RegisterDto registerDto) throws EmailAlreadyUsedException,UserIsNotVerifiedException {
-        userService.checkUser(registerDto.getEmail());
         userService.registerUser(registerDto);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
