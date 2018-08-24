@@ -1,11 +1,7 @@
 package com.softserve.edu.bookinglite.controller;
 
 
-import com.softserve.edu.bookinglite.exception.ApartmentNotFoundException;
-import com.softserve.edu.bookinglite.exception.BookingCancelException;
-import com.softserve.edu.bookinglite.exception.BookingNotFoundException;
-import com.softserve.edu.bookinglite.exception.BookingExistingException;
-import com.softserve.edu.bookinglite.exception.BookingInvalidDataException;
+import com.softserve.edu.bookinglite.exception.*;
 import com.softserve.edu.bookinglite.service.BookingService;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
 import com.softserve.edu.bookinglite.service.dto.CreateBookingDto;
@@ -71,9 +67,9 @@ public class BookingController {
 	@PostMapping(value="/booking/{apartmentId}")
 	public ResponseEntity<CreateBookingDto> createBooking(@Valid @RequestBody CreateBookingDto createBookingDto, 
 			@PathVariable ("apartmentId") Long apartmentId,
-			Principal principal) throws ApartmentNotFoundException, BookingInvalidDataException, BookingExistingException{		 		
+			Principal principal) throws ApartmentNotFoundException, BookingInvalidDataException, BookingExistingException, NumberOfGuestsException {
 		 Long userId = Long.parseLong(principal.getName());						 
-		 if(bookingService.createBooking(createBookingDto, userId, apartmentId)) {
+		 if(bookingService.createBookingWithValidation(createBookingDto, userId, apartmentId)) {
 				return new ResponseEntity<CreateBookingDto>(HttpStatus.CREATED);
 			}else {
 				return new ResponseEntity<CreateBookingDto>(HttpStatus.BAD_REQUEST);

@@ -9,7 +9,7 @@ import com.softserve.edu.bookinglite.repository.ReviewRepository;
 import com.softserve.edu.bookinglite.service.ReviewService;
 import com.softserve.edu.bookinglite.service.dto.ReviewDto;
 import com.softserve.edu.bookinglite.service.mapper.ReviewMapper;
-import com.softserve.edu.bookinglite.util.DateUtil;
+import com.softserve.edu.bookinglite.util.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -44,8 +44,8 @@ public class ReviewServiceTest {
     private final Long BAD_ID = 10L;
     private final String CANCELED = "Canceled";
     private final String RESERVED = "Reserved";
-    private final Date VALID_DATE = DateUtil.setHourAndMinToDate(new Date(116,11,8),12);
-    private final Date INVALID_DATE = DateUtil.setHourAndMinToDate(new Date(119,11,8),12);
+    private final Date VALID_DATE = DateUtils.setHourAndMinToDate(new Date(116,11,8),12);
+    private final Date INVALID_DATE = DateUtils.setHourAndMinToDate(new Date(119,11,8),12);
     @Test
     public void findReviewByBooking() throws ReviewNotFoundExeption {
 
@@ -128,7 +128,7 @@ public class ReviewServiceTest {
         bookingStatus.setName(CANCELED);
         booking.setBookingStatus(bookingStatus);
         booking.setReview(review);
-        booking.setCheckOut(DateUtil.setHourAndMinToDate(date,12));
+        booking.setCheckOut(DateUtils.setHourAndMinToDate(date,12));
         return booking;
     }
 

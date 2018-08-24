@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DateUtil {
+public class DateUtils {
     public static Date toDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
        // return sdf.format(new Date(date.getYear()-1900,date.getMonth()-1,date.getDate()));
