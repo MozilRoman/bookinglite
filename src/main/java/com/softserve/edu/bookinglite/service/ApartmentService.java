@@ -47,7 +47,15 @@ public class ApartmentService {
 		Property property = propertyRepository.findById(propertyId)
 				.orElseThrow(() -> new PropertyNotFoundException(propertyId));
 		List<ApartmentDto> apartmentDtos = new ArrayList<>();
-		property.getApartments().forEach(a -> apartmentDtos.add(ApartmentMapper.instance.toDto(a)));
+
+		for (Apartment a: property.getApartments()){
+			ApartmentDto apartmentDto = ApartmentMapper.instance.toDto(a);
+			apartmentDto.setPropertyName(property.getName());
+			System.out.println("eeeeeeeeeeeeee" + property.getName());
+			apartmentDtos.add(apartmentDto);
+		}
+
+//		property.getApartments().forEach(a -> apartmentDtos.add(ApartmentMapper.instance.toDto(a)));
 		return apartmentDtos;
 	}
 
