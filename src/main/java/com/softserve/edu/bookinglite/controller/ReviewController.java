@@ -23,23 +23,28 @@ public class ReviewController {
     }
 
     @GetMapping("/booking/{id}/review")
-    public ReviewDto getReviewForBooking(@PathVariable ("id") Long bookingId) throws ReviewNotFoundExeption {
+    public ReviewDto getReviewForBooking(@PathVariable("id") Long bookingId) throws ReviewNotFoundExeption {
         return reviewService.findReviewByBookingId(bookingId);
     }
 
+    @GetMapping("property/{id}/reviews/count")
+    public int findCountReviewsByIdProperty(@PathVariable("id") Long propertyId) throws PropertyNotFoundException {
+        return reviewService.findCountReviewsByPropertyId(propertyId);
+    }
+
     @GetMapping("/property/{id}/reviews")
-    public List<ReviewDto> findAllReviewsByIdProperty(@PathVariable ("id") Long propertyId)
+    public List<ReviewDto> findAllReviewsByIdProperty(@PathVariable("id") Long propertyId)
             throws PropertyNotFoundException {
         return reviewService.findAllReviewsByPropertyId(propertyId);
     }
 
     @PostMapping("/booking/{id}/review")
     public ResponseEntity<Void> saveReview(@RequestBody ReviewDto reviewDto,
-                                           @PathVariable ("id") Long bookingId,
+                                           @PathVariable("id") Long bookingId,
                                            Principal principal)
             throws BookingNotFoundException, ReviewOwnerException, CantLeaveReviewException {
         Long userId = Long.parseLong(principal.getName());
-        if (reviewService.addReview(reviewDto, bookingId, userId)){
+        if (reviewService.addReview(reviewDto, bookingId, userId)) {
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
