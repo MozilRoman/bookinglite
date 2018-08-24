@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ReviewOwnerException extends Exception {
 
     public ReviewOwnerException() {
-        super("You are not owner of this booking.");
+        super("You are not owner of this booking");
     }
 }
