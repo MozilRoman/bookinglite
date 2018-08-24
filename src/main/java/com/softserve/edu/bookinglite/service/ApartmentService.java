@@ -2,6 +2,7 @@ package com.softserve.edu.bookinglite.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.softserve.edu.bookinglite.entity.Amenity;
 import com.softserve.edu.bookinglite.entity.ApartmentType;
@@ -10,6 +11,7 @@ import com.softserve.edu.bookinglite.exception.ApartmentUpdateException;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import com.softserve.edu.bookinglite.repository.AmenityRepository;
 import com.softserve.edu.bookinglite.repository.ApartmentTypeRepository;
+import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -40,20 +42,19 @@ public class ApartmentService {
 	public ApartmentDto findApartmentDtoById(Long apartmentId) throws ApartmentNotFoundException {
 		Apartment apartment = apartmentRepository.findById(apartmentId)
 				.orElseThrow(()-> new ApartmentNotFoundException(apartmentId));
-		return ApartmentMapper.instance.toDto(apartment);
+		ApartmentDto apartmentDto = ApartmentMapper.instance.toDto(apartment);
+		apartmentDto.setPropertyDto(PropertyMapper.instance.propertyToBasePropertyDto(apartment.getProperty()));
+		return apartmentDto;
+//		return apartment.map(ApartmentMapper.instance::toDto)
+//				.orElseThrow(()-> new ApartmentNotFoundException(apartmentId));
+
 	}
 
 	public List<ApartmentDto> findAllApartmentsByPropertyId(Long propertyId) throws PropertyNotFoundException {
 		Property property = propertyRepository.findById(propertyId)
 				.orElseThrow(() -> new PropertyNotFoundException(propertyId));
 		List<ApartmentDto> apartmentDtos = new ArrayList<>();
-
-		for (Apartment a: property.getApartments()){
-			ApartmentDto apartmentDto = ApartmentMapper.instance.toDto(a);
-			apartmentDto.setPropertyName(property.getName());
-			apartmentDtos.add(apartmentDto);
-		}
-//		property.getApartments().forEach(a -> apartmentDtos.add(ApartmentMapper.instance.toDto(a)));
+		property.getApartments().forEach(a -> apartmentDtos.add(ApartmentMapper.instance.toDto(a)));
 		return apartmentDtos;
 	}
 

@@ -16,7 +16,7 @@ public class ApartmentDto {
     private String name;
     private BigDecimal price;
     private int numberOfGuests;
-    private String  propertyName;
+	private PropertyDto propertyDto;
     @NotNull
     private ApartmentType apartmentType;
     @NotNull
@@ -70,12 +70,12 @@ public class ApartmentDto {
         this.amenities = amenities;
     }
 
-	public String getPropertyName() {
-		return propertyName;
+	public PropertyDto getPropertyDto() {
+		return propertyDto;
 	}
 
-	public void setPropertyName(String propertyId) {
-		this.propertyName = propertyId;
+	public void setPropertyDto(PropertyDto propertyDto) {
+		this.propertyDto = propertyDto;
 	}
 
 	@Override
