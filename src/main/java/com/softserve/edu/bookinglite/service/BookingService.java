@@ -146,7 +146,7 @@ public class BookingService {
 		return apartment;
 	}
 	@Transactional
-    public boolean validateApartmentAvailable(Long apartmentId, Date in, Date out) throws BookingExistingException {
+	public boolean validateApartmentAvailable(Long apartmentId, Date in, Date out) throws BookingExistingException {
 	if(!bookingRepository.getBookingByCheck(apartmentId,
 			DateUtils.setHourAndMinToDate(in, HOUR_CHECK_IN),
 			DateUtils.setHourAndMinToDate(out, HOUR_CHECK_OUT))){
@@ -154,7 +154,7 @@ public class BookingService {
 	}else throw new BookingExistingException();
 }
     @Transactional
-    public void saveBooking(Long userId,Apartment apartment,CreateBookingDto createBookingDto){
+	void saveBooking(Long userId, Apartment apartment, CreateBookingDto createBookingDto){
 	Booking booking = new Booking();
 	booking.setApartment(apartment);
 	User user = new User();
