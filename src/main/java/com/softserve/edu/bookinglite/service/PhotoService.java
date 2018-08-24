@@ -52,7 +52,7 @@ public class PhotoService {
 		applicationEventMulticaster.multicastEvent(new UploadPhotoEvent(file.getBytes(), property_id));
 	}
 	
-	public boolean deletePtoto(String name, Long user_id) throws PhotoNotFoundException, PropertyConfirmOwnerException, IOException {
+	public boolean deletePhoto(String name, Long user_id) throws PhotoNotFoundException, PropertyConfirmOwnerException, IOException {
 		
 			
 		if(photoRepository.findByUrlLike(name).isEmpty()) {

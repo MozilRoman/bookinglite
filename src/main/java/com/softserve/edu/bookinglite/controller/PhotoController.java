@@ -35,7 +35,7 @@ public class PhotoController {
 	}
 	@DeleteMapping("/photo/{name}")
 	public ResponseEntity<Void> deletePhoto(@PathVariable("name") String name, Principal principal) throws NumberFormatException, PhotoNotFoundException, PropertyConfirmOwnerException, IOException{
-		photoService.deletePtoto(name, Long.parseLong(principal.getName()));
+		photoService.deletePhoto(name, Long.parseLong(principal.getName()));
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 	
