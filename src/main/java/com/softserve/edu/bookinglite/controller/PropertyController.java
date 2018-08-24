@@ -31,7 +31,7 @@ import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
 @RestController
 @RequestMapping("/api")
 public class PropertyController {
-
+	
 	private final PropertyService propertyService;
 
 	@Autowired
@@ -66,14 +66,14 @@ public class PropertyController {
 			return new ResponseEntity<PropertyDto>(HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity<PropertyDto>(HttpStatus.BAD_REQUEST);
-
 		}
 	}
 
 	@PutMapping("/property/{propertyId}")
 	public ResponseEntity<PropertyDto> update(@RequestBody PropertyDto propertyDto, @PathVariable("propertyId") Long id,
 			Principal principal) throws PropertyNotFoundException, PropertyConfirmOwnerException {
-		if (propertyService.updateProperty(propertyDto, id, principal)) {
+		Long ownerId = Long.parseLong(principal.getName());
+		if (propertyService.updateProperty(propertyDto, id, ownerId)) {
 			return new ResponseEntity<PropertyDto>(HttpStatus.OK);
 		} else {
 			return new ResponseEntity<PropertyDto>(HttpStatus.BAD_REQUEST);
