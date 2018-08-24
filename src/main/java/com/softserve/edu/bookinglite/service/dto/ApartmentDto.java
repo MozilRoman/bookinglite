@@ -16,7 +16,7 @@ public class ApartmentDto {
     private String name;
     private BigDecimal price;
     private int numberOfGuests;
-	private String  propertyName;
+    private String  propertyName;
     @NotNull
     private ApartmentType apartmentType;
     @NotNull

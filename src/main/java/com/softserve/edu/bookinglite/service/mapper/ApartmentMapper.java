@@ -17,16 +17,9 @@ import java.util.Set;
 public interface ApartmentMapper {
 
     ApartmentMapper instance = Mappers.getMapper(ApartmentMapper.class);
-
     ApartmentDto toDto(Apartment apartment);
-
     Set<Amenity> map(Set<Amenity> amenities);
-
     Amenity map(Amenity amenity);
-
     ApartmentType map(ApartmentType apartmentType);
 
-//    default PropertyDto map(Property property){
-//        return PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(property);
-//    }
 }
