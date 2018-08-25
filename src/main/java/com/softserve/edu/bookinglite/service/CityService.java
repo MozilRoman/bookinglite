@@ -23,5 +23,9 @@ public class CityService {
 	public List<City> getCitiesByCountryId(Long id){
 		return cityRepository.getAllCitiesByCountryId(id);
 	}
+
+	public City getCityByid(Long id) {
+		return cityRepository.findById(id).get();
+	}
 	
 }
