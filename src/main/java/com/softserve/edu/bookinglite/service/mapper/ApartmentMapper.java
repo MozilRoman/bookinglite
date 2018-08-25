@@ -26,7 +26,7 @@ public interface ApartmentMapper {
     ApartmentDto toDto(Apartment apartment);
 
     default PropertyDto map(Property property){
-        return PropertyMapper.instance.propertyToBasePropertyDto(property);
+        return PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(property);
     }
 
 }

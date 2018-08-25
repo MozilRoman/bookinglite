@@ -40,13 +40,10 @@ public class ApartmentService {
 	}
 
 	public ApartmentDto findApartmentDtoById(Long apartmentId) throws ApartmentNotFoundException {
-		Apartment apartment = apartmentRepository.findById(apartmentId)
+		Optional<Apartment> apartment = apartmentRepository
+				.findById(apartmentId);
+		return apartment.map(ApartmentMapper.instance::toDto)
 				.orElseThrow(()-> new ApartmentNotFoundException(apartmentId));
-		ApartmentDto apartmentDto = ApartmentMapper.instance.toDto(apartment);
-		apartmentDto.setPropertyDto(PropertyMapper.instance.propertyToBasePropertyDto(apartment.getProperty()));
-		return apartmentDto;
-//		return apartment.map(ApartmentMapper.instance::toDto)
-//				.orElseThrow(()-> new ApartmentNotFoundException(apartmentId));
 
 	}
 
