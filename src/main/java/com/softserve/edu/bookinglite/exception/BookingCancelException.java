@@ -9,6 +9,10 @@ public class BookingCancelException  extends Exception{
 	private static final long serialVersionUID = 1L;
 	
 	public BookingCancelException(String bookingtStatus) {
-		super("You can not change status " + bookingtStatus + " on Cancel");
+		super("You can not change status " + bookingtStatus + " on Canceled");
+	}
+	
+	public BookingCancelException() {
+		super("You can not change status in this booking ");
 	}
 }

@@ -38,7 +38,7 @@ public interface BookingMapper {
     }
 
     default ReviewDto map(Review review){
-        return ReviewMapper.instance.toDto(review);
+        return ReviewMapper.instance.reviewToBaseReviewDto(review);
     }
 
 
