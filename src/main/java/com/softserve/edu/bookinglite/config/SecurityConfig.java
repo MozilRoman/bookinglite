@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/login","/api/register","/api/registrationconfirm").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/property","property/*/photo","/property/*/apartment").hasAuthority("ROLE_OWNER")
+                .antMatchers(HttpMethod.POST,"/api/addproperty","property/*/photo","/property/*/apartment").hasAuthority("ROLE_OWNER")
                 .antMatchers(HttpMethod.PUT,"/apartment/*","/property/*").hasAuthority("ROLE_OWNER")
                 .antMatchers(HttpMethod.DELETE,"/photo/*").hasAuthority("ROLE_OWNER")
                 .anyRequest().authenticated();
