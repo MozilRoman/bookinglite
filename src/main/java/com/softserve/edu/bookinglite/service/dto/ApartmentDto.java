@@ -16,6 +16,7 @@ public class ApartmentDto {
     private String name;
     private BigDecimal price;
     private int numberOfGuests;
+	private PropertyDto propertyDto;
     @NotNull
     private ApartmentType apartmentType;
     @NotNull
@@ -68,6 +69,14 @@ public class ApartmentDto {
     public void setAmenities(Set<Amenity> amenities) {
         this.amenities = amenities;
     }
+
+	public PropertyDto getPropertyDto() {
+		return propertyDto;
+	}
+
+	public void setPropertyDto(PropertyDto propertyDto) {
+		this.propertyDto = propertyDto;
+	}
 
 	@Override
 	public int hashCode() {
