@@ -30,7 +30,7 @@ public class BookingController {
 
     @GetMapping(value = "/booking/{bookingId}")
     public BookingDto getBookingById(Principal principal,
-                                     @PathVariable("bookingId") Long bookingId) {
+                                     @PathVariable("bookingId") Long bookingId) throws BookingNotFoundException {
         Long userId = Long.parseLong(principal.getName());
         return bookingService.findBookinDTOById(userId, bookingId);
     }
