@@ -11,13 +11,13 @@ public class RegisterDto {
     @Email
     private String email;
 
-    private String first_name;
+    private String firstName;
 
-    private String last_name;
+    private String lastName;
 
     private String password;
 
-    private String phone_number;
+    private String phoneNumber;
 
     private boolean owner;
 
@@ -32,21 +32,7 @@ public class RegisterDto {
         this.email = email;
     }
 
-    public String getFirst_name() {
-        return first_name;
-    }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
-    }
-
-    public String getLast_name() {
-        return last_name;
-    }
-
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
-    }
 
     public String getPassword() {
         return password;
@@ -56,15 +42,31 @@ public class RegisterDto {
         this.password = password;
     }
 
-    public String getPhone_number() {
-        return phone_number;
-    }
+	public String getFirstName() {
+		return firstName;
+	}
 
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
-    }
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 
-    public boolean isOwner() {
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public boolean isOwner() {
         return owner;
     }
 
@@ -86,11 +88,11 @@ public class RegisterDto {
 		int result = 1;
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((first_name == null) ? 0 : first_name.hashCode());
-		result = prime * result + ((last_name == null) ? 0 : last_name.hashCode());
+		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
 		result = prime * result + (owner ? 1231 : 1237);
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((phone_number == null) ? 0 : phone_number.hashCode());
+		result = prime * result + ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
 		return result;
 	}
 
@@ -113,15 +115,15 @@ public class RegisterDto {
 				return false;
 		} else if (!email.equals(other.email))
 			return false;
-		if (first_name == null) {
-			if (other.first_name != null)
+		if (lastName == null) {
+			if (other.firstName != null)
 				return false;
-		} else if (!first_name.equals(other.first_name))
+		} else if (!firstName.equals(other.firstName))
 			return false;
-		if (last_name == null) {
-			if (other.last_name != null)
+		if (lastName == null) {
+			if (other.lastName != null)
 				return false;
-		} else if (!last_name.equals(other.last_name))
+		} else if (!lastName.equals(other.lastName))
 			return false;
 		if (owner != other.owner)
 			return false;
@@ -130,10 +132,10 @@ public class RegisterDto {
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
-		if (phone_number == null) {
-			if (other.phone_number != null)
+		if (phoneNumber == null) {
+			if (other.phoneNumber != null)
 				return false;
-		} else if (!phone_number.equals(other.phone_number))
+		} else if (!phoneNumber.equals(other.phoneNumber))
 			return false;
 		return true;
 	}

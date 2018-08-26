@@ -36,7 +36,7 @@ public class AuthController {
 
 
 
-    @GetMapping("/hello")
+    @GetMapping("/user")
     public UserDto hello(Principal principal){
        UserDto user = userService.findById(Long.parseLong(principal.getName()));
        return user;
