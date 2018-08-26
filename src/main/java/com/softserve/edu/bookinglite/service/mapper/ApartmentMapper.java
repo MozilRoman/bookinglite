@@ -32,7 +32,7 @@ public interface ApartmentMapper {
 
 
     default PropertyDto map(Property property){
-        return PropertyMapper.instance.propertyToBasePropertyDtoWithAddressApartment(property);
+        return PropertyMapper.instance.propertyToBasePropertyDtoWithAddress(property);
     }
 
 }
