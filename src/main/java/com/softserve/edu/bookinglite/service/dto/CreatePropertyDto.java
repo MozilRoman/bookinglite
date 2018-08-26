@@ -19,27 +19,22 @@ public class CreatePropertyDto {
 	@NotBlank
 	private String contactEmail;
 
-	
-
 	private Long userId;
 	@NotNull
 	private Long propertyTypeId;
-	
 
-//	@NotNull
-//	private Set<Long> facilityId;
-@NotNull
-	private Long facilityId;
+	@NotNull
+	private Set<Long> facilityId;
+
 	@NotNull
 	private Long cityId;
 	@NotNull
 	private Long countryId;
-	
+	@NotNull
 	private String addressLine;
+	@NotNull
 	private String zip;
-	
 
-	
 	public Long getCityId() {
 		return cityId;
 	}
@@ -136,20 +131,11 @@ public class CreatePropertyDto {
 		this.propertyTypeId = propertyTypeId;
 	}
 
-//	public Set<Long> getFacilityId() {
-//		return facilityId;
-//	}
-//
-//	public void setFacilityId(Set<Long> facilityId) {
-//		this.facilityId = facilityId;
-//	}
-
-
-	public Long getFacilityId() {
+	public Set<Long> getFacilityId() {
 		return facilityId;
 	}
 
-	public void setFacilityId(Long facilityId) {
+	public void setFacilityId(Set<Long> facilityId) {
 		this.facilityId = facilityId;
 	}
 

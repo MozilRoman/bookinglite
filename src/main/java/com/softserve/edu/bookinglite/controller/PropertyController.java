@@ -70,14 +70,13 @@ public class PropertyController {
 		}
 	}
 	
-	@PostMapping("/testversion")
+	@PostMapping("/addproperty")
 	public ResponseEntity<CreatePropertyDto> createPropertyTestVersion(
 			@Valid @RequestBody CreatePropertyDto createPropertyDto, Principal principal) {
 		Long userId = Long.parseLong(principal.getName());
 		
 		propertyService.saveCreatePropertyDto(createPropertyDto, userId);
 		return new ResponseEntity<CreatePropertyDto>(HttpStatus.OK);
-	
 	}
 	
 

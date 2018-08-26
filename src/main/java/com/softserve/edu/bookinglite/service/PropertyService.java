@@ -31,24 +31,22 @@ import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
 @Service
 public class PropertyService {
 	
-	@Autowired
-	private PropertyTypeService propertyTypeService;
-
-	@Autowired
-	private FacilityService facilityService;
-
-	@Autowired
-	private CountryService countryService;
-	
-	@Autowired
-	private CityService cityService;
-	
-	
+	private final PropertyTypeService propertyTypeService;
+	private final FacilityService facilityService;
+	private final CountryService countryService;
+	private final CityService cityService;
 	private final PropertyRepository propertyRepository;
 	private final UserService userService;
 
+	
 	@Autowired
-	public PropertyService(PropertyRepository propertyRepository, UserService userService) {
+	public PropertyService(PropertyTypeService propertyTypeService, FacilityService facilityService,
+			CountryService countryService, CityService cityService, PropertyRepository propertyRepository,
+			UserService userService) {
+		this.propertyTypeService = propertyTypeService;
+		this.facilityService = facilityService;
+		this.countryService = countryService;
+		this.cityService = cityService;
 		this.propertyRepository = propertyRepository;
 		this.userService = userService;
 	}
@@ -103,47 +101,32 @@ public class PropertyService {
 	}
 	
 	@Transactional
-	public void saveCreatePropertyDto(CreatePropertyDto  createPropertyDto,
-			Long userId) {
-		
-	Property property = new Property();
-	property.setName(createPropertyDto.getName());
-	System.out.println(createPropertyDto.getName());
-	property.setDescription(createPropertyDto.getDescription());
-	property.setPhoneNumber(createPropertyDto.getPhoneNumber());
-	property.setContactEmail(createPropertyDto.getContactEmail());
-	property.setUser(userService.getUserById(userId).get());
-	property.setPropertyType(propertyTypeService
-			.getPropertyTypeById(createPropertyDto.getPropertyTypeId()));
-	
-	System.out.println("propertyTYpe" + createPropertyDto.getPropertyTypeId());
-	System.out.println("countryID " +createPropertyDto.getCountryId());
-	
-//	Set<Facility> facilities = new HashSet<>();
-//		for(Long id : createPropertyDto.getFacilityId()) {
-//			facilities.add(facilityService.getFacilityById(id));
-//		}
-//		property.setFacilities(facilities);
-
-		Facility facility = facilityService.getFacilityById(createPropertyDto.getFacilityId());
-		Set<Facility> facilities = new HashSet<>();
-		facilities.add(facility);
-
-		property.setFacilities(facilities);
-	Country country = countryService.getCountryByid(createPropertyDto.getCountryId());
-	City city = cityService.getCityByid(createPropertyDto.getCityId());
-	city.setCountry(country);	
-	Address address = new Address();
-	address.setAddressLine(createPropertyDto.getAddressLine());
-	address.setZip(createPropertyDto.getZip());
-	address.setCity(cityService.getCityByid(createPropertyDto.getCityId()));
-	
-	property.setAddress(address);
-
-	propertyRepository.save(property);
-
-	}
-	
+    public void saveCreatePropertyDto(CreatePropertyDto createPropertyDto,
+                                      Long userId) {
+        Property property = new Property();
+        property.setName(createPropertyDto.getName());
+        System.out.println(createPropertyDto.getName());
+        property.setDescription(createPropertyDto.getDescription());
+        property.setPhoneNumber(createPropertyDto.getPhoneNumber());
+        property.setContactEmail(createPropertyDto.getContactEmail());
+        property.setUser(userService.getUserById(userId).get());
+        property.setPropertyType(propertyTypeService
+                .getPropertyTypeById(createPropertyDto.getPropertyTypeId()));
+        Set<Facility> facilities = new HashSet<>();
+        for (Long id : createPropertyDto.getFacilityId()) {
+            facilities.add(facilityService.getFacilityById(id));
+        }
+        property.setFacilities(facilities);
+        Country country = countryService.getCountryByid(createPropertyDto.getCountryId());
+        City city = cityService.getCityByid(createPropertyDto.getCityId());
+        city.setCountry(country);
+        Address address = new Address();
+        address.setAddressLine(createPropertyDto.getAddressLine());
+        address.setZip(createPropertyDto.getZip());
+        address.setCity(cityService.getCityByid(createPropertyDto.getCityId()));
+        property.setAddress(address);
+        propertyRepository.save(property);
+    }	
 	
 	
 	@Transactional

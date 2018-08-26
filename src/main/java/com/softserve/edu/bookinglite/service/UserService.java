@@ -100,10 +100,10 @@ public class UserService {
         checkUser(registerDto.getEmail());
         User user = new User();
         user.setEmail(registerDto.getEmail());
-        user.setFirst_name(registerDto.getFirst_name());
-        user.setLast_name(registerDto.getLast_name());
+        user.setFirstName(registerDto.getFirstName());
+        user.setLastName(registerDto.getLastName());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-        user.setPhone_number(registerDto.getPhone_number());
+        user.setPhoneNumber(registerDto.getPhoneNumber());
         user.setAddress(registerDto.getAddress());
         List<Role> roles = roleRepository.findAll();
         Set<Role> userRoles = new HashSet<Role>();
