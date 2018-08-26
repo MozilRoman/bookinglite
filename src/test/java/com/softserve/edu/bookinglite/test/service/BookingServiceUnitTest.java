@@ -251,11 +251,11 @@ public class BookingServiceUnitTest {
         // User
         User user = new User();
         user.setId(1L);
-        user.setFirst_name("ivan");
-        user.setLast_name("zhun");
+        user.setFirstName("ivan");
+        user.setLastName("zhun");
         user.setPassword("123");
         user.setEmail("zynki.i32@gmail.com");
-        user.setPhone_number("12313123");
+        user.setPhoneNumber("12313123");
         user.setVerified(true);
         user.setAddress(address);
         user.setRoles(roles);

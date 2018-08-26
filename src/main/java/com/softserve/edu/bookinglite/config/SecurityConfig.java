@@ -49,12 +49,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/login","/api/register","/api/registrationconfirm").permitAll()
+                .antMatchers("/api/login","/api/register","/api/registrationconfirm","/api/countries","/api/country/**/cities").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/addproperty","property/*/photo","/property/*/apartment").hasAuthority("ROLE_OWNER")
                 .antMatchers(HttpMethod.PUT,"/apartment/*","/property/*").hasAuthority("ROLE_OWNER")
                 .antMatchers(HttpMethod.DELETE,"/photo/*").hasAuthority("ROLE_OWNER")
                 .anyRequest().authenticated();
-        http.addFilterBefore(jwtAuthorizationFilter,UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(jwtAuthorizationFilter,UsernamePasswordAuthenticationFilter.class);
     }
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
