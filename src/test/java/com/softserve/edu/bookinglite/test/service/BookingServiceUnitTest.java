@@ -17,7 +17,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import com.softserve.edu.bookinglite.entity.Address;
 import com.softserve.edu.bookinglite.entity.Apartment;
@@ -40,6 +42,7 @@ import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
 public class BookingServiceUnitTest {
 
     private final int INDEX = 0;
+    private final int PAGE_AND_SIZE = 1;
     private final Long ID = 1L;
     private final String RESERVED = "Reserved";
     private final String CANCELED = "Canceled";
@@ -57,17 +60,20 @@ public class BookingServiceUnitTest {
 
 
     @Test
-    public void findBookinDTOById() {
+    public void findBookinDTOById() throws BookingNotFoundException {
         Booking booking = getBookingInstance();
         BookingDto actualBookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
-
         Mockito.when(bookingRepository.findBookingById(ID, ID)).thenReturn(booking);
-        // Act
         BookingDto expectedBookingDto = bookingService.findBookinDTOById(ID, ID);
-        // Assert
         assertThat(actualBookingDto).isEqualTo(expectedBookingDto);
     }
 
+    @Test(expected = BookingNotFoundException.class)
+    public void findBookinDTOByIdBookingNotFoundException() throws BookingNotFoundException {
+        Booking booking = null;
+        Mockito.when(bookingRepository.findBookingById(ID, ID)).thenReturn(booking);
+        bookingService.findBookinDTOById(ID, ID);
+    }
 
     @Test
     public void findAllBookingsDtoByUserIdTest() {
@@ -77,7 +83,6 @@ public class BookingServiceUnitTest {
         BookingDto actualBookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
         Mockito.when(bookingRepository.getAllByUserIdOrderByCheckInAsc(ID)).thenReturn(bookings);
         List<BookingDto> expectedBookingDto = bookingService.findAllBookingsDtoByUserId(1L);
-
         assertThat(actualBookingDto).isEqualTo(expectedBookingDto.get(INDEX));
     }
 
@@ -96,14 +101,13 @@ public class BookingServiceUnitTest {
         assertThat(expectedCanceledBooking);
     }
 
-    @Test(expected = BookingNotFoundException.class)//work
+    @Test(expected = BookingNotFoundException.class)
     public void cancelBookingNotFoundExceptionTest() throws BookingNotFoundException, BookingCancelException {
         Mockito.when(bookingRepository.findBookingById(ID, ID)).thenReturn(null);
-        boolean expectedBooking = bookingService.cancelBooking(ID, ID);
-        assertThat(expectedBooking);
+        bookingService.cancelBooking(ID, ID);
     }
 
-    @Test(expected = BookingCancelException.class)///work
+    @Test(expected = BookingCancelException.class)
     public void cancelBookingWrongBookingStatusTest() throws BookingNotFoundException, BookingCancelException {
         Booking booking = getBookingInstance();
         BookingStatus bookingStatus = new BookingStatus();
@@ -111,20 +115,38 @@ public class BookingServiceUnitTest {
         bookingStatus.setName(CANCELED);
         booking.setBookingStatus(bookingStatus);
         Mockito.when(bookingRepository.findBookingById(ID, ID)).thenReturn(booking);
-        boolean expectedCanceledBooking = bookingService.cancelBooking(ID, ID);
-        assertThat(expectedCanceledBooking);
+        bookingService.cancelBooking(ID, ID);
     }
 
     @Test(expected = BookingCancelException.class)
-    public void cancelBookingWrongDateTest() throws BookingNotFoundException, BookingCancelException {//all good
-        // Arrange
+    public void cancelBookingWrongDateTest() throws BookingNotFoundException, BookingCancelException {
         Booking booking = getBookingInstance();
         booking.setCheckIn(setAllDate("2018-01-11-14-00-00"));
         booking.setCheckOut(setAllDate("2018-01-12-12-00-00"));
         Mockito.when(bookingRepository.findBookingById(ID, ID)).thenReturn(booking);
-
-        boolean expectedCanceledBooking = bookingService.cancelBooking(ID, ID);
-        assertThat(expectedCanceledBooking);
+        bookingService.cancelBooking(ID, ID);
+    }
+    
+    @Test
+    public void findPageAllBookingsDtoByUserId()  {
+    	Booking booking = getBookingInstance();
+    	List<Booking> bookings = new ArrayList<>();
+    	bookings.add(booking);
+    	Page<Booking> pageBooking = new PageImpl(bookings);
+        Mockito.when(bookingRepository.getPageAllByUserIdOrderByCheckInAsc(
+        		ID, PageRequest.of(PAGE_AND_SIZE, PAGE_AND_SIZE))).thenReturn(pageBooking);
+        bookingService.findPageAllBookingsDtoByUserId(ID, PAGE_AND_SIZE, PAGE_AND_SIZE);
+    }
+    
+    @Test
+    public void getPageAllBookingsDtoByOwnerId()  {
+    	Booking booking = getBookingInstance();
+    	List<Booking> bookings = new ArrayList<>();
+    	bookings.add(booking);
+    	Page<Booking> pageBooking = new PageImpl(bookings);
+        Mockito.when(bookingRepository.getPageAllBookingsByOwnerId(
+        		ID, PageRequest.of(PAGE_AND_SIZE, PAGE_AND_SIZE))).thenReturn(pageBooking);
+        bookingService.getPageAllBookingsDtoByOwnerId(ID, PAGE_AND_SIZE, PAGE_AND_SIZE);
     }
 
     //Ivan
