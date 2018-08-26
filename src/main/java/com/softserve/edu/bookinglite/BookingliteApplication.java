@@ -24,9 +24,6 @@ public class BookingliteApplication {
 	JwtAuthorizationFilter jwtAuthenticationFilter(){
 		return new JwtAuthorizationFilter();
 	}
-
-
-
 	@Bean
 	Cloudinary cloudinary() {
 		return new Cloudinary(ObjectUtils.asMap(
@@ -34,6 +31,7 @@ public class BookingliteApplication {
 				CloudinaryData.API_KEY.getName(), CloudinaryData.API_KEY.getValue(),
 				CloudinaryData.API_SECRET.getName(), CloudinaryData.API_SECRET.getValue()));
 	}
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(BookingliteApplication.class, args);

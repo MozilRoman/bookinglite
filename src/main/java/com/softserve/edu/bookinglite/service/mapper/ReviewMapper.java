@@ -14,7 +14,7 @@ public interface ReviewMapper {
 
     ReviewMapper instance = Mappers.getMapper(ReviewMapper.class);
     @Mappings({@Mapping(source = "booking.user", target = "userDto")})
-    ReviewDto toDto(Review review);
+    ReviewDto reviewToBaseReviewDto(Review review);
 
     default UserDto map(User user){
         return UserMapper.instance.UserToBaseUserDtoWithName(user);

@@ -11,10 +11,10 @@ import java.util.List;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-
+    @Query("select r from Review r where r.booking.id=?1")
     Review findByBookingId(Long bookingId);
 
-    @Query("select r from Review r join r.booking b join b.apartment a join a.property p where p.id=:propertyId")
-    List<Review> findAllReviewsByIdProperty (@Param("propertyId") Long propertyId);
+    @Query("select r from Review r join r.booking b join b.apartment a join a.property p where p.id=?1")
+    List<Review> findAllReviewsByIdProperty (Long propertyId);
 
 }

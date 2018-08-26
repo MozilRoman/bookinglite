@@ -17,32 +17,32 @@ import java.util.List;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-	@Query("Select b from Booking b where user.id= ?1 and b.id= ?2 ")
+    @Query("Select b from Booking b where user.id= ?1 and b.id= ?2 ")
     Booking findBookingById(Long idUser, Long bookingId);
-	
-	@Query("Select b from Booking b where user.id= ?1 ORDER BY b.checkIn desc")
+
+    @Query("Select b from Booking b where user.id= ?1 ORDER BY b.checkIn desc")
     List<Booking> getAllByUserIdOrderByCheckInAsc(Long idUser);
-	
-	@Query("Select b from Booking b where user.id= ?1 ORDER BY b.checkIn desc")
+
+    @Query("Select b from Booking b where user.id= ?1 ORDER BY b.checkIn desc")
     Page<Booking> getPageAllByUserIdOrderByCheckInAsc(Long idUser, Pageable pageable);
 
     //if booking exist it will return true
-	@Query("select CASE WHEN COUNT(b.id) > 0 THEN TRUE ELSE FALSE END  from Booking b " +
-			"where  b.apartment.id=?1 and b.bookingStatus.name<>'Canceled' " +
-			"and (?2 between b.checkIn and b.checkOut or ?3 between b.checkIn and b.checkOut " +
-			"or b.checkIn between ?2 and ?3 or b.checkOut between ?2 and ?3)")
-	boolean getBookingByCheck(Long apartment_id, Date inDate,Date outDate);
+    @Query("select CASE WHEN COUNT(b.id) > 0 THEN TRUE ELSE FALSE END  from Booking b " +
+            "where  b.apartment.id=?1 and b.bookingStatus.name<>'Canceled' " +
+            "and (?2 between b.checkIn and b.checkOut or ?3 between b.checkIn and b.checkOut " +
+            "or b.checkIn between ?2 and ?3 or b.checkOut between ?2 and ?3)")
+    boolean getBookingByCheck(Long apartment_id, Date inDate, Date outDate);
 
 
-	@Query("SELECT b FROM Booking b " + "join Apartment a on a.id=b.apartment.id "
-			+ "join Property p on p.id=a.property.id "
-			+ "where p.user.id=?1 and b.bookingStatus.name<>'Canceled' order by b.checkIn desc ")
-	List<Booking> getAllBookingsByOwnerId(Long idOwnerUser);
+    @Query("SELECT b FROM Booking b " + "join Apartment a on a.id=b.apartment.id "
+            + "join Property p on p.id=a.property.id "
+            + "where p.user.id=?1 and b.bookingStatus.name<>'Canceled' order by b.checkIn desc ")
+    List<Booking> getAllBookingsByOwnerId(Long idOwnerUser);
 
-	@Query("SELECT b FROM Booking b " + "join Apartment a on a.id=b.apartment.id "
-			+ "join Property p on p.id=a.property.id "
-			+ "where p.user.id=?1 and b.bookingStatus.name<>'Canceled' order by b.checkIn desc ")
-	Page<Booking> getPageAllBookingsByOwnerId(Long idOwnerUser, Pageable pageable);
+    @Query("SELECT b FROM Booking b " + "join Apartment a on a.id=b.apartment.id "
+            + "join Property p on p.id=a.property.id "
+            + "where p.user.id=?1 and b.bookingStatus.name<>'Canceled' order by b.checkIn desc ")
+    Page<Booking> getPageAllBookingsByOwnerId(Long idOwnerUser, Pageable pageable);
 }
 
 	
