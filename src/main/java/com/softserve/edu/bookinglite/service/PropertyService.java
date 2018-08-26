@@ -119,12 +119,17 @@ public class PropertyService {
 	System.out.println("propertyTYpe" + createPropertyDto.getPropertyTypeId());
 	System.out.println("countryID " +createPropertyDto.getCountryId());
 	
-	Set<Facility> facilities = new HashSet<>();
-		for(Long id : createPropertyDto.getFacilityId()) {
-			facilities.add(facilityService.getFacilityById(id));
-		}
-		property.setFacilities(facilities);
+//	Set<Facility> facilities = new HashSet<>();
+//		for(Long id : createPropertyDto.getFacilityId()) {
+//			facilities.add(facilityService.getFacilityById(id));
+//		}
+//		property.setFacilities(facilities);
 
+		Facility facility = facilityService.getFacilityById(createPropertyDto.getFacilityId());
+		Set<Facility> facilities = new HashSet<>();
+		facilities.add(facility);
+
+		property.setFacilities(facilities);
 	Country country = countryService.getCountryByid(createPropertyDto.getCountryId());
 	City city = cityService.getCityByid(createPropertyDto.getCityId());
 	city.setCountry(country);	

@@ -26,8 +26,10 @@ public class CreatePropertyDto {
 	private Long propertyTypeId;
 	
 
-	@NotNull
-	private Set<Long> facilityId;
+//	@NotNull
+//	private Set<Long> facilityId;
+@NotNull
+	private Long facilityId;
 	@NotNull
 	private Long cityId;
 	@NotNull
@@ -36,7 +38,7 @@ public class CreatePropertyDto {
 	private String addressLine;
 	private String zip;
 	
-	
+
 	
 	public Long getCityId() {
 		return cityId;
@@ -134,11 +136,20 @@ public class CreatePropertyDto {
 		this.propertyTypeId = propertyTypeId;
 	}
 
-	public Set<Long> getFacilityId() {
+//	public Set<Long> getFacilityId() {
+//		return facilityId;
+//	}
+//
+//	public void setFacilityId(Set<Long> facilityId) {
+//		this.facilityId = facilityId;
+//	}
+
+
+	public Long getFacilityId() {
 		return facilityId;
 	}
 
-	public void setFacilityId(Set<Long> facilityId) {
+	public void setFacilityId(Long facilityId) {
 		this.facilityId = facilityId;
 	}
 
