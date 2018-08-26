@@ -130,11 +130,11 @@ public class ApartmentServiceUnitTest {
         role.setName("Owner");
         // User
         User user = new User();
-        user.setFirst_name("Marian");
-        user.setLast_name("Mazurak");
+        user.setFirstName("Marian");
+        user.setLastName("Mazurak");
         user.setPassword("qwerty");
         user.setEmail("asd@ASd.com");
-        user.setPhone_number("456654456");
+        user.setPhoneNumber("456654456");
         user.setVerified(true);
         user.setAddress(address);
         user.setRoles(roles);
