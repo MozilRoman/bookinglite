@@ -2,22 +2,20 @@ package com.softserve.edu.bookinglite.controller;
 
 import java.security.Principal;
 import java.util.List;
-
 import javax.validation.Valid;
-
-import com.softserve.edu.bookinglite.entity.Apartment;
+import com.softserve.edu.bookinglite.entity.Amenity;
+import com.softserve.edu.bookinglite.entity.ApartmentType;
 import com.softserve.edu.bookinglite.exception.ApartmentNotFoundException;
 import com.softserve.edu.bookinglite.exception.ApartmentUpdateException;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
+import com.softserve.edu.bookinglite.service.dto.CreateApartmentDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.softserve.edu.bookinglite.service.ApartmentService;
 import com.softserve.edu.bookinglite.service.dto.ApartmentDto;
-import com.softserve.edu.bookinglite.service.mapper.ApartmentMapper;
 
 @RestController
 @RequestMapping("/api")
@@ -43,15 +41,12 @@ public class ApartmentController {
 	}
 
 	@PostMapping("/property/{id}/apartment")
-	public ResponseEntity<Void> saveApartment(@Valid @RequestBody ApartmentDto apartmentDto,
-											  @PathVariable("id") Long propertyId,
-											  Principal principal) throws PropertyNotFoundException {
+	public ResponseEntity<CreateApartmentDto> saveApartment(@Valid @RequestBody CreateApartmentDto createApartmentDto,
+															@PathVariable("id") Long propertyId,
+															Principal principal) throws PropertyNotFoundException {
 		Long userId = Long.parseLong(principal.getName());
-		if (apartmentService.saveApartment(apartmentDto, propertyId, userId)) {
-			return new ResponseEntity<Void>(HttpStatus.CREATED);
-		} else {
-			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-		}
+		apartmentService.saveCreatedApartmentDto(createApartmentDto, propertyId, userId);
+		return new ResponseEntity<CreateApartmentDto>(HttpStatus.CREATED);
 	}
 
 	@PutMapping("/apartment/{id}")
@@ -64,6 +59,16 @@ public class ApartmentController {
 		} else {
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@GetMapping("/create-apartment/apartment-type")
+	public List<ApartmentType> getApartmentTypes(){
+		return apartmentService.findApartmentTypes();
+	}
+
+	@GetMapping("/create-apartment/amenities")
+	public List<Amenity> getAmenities(){
+		return apartmentService.findAmenities();
 	}
 
 }
