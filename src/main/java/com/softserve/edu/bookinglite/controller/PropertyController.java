@@ -24,6 +24,7 @@ import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.exception.PropertyConfirmOwnerException;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import com.softserve.edu.bookinglite.service.PropertyService;
+import com.softserve.edu.bookinglite.service.dto.CreatePropertyDto;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.dto.SearchDto;
 import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
@@ -43,7 +44,7 @@ public class PropertyController {
 	public List<PropertyDto> getAllProperties() {
 		return propertyService.getAllPropertyDtos();
 	}
-
+	
 	@GetMapping("/property/{propertyId}")
 	public PropertyDto getPropertyById(@PathVariable("propertyId") Long id) throws PropertyNotFoundException {
 			return propertyService.getPropertyDtoById(id);
@@ -68,6 +69,17 @@ public class PropertyController {
 			return new ResponseEntity<PropertyDto>(HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	@PostMapping("/testversion")
+	public ResponseEntity<CreatePropertyDto> createPropertyTestVersion(
+			@Valid @RequestBody CreatePropertyDto createPropertyDto, Principal principal) {
+		Long userId = Long.parseLong(principal.getName());
+		
+		propertyService.saveCreatePropertyDto(createPropertyDto, userId);
+		return new ResponseEntity<CreatePropertyDto>(HttpStatus.OK);
+	
+	}
+	
 
 	@PutMapping("/property/{propertyId}")
 	public ResponseEntity<PropertyDto> update(@RequestBody PropertyDto propertyDto, @PathVariable("propertyId") Long id,
