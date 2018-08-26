@@ -38,8 +38,9 @@ public interface PropertyMapper {
 	@Mappings({@Mapping(target = "apartments",ignore = true),
         @Mapping(target = "address",ignore = true)})
 	PropertyDto propertyToBasePropertyDtoWithUser(Property property);
-	
-	@Mapping(target = "user",ignore = true)
+
+	@Mappings({@Mapping(target = "apartments",ignore = true),
+			@Mapping(target = "user",ignore = true)})
 	PropertyDto propertyToBasePropertyDtoWithAddressApartment(Property property);
 	
 	PropertyDto propertyToBasePropertyDtoWithApartmentAddressUser(Property property);

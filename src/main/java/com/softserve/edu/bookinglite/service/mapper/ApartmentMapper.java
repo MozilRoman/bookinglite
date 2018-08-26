@@ -15,7 +15,13 @@ import java.util.Set;
 @Mapper
 public interface ApartmentMapper {
 
+
     ApartmentMapper instance = Mappers.getMapper(ApartmentMapper.class);
+
+    @Mappings({
+            @Mapping(target="propertyDto", source="apartment.property"),
+    })
+    ApartmentDto toDto(Apartment apartment);
 
     Set<Amenity> map(Set<Amenity> amenities);
 
@@ -23,10 +29,10 @@ public interface ApartmentMapper {
 
     ApartmentType map(ApartmentType apartmentType);
 
-    ApartmentDto toDto(Apartment apartment);
+
 
     default PropertyDto map(Property property){
-        return PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(property);
+        return PropertyMapper.instance.propertyToBasePropertyDtoWithAddressApartment(property);
     }
 
 }

@@ -13,7 +13,6 @@ public class CreateApartmentDto {
     @NotBlank
     private String name;
     private BigDecimal price;
-    private int numberOfGuests;
     private Long propertyDtoId;
     @NotNull
     private Long apartmentTypeId;
@@ -42,14 +41,6 @@ public class CreateApartmentDto {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
-    }
-
-    public int getNumberOfGuests() {
-        return numberOfGuests;
-    }
-
-    public void setNumberOfGuests(int numberOfGuests) {
-        this.numberOfGuests = numberOfGuests;
     }
 
     public Long getPropertyDtoId() {
