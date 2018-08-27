@@ -12,9 +12,9 @@ public class UserDto {
 
     private Long id;
     private String email;
-    private String first_name;
-    private String last_name;
-    private String phone_number;
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
     Address address;
     Set<Role> roles;
 
@@ -34,31 +34,31 @@ public class UserDto {
         this.email = email;
     }
 
-    public String getFirst_name() {
-        return first_name;
-    }
+	public String getFirstName() {
+		return firstName;
+	}
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
-    }
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 
-    public String getLast_name() {
-        return last_name;
-    }
+	public String getLastName() {
+		return lastName;
+	}
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
-    }
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
-    public String getPhone_number() {
-        return phone_number;
-    }
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
 
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
-    }
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 
-    public Address getAddress() {
+	public Address getAddress() {
         return address;
     }
 
@@ -80,10 +80,10 @@ public class UserDto {
 		int result = 1;
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((first_name == null) ? 0 : first_name.hashCode());
+		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((last_name == null) ? 0 : last_name.hashCode());
-		result = prime * result + ((phone_number == null) ? 0 : phone_number.hashCode());
+		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+		result = prime * result + ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
 		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
 		return result;
 	}
@@ -107,25 +107,25 @@ public class UserDto {
 				return false;
 		} else if (!email.equals(other.email))
 			return false;
-		if (first_name == null) {
-			if (other.first_name != null)
+		if (firstName == null) {
+			if (other.firstName != null)
 				return false;
-		} else if (!first_name.equals(other.first_name))
+		} else if (!firstName.equals(other.firstName))
 			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (last_name == null) {
-			if (other.last_name != null)
+		if (lastName == null) {
+			if (other.lastName != null)
 				return false;
-		} else if (!last_name.equals(other.last_name))
+		} else if (!lastName.equals(other.lastName))
 			return false;
-		if (phone_number == null) {
-			if (other.phone_number != null)
+		if (phoneNumber == null) {
+			if (other.phoneNumber != null)
 				return false;
-		} else if (!phone_number.equals(other.phone_number))
+		} else if (!phoneNumber.equals(other.phoneNumber))
 			return false;
 		if (roles == null) {
 			if (other.roles != null)

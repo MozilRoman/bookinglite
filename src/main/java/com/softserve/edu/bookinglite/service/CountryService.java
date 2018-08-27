@@ -24,4 +24,8 @@ public class CountryService {
 		return countryRepository.findAll();
 	}
 
+	public Country getCountryByid(Long id) {
+		return countryRepository.findById(id).get();
+	}
+	
 }

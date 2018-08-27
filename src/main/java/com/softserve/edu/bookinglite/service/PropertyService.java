@@ -1,8 +1,10 @@
 package com.softserve.edu.bookinglite.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,25 +12,41 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.softserve.edu.bookinglite.entity.Address;
 import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.Booking;
+import com.softserve.edu.bookinglite.entity.City;
+import com.softserve.edu.bookinglite.entity.Country;
+import com.softserve.edu.bookinglite.entity.Facility;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.exception.PropertyConfirmOwnerException;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
+import com.softserve.edu.bookinglite.service.dto.CreatePropertyDto;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.dto.SearchDto;
 import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
 
 @Service
 public class PropertyService {
-
+	
+	private final PropertyTypeService propertyTypeService;
+	private final FacilityService facilityService;
+	private final CountryService countryService;
+	private final CityService cityService;
 	private final PropertyRepository propertyRepository;
 	private final UserService userService;
 
+	
 	@Autowired
-	public PropertyService(PropertyRepository propertyRepository, UserService userService) {
+	public PropertyService(PropertyTypeService propertyTypeService, FacilityService facilityService,
+			CountryService countryService, CityService cityService, PropertyRepository propertyRepository,
+			UserService userService) {
+		this.propertyTypeService = propertyTypeService;
+		this.facilityService = facilityService;
+		this.countryService = countryService;
+		this.cityService = cityService;
 		this.propertyRepository = propertyRepository;
 		this.userService = userService;
 	}
@@ -81,7 +99,36 @@ public class PropertyService {
 		}
 		return false;
 	}
-
+	
+	@Transactional
+    public void saveCreatePropertyDto(CreatePropertyDto createPropertyDto,
+                                      Long userId) {
+        Property property = new Property();
+        property.setName(createPropertyDto.getName());
+        System.out.println(createPropertyDto.getName());
+        property.setDescription(createPropertyDto.getDescription());
+        property.setPhoneNumber(createPropertyDto.getPhoneNumber());
+        property.setContactEmail(createPropertyDto.getContactEmail());
+        property.setUser(userService.getUserById(userId).get());
+        property.setPropertyType(propertyTypeService
+                .getPropertyTypeById(createPropertyDto.getPropertyTypeId()));
+        Set<Facility> facilities = new HashSet<>();
+        for (Long id : createPropertyDto.getFacilityId()) {
+            facilities.add(facilityService.getFacilityById(id));
+        }
+        property.setFacilities(facilities);
+        Country country = countryService.getCountryByid(createPropertyDto.getCountryId());
+        City city = cityService.getCityByid(createPropertyDto.getCityId());
+        city.setCountry(country);
+        Address address = new Address();
+        address.setAddressLine(createPropertyDto.getAddressLine());
+        address.setZip(createPropertyDto.getZip());
+        address.setCity(cityService.getCityByid(createPropertyDto.getCityId()));
+        property.setAddress(address);
+        propertyRepository.save(property);
+    }	
+	
+	
 	@Transactional
 	public boolean updateProperty(PropertyDto propertyDto, Long propertyId, Long ownerId)
 			throws PropertyNotFoundException, PropertyConfirmOwnerException {

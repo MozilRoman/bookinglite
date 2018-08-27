@@ -48,38 +48,29 @@ public class BookingService {
 		this.apartmentRepository = apartmentRepository;
 	}
 
-
 	@Transactional
-	public BookingDto findBookinDTOById(Long idUser,Long bookingId) {
-		Booking booking = bookingRepository.findBookingById(idUser, bookingId);
+	public BookingDto findBookinDTOById(Long idUser,Long bookingId)  throws BookingNotFoundException{ //add unit tests
+		Booking booking = bookingRepository.findBookingById(idUser, bookingId); 
+		if(booking==null) throw new BookingNotFoundException(bookingId);
 		return BookingMapper.instance.bookingToBaseBookingDto(booking);
 	}
 
 	@Transactional
 	public List<BookingDto> findAllBookingsDtoByUserId(Long userId) {
 		List<BookingDto> listBookingDto = new ArrayList<>();
-		List<Booking> listBooking = bookingRepository.getAllByUserIdOrderByCheckInAsc(userId);
-		if ( !listBooking.isEmpty()) {
-			for (Booking booking : listBooking	) {
-				BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
-				listBookingDto.add(bookingDto);
-			}
-		}
+		bookingRepository.getAllByUserIdOrderByCheckInAsc(userId).forEach(
+				b -> listBookingDto.add(BookingMapper.instance.bookingToBaseBookingDto(b)));
 		return listBookingDto;
 	}
-
 
 	@Transactional
 	public List<BookingDto> findPageAllBookingsDtoByUserId(Long userId, int page, int size) {
 		List<BookingDto> listBookingDto = new ArrayList<>();
-		Page<Booking> pageBooking = bookingRepository.getPageAllByUserIdOrderByCheckInAsc(userId, PageRequest.of(page, size));
-		for(Booking booking : pageBooking.getContent()) {
-			BookingDto propertyDto = BookingMapper.instance
-					.bookingToBaseBookingDto(booking);
-			listBookingDto.add(propertyDto);
-		}
+		bookingRepository.getPageAllByUserIdOrderByCheckInAsc(userId, PageRequest.of(page, size)).forEach(
+				b ->listBookingDto.add(BookingMapper.instance.bookingToBaseBookingDto(b)) );	
 		return listBookingDto;
-	}
+    }
+
 	@Transactional
 	public boolean cancelBooking(Long userId, Long bookingId) throws BookingNotFoundException, BookingCancelException {
 		Booking booking = bookingRepository.findBookingById(userId, bookingId);
@@ -100,31 +91,21 @@ public class BookingService {
 		else throw new BookingCancelException();
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public List<BookingDto> getAllBookingsDtoByOwnerId(Long idUserOwner) {
-		List<BookingDto> listBookingDto = new ArrayList<>();
-		List<Booking> listBooking = bookingRepository.getAllBookingsByOwnerId(idUserOwner);
-		if (!listBooking.isEmpty()) {
-			for (Booking booking : listBooking	) {
-				BookingDto bookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
-				listBookingDto.add(bookingDto);
-			}
-		}
+    	List<BookingDto> listBookingDto = new ArrayList<>();
+    	bookingRepository.getAllBookingsByOwnerId(idUserOwner).forEach(
+				b -> listBookingDto.add( BookingMapper.instance.bookingToBaseBookingDto(b)));
 		return listBookingDto;
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public List<BookingDto> getPageAllBookingsDtoByOwnerId(Long ownerId, int page, int size) {
 		List<BookingDto> listBookingDto = new ArrayList<>();
-		Page<Booking> pageBooking = bookingRepository.getPageAllBookingsByOwnerId(ownerId, PageRequest.of(page, size));
-		if(pageBooking.getNumberOfElements()!=0) {
-			for(Booking booking : pageBooking.getContent()) {
-				BookingDto propertyDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
-				listBookingDto.add(propertyDto);
-			}
-		}
+		bookingRepository.getPageAllBookingsByOwnerId(ownerId, PageRequest.of(page, size)).forEach(
+				b ->listBookingDto.add(BookingMapper.instance.bookingToBaseBookingDto(b)) );
 		return listBookingDto;
-	}
+    }
 
 	@Transactional
 	public boolean createBookingWithValidation(CreateBookingDto createBookingDto, Long userId, Long apartmentId)
