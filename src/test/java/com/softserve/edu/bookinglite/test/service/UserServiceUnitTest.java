@@ -136,7 +136,7 @@ public class UserServiceUnitTest {
         user.setFirstName("Ivan");
         user.setLastName("Ivanov");
         user.setPhoneNumber("1231312");
-        user.setPassword("123123");
+        user.setPassword("1223123");
         UserDto expectedDto = new UserDto();
         expectedDto = UserMapper.instance.UserToBaseUserDtoWithRoles(user);
         Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
