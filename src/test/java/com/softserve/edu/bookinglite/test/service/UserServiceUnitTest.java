@@ -76,7 +76,7 @@ public class UserServiceUnitTest {
     public void testLoginBadCredentials() throws UserNotFoundException,UserIsNotVerifiedException,BadUserCredentialsException {
         LoginDto loginDto = new LoginDto();
         loginDto.setEmail("hello@gmail.com");
-        loginDto.setPassword("sdadsa");
+        loginDto.setPassword("sdasdsa");
         User testUser = new User();
         testUser.setVerified(true);
         Mockito.when(userRepository.findByEmail(loginDto.getEmail())).thenReturn(testUser);
@@ -136,7 +136,7 @@ public class UserServiceUnitTest {
         user.setFirstName("Ivan");
         user.setLastName("Ivanov");
         user.setPhoneNumber("1231312");
-        user.setPassword("1223123");
+        user.setPassword("123123");
         UserDto expectedDto = new UserDto();
         expectedDto = UserMapper.instance.UserToBaseUserDtoWithRoles(user);
         Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
