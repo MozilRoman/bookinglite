@@ -1,7 +1,7 @@
 package com.softserve.edu.bookinglite.repository;
 
-import com.softserve.edu.bookinglite.entity.Apartment;
-
+import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,9 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.softserve.edu.bookinglite.entity.Booking;
-
-import java.util.Date;
-import java.util.List;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
