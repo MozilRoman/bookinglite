@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.softserve.edu.bookinglite.exception.*;
 import com.softserve.edu.bookinglite.service.ReviewService;
+import com.softserve.edu.bookinglite.service.dto.CreateBookingDto;
+import com.softserve.edu.bookinglite.service.dto.CreateReviewDto;
 import com.softserve.edu.bookinglite.service.dto.ReviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,7 +41,7 @@ public class ReviewController {
     }
 
     @PostMapping("/booking/{id}/review")
-    public ResponseEntity<Void> saveReview(@RequestBody ReviewDto reviewDto,
+    public ResponseEntity<Void> saveReview(@RequestBody CreateReviewDto reviewDto,
                                            @PathVariable("id") Long bookingId,
                                            Principal principal)
             throws BookingNotFoundException, ReviewOwnerException, CantLeaveReviewException {

@@ -7,6 +7,7 @@ import com.softserve.edu.bookinglite.repository.BookingRepository;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.repository.ReviewRepository;
 import com.softserve.edu.bookinglite.service.ReviewService;
+import com.softserve.edu.bookinglite.service.dto.CreateReviewDto;
 import com.softserve.edu.bookinglite.service.dto.ReviewDto;
 import com.softserve.edu.bookinglite.service.mapper.ReviewMapper;
 import com.softserve.edu.bookinglite.util.DateUtils;
@@ -81,32 +82,32 @@ public class ReviewServiceTest {
     @Test(expected = BookingNotFoundException.class)
     public void addReviewBookingNotFoundExceptionTest() throws BookingNotFoundException, ReviewOwnerException, CantLeaveReviewException {
         Mockito.when(bookingRepository.findById(ID)).thenReturn(Optional.empty());
-        ReviewDto reviewDto = new ReviewDto();
-        assertThat(reviewService.addReview(reviewDto, ID, ID));
+        CreateReviewDto reviewDto = new CreateReviewDto();
+       reviewService.addReview(reviewDto, ID, ID);
     }
 
     @Test(expected = ReviewOwnerException.class)
     public void addReviewBookingReviewOwnerExceptionTest() throws BookingNotFoundException, ReviewOwnerException, CantLeaveReviewException {
         Booking booking = initBooking(BAD_ID, VALID_DATE);
         Mockito.when(bookingRepository.findById(ID)).thenReturn(Optional.of(booking));
-        ReviewDto reviewDto = new ReviewDto();
-        assertThat(reviewService.addReview(reviewDto, ID, ID));
+        CreateReviewDto reviewDto = new CreateReviewDto();
+       reviewService.addReview(reviewDto, ID, ID);
     }
 
     @Test(expected = CantLeaveReviewException.class)
     public void addReviewBookingCantLeaveReviewExceptionTest() throws BookingNotFoundException, ReviewOwnerException, CantLeaveReviewException {
         Booking booking = initBooking(ID, INVALID_DATE);
         Mockito.when(bookingRepository.findById(ID)).thenReturn(Optional.of(booking));
-        ReviewDto reviewDto = new ReviewDto();
-        assertThat(reviewService.addReview(reviewDto, ID, ID));
+        CreateReviewDto reviewDto = new CreateReviewDto();
+        reviewService.addReview(reviewDto, ID, ID);
     }
 
     @Test(expected = CantLeaveReviewException.class)
     public void addReviewBookingCantLeaveReviewExceptionWhenBookingStatusIsCanceledTest() throws BookingNotFoundException, ReviewOwnerException, CantLeaveReviewException {
         Booking booking = initBooking(ID, VALID_DATE);
         Mockito.when(bookingRepository.findById(ID)).thenReturn(Optional.of(booking));
-        ReviewDto reviewDto = new ReviewDto();
-        assertThat(reviewService.addReview(reviewDto, ID, ID));
+        CreateReviewDto reviewDto = new CreateReviewDto();
+        reviewService.addReview(reviewDto, ID, ID);
     }
 
     public Booking initBooking(Long id_User, Date date) {

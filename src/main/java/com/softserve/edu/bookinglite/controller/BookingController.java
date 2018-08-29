@@ -49,18 +49,10 @@ public class BookingController {
         return bookingService.findPageAllBookingsDtoByUserId(userId, pageNumber, pageSize);
     }
 
-    @GetMapping(value = "/guestarivals")
-    public List<BookingDto> getAllBookingsDtoByOwnerId(Principal principal) {
+    @GetMapping(value = "/guestArrivals/{propertyId}")
+    public List<BookingDto> getAllBookingsDtoByOwnerId(@PathVariable Long propertyId, Principal principal) {
         Long userId = Long.parseLong(principal.getName());
-        return bookingService.getAllBookingsDtoByOwnerId(userId);
-    }
-
-    @GetMapping("/guestarivals/pages")
-    public List<BookingDto> getPageAllBookingsDtoByOwnerId(Principal principal,
-                                                           @RequestParam("getPageNumber") int pageNumber,
-                                                           @RequestParam("getPageSize") int pageSize) {
-        Long userId = Long.parseLong(principal.getName());
-        return bookingService.getPageAllBookingsDtoByOwnerId(userId, pageNumber, pageSize);
+        return bookingService.getAllBookingsByPropertyAndOwnerId(propertyId,userId);
     }
 
     @PostMapping(value = "/booking/{apartmentId}")
