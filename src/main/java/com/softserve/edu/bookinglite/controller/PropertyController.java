@@ -92,7 +92,7 @@ public class PropertyController {
 	}
 	
 	@GetMapping("/property/search")
-	public List<PropertyDto> searchPropertyQuery(@RequestParam("checkIn") Date checkIn,
+	public List<PropertyDto> searchProperty(@RequestParam("checkIn") Date checkIn,
             									@RequestParam("checkOut")  Date checkOut,
             									@RequestParam("numberOfGuests") Integer numberOfGuests,
             									@RequestParam("cityId") Long cityId,

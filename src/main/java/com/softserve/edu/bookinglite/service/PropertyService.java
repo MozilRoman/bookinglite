@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.softserve.edu.bookinglite.entity.Address;
-import com.softserve.edu.bookinglite.entity.Apartment;
-import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.City;
 import com.softserve.edu.bookinglite.entity.Country;
 import com.softserve.edu.bookinglite.entity.Facility;
@@ -146,16 +144,12 @@ public class PropertyService {
 
 	@Transactional
 	public List<PropertyDto> searchProperty(SearchDto searchDto) {
-		List<Property> properties = propertyRepository.searchProperties(searchDto.getNumberOfGuests(),
-				searchDto.getCityId(), searchDto.getCountryId(), searchDto.getCheckIn(), searchDto.getCheckOut());
-
-		List<PropertyDto> dtos = new ArrayList<>();
-		for (Property property : properties) {
-			PropertyDto propertyDto = PropertyMapper.instance
-					.propertyToBasePropertyDtoWithApartmentAddressUser(property);
-			dtos.add(propertyDto);
-		}
-		return dtos;
+		List<PropertyDto> propertyDtos = new ArrayList<>();
+		propertyRepository
+				.searchProperties(searchDto.getNumberOfGuests(), searchDto.getCityId(), searchDto.getCountryId(),
+						searchDto.getCheckIn(), searchDto.getCheckOut())
+				.forEach(p -> propertyDtos.add(PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(p)));
+		return propertyDtos;
 	}
 
 	@Transactional
