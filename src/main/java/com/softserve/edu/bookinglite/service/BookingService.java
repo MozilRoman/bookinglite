@@ -8,14 +8,12 @@ import com.softserve.edu.bookinglite.exception.*;
 import com.softserve.edu.bookinglite.repository.ApartmentRepository;
 import com.softserve.edu.bookinglite.repository.BookingRepository;
 import com.softserve.edu.bookinglite.repository.BookingStatusRepository;
+import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
 import com.softserve.edu.bookinglite.service.dto.CreateBookingDto;
 import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
 import com.softserve.edu.bookinglite.util.BookingUtil;
 import com.softserve.edu.bookinglite.util.DateUtils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -27,25 +25,24 @@ import java.util.*;
 public class BookingService {
 
     private final String RESERVED = "Reserved";
-    private final String CANCELED = "Canceled";
     private final int HOUR_CHECK_IN = 17;
     private final int HOUR_CHECK_OUT = 15;
-
 
     private final BookingRepository bookingRepository;
     private final BookingStatusRepository bookingStatusRepository;
     private final ApartmentRepository apartmentRepository;
-
-    private Logger logger = LoggerFactory.getLogger(BookingService.class);
+    private final PropertyRepository propertyRepository;
 
     @Autowired
     public BookingService(BookingRepository bookingRepository,
                           BookingStatusRepository bookingStatusRepository,
-                          ApartmentRepository apartmentRepository
+                          ApartmentRepository apartmentRepository,
+                          PropertyRepository propertyRepository
     ) {
         this.bookingRepository = bookingRepository;
         this.bookingStatusRepository = bookingStatusRepository;
         this.apartmentRepository = apartmentRepository;
+        this.propertyRepository = propertyRepository;
     }
 
     @Transactional
@@ -84,6 +81,7 @@ public class BookingService {
                 booking.getCheckIn().before(DateUtils.setHourAndMinToDate
                         (new Date(), HOUR_CHECK_IN))) ||
                 booking.getCheckIn().after(new Date())) {
+            String CANCELED = "Canceled";
             booking.setBookingStatus(bookingStatusRepository.findByName(CANCELED));
             bookingRepository.save(booking);
             return true;
@@ -91,9 +89,10 @@ public class BookingService {
     }
 
     @Transactional
-    public List<BookingDto> getAllBookingsByPropertyAndOwnerId(Long idProperty,Long idUserOwner) {
+    public List<BookingDto> getAllBookingsByPropertyAndOwnerId(Long idProperty, Long idUserOwner) throws PropertyNotFoundException {
+        propertyRepository.findById(idProperty).orElseThrow(() -> new PropertyNotFoundException(idProperty));
         List<BookingDto> listBookingDto = new ArrayList<>();
-        bookingRepository.getAllBookingsByPropertyAndOwnerId(idProperty,idUserOwner).forEach(
+        bookingRepository.getAllBookingsByPropertyAndOwnerId(idProperty, idUserOwner).forEach(
                 b -> listBookingDto.add(BookingMapper.instance.bookingToBaseBookingDto(b)));
         return listBookingDto;
     }

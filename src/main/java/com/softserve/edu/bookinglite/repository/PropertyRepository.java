@@ -27,4 +27,5 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
 			+ "a JOIN a.city c JOIN c.country ct WHERE lower(ct.name) = :name")
 	public List<Property> getAllPropertyByCountryName(@Param("name") String name);
 
+	List<Property> getAllByUserId(Long idOwnerUser);
 }

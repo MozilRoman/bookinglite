@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import com.softserve.edu.bookinglite.entity.Booking;
+
 import java.util.Date;
 import java.util.List;
 
@@ -30,8 +31,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query("SELECT b FROM Booking b " + "join Apartment a on a.id=b.apartment.id "
             + "join Property p on p.id=a.property.id "
-            + "where p.user.id=?2 and p.id=?2 and b.bookingStatus.name<>'Canceled' order by b.checkIn desc ")
-    List<Booking> getAllBookingsByPropertyAndOwnerId(Long propertyId,Long idOwnerUser);
+            + "where p.user.id=?2 and p.id=?1 and b.bookingStatus.name<>'Canceled' order by b.checkIn desc ")
+    List<Booking> getAllBookingsByPropertyAndOwnerId(Long propertyId, Long idOwnerUser);
 
 }
 
