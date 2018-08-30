@@ -2,7 +2,8 @@ package com.softserve.edu.bookinglite.entity;
 
 import javax.persistence.*;
 
-@Entity(name = "countries")
+@Entity
+@Table(name = "countries")
 public class Country {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
