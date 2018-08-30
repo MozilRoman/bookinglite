@@ -5,8 +5,7 @@ import com.softserve.edu.bookinglite.exception.*;
 import com.softserve.edu.bookinglite.service.BookingService;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
 import com.softserve.edu.bookinglite.service.dto.CreateBookingDto;
-
-
+import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,9 +49,9 @@ public class BookingController {
     }
 
     @GetMapping(value = "/guestArrivals/{propertyId}")
-    public List<BookingDto> getAllBookingsDtoByOwnerId(@PathVariable Long propertyId, Principal principal) {
+    public List<BookingDto> getAllBookingsDtoByOwnerId(@PathVariable Long propertyId, Principal principal) throws PropertyNotFoundException {
         Long userId = Long.parseLong(principal.getName());
-        return bookingService.getAllBookingsByPropertyAndOwnerId(propertyId,userId);
+        return bookingService.getAllBookingsByPropertyAndOwnerId(propertyId, userId);
     }
 
     @PostMapping(value = "/booking/{apartmentId}")
@@ -61,9 +60,9 @@ public class BookingController {
                                                           Principal principal) throws ApartmentNotFoundException, BookingInvalidDataException, BookingExistingException, NumberOfGuestsException {
         Long userId = Long.parseLong(principal.getName());
         if (bookingService.createBookingWithValidation(createBookingDto, userId, apartmentId)) {
-            return new ResponseEntity<CreateBookingDto>(HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<CreateBookingDto>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -72,9 +71,9 @@ public class BookingController {
                                                     @PathVariable("id") Long bookingId) throws BookingNotFoundException, BookingCancelException {
         Long userId = Long.parseLong(principal.getName());
         if (bookingService.cancelBooking(userId, bookingId)) {
-            return new ResponseEntity<BookingDto>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity<BookingDto>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -9,6 +9,6 @@ public class BookingInvalidDataException  extends Exception{
 	private static final long serialVersionUID = 1L;
 	
 	public BookingInvalidDataException() {
-		super("You entered invalid data. Check field date and number of guests ");
+		super("You entered invalid data...Please try again");
 	}
 }
