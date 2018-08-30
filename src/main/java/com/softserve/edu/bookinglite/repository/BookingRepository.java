@@ -1,14 +1,10 @@
 package com.softserve.edu.bookinglite.repository;
 
-import com.softserve.edu.bookinglite.entity.Apartment;
-
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import com.softserve.edu.bookinglite.entity.Booking;
 
 import java.util.Date;
@@ -31,18 +27,13 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "where  b.apartment.id=?1 and b.bookingStatus.name<>'Canceled' " +
             "and (?2 between b.checkIn and b.checkOut or ?3 between b.checkIn and b.checkOut " +
             "or b.checkIn between ?2 and ?3 or b.checkOut between ?2 and ?3)")
-    boolean getBookingByCheck(Long apartment_id, Date inDate, Date outDate);
-
-
-    @Query("SELECT b FROM Booking b " + "join Apartment a on a.id=b.apartment.id "
-            + "join Property p on p.id=a.property.id "
-            + "where p.user.id=?1 and b.bookingStatus.name<>'Canceled' order by b.checkIn desc ")
-    List<Booking> getAllBookingsByOwnerId(Long idOwnerUser);
+    boolean isApartmentBookedWithinDateRange(Long apartment_id, Date inDate, Date outDate);
 
     @Query("SELECT b FROM Booking b " + "join Apartment a on a.id=b.apartment.id "
             + "join Property p on p.id=a.property.id "
-            + "where p.user.id=?1 and b.bookingStatus.name<>'Canceled' order by b.checkIn desc ")
-    Page<Booking> getPageAllBookingsByOwnerId(Long idOwnerUser, Pageable pageable);
+            + "where p.user.id=?2 and p.id=?1 and b.bookingStatus.name<>'Canceled' order by b.checkIn desc ")
+    List<Booking> getAllBookingsByPropertyAndOwnerId(Long propertyId, Long idOwnerUser);
+
 }
 
 	

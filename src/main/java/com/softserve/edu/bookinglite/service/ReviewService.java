@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.softserve.edu.bookinglite.service.dto.CreateReviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +63,7 @@ public class ReviewService {
     	return reviewRepository.findAllReviewsByIdProperty(property.getId()).size();
     }
 
-    public boolean addReview(ReviewDto reviewDto, Long bookingId, Long userId)
+    public boolean addReview(CreateReviewDto reviewDto, Long bookingId, Long userId)
             throws BookingNotFoundException, ReviewOwnerException, CantLeaveReviewException {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(()-> new BookingNotFoundException(bookingId));
