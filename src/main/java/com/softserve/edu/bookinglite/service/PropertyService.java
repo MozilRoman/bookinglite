@@ -156,4 +156,12 @@ public class PropertyService {
 	public Page<Property> findPropertyByPage(int page, int size) {
 		return propertyRepository.findAll(PageRequest.of(page, size));
 	}
+
+	@Transactional
+	public List<PropertyDto> getAllPropertyByOwner(Long ownerId){
+		List<PropertyDto> propertyDtos = new ArrayList<>();
+		propertyRepository.getAllByUserId(ownerId).forEach(
+				p -> propertyDtos.add(PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(p)));
+		return propertyDtos;
+	}
 }

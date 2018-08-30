@@ -119,4 +119,10 @@ public class PropertyController {
 		}
 		return dtos;
 	}
+
+	@GetMapping(value = "/guestArrivals")
+	public List<PropertyDto> getAllPropetiesByOwnerId(Principal principal){
+		Long userId = Long.parseLong(principal.getName());
+		return propertyService.getAllPropertyByOwner(userId);
+	}
 }

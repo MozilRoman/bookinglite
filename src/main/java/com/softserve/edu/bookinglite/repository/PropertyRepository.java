@@ -44,4 +44,5 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
 	public List<Property> searchProperties(int numOfGuests,Long cityId, Long countryId, Date checkIn, Date checkOut);
 	
 
+	List<Property> getAllByUserId(Long idOwnerUser);
 }
