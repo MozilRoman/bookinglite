@@ -10,6 +10,7 @@ import com.softserve.edu.bookinglite.entity.Booking;
 import java.util.Date;
 import java.util.List;
 
+
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 

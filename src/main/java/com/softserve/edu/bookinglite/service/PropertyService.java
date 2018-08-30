@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.softserve.edu.bookinglite.entity.Address;
-import com.softserve.edu.bookinglite.entity.Apartment;
-import com.softserve.edu.bookinglite.entity.Booking;
 import com.softserve.edu.bookinglite.entity.City;
 import com.softserve.edu.bookinglite.entity.Country;
 import com.softserve.edu.bookinglite.entity.Facility;
@@ -30,7 +28,7 @@ import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
 
 @Service
 public class PropertyService {
-	
+
 	private final PropertyTypeService propertyTypeService;
 	private final FacilityService facilityService;
 	private final CountryService countryService;
@@ -38,7 +36,6 @@ public class PropertyService {
 	private final PropertyRepository propertyRepository;
 	private final UserService userService;
 
-	
 	@Autowired
 	public PropertyService(PropertyTypeService propertyTypeService, FacilityService facilityService,
 			CountryService countryService, CityService cityService, PropertyRepository propertyRepository,
@@ -99,36 +96,33 @@ public class PropertyService {
 		}
 		return false;
 	}
-	
+
 	@Transactional
-    public void saveCreatePropertyDto(CreatePropertyDto createPropertyDto,
-                                      Long userId) {
-        Property property = new Property();
-        property.setName(createPropertyDto.getName());
-        System.out.println(createPropertyDto.getName());
-        property.setDescription(createPropertyDto.getDescription());
-        property.setPhoneNumber(createPropertyDto.getPhoneNumber());
-        property.setContactEmail(createPropertyDto.getContactEmail());
-        property.setUser(userService.getUserById(userId).get());
-        property.setPropertyType(propertyTypeService
-                .getPropertyTypeById(createPropertyDto.getPropertyTypeId()));
-        Set<Facility> facilities = new HashSet<>();
-        for (Long id : createPropertyDto.getFacilityId()) {
-            facilities.add(facilityService.getFacilityById(id));
-        }
-        property.setFacilities(facilities);
-        Country country = countryService.getCountryByid(createPropertyDto.getCountryId());
-        City city = cityService.getCityByid(createPropertyDto.getCityId());
-        city.setCountry(country);
-        Address address = new Address();
-        address.setAddressLine(createPropertyDto.getAddressLine());
-        address.setZip(createPropertyDto.getZip());
-        address.setCity(cityService.getCityByid(createPropertyDto.getCityId()));
-        property.setAddress(address);
-        propertyRepository.save(property);
-    }	
-	
-	
+	public void saveCreatePropertyDto(CreatePropertyDto createPropertyDto, Long userId) {
+		Property property = new Property();
+		property.setName(createPropertyDto.getName());
+		System.out.println(createPropertyDto.getName());
+		property.setDescription(createPropertyDto.getDescription());
+		property.setPhoneNumber(createPropertyDto.getPhoneNumber());
+		property.setContactEmail(createPropertyDto.getContactEmail());
+		property.setUser(userService.getUserById(userId).get());
+		property.setPropertyType(propertyTypeService.getPropertyTypeById(createPropertyDto.getPropertyTypeId()));
+		Set<Facility> facilities = new HashSet<>();
+		for (Long id : createPropertyDto.getFacilityId()) {
+			facilities.add(facilityService.getFacilityById(id));
+		}
+		property.setFacilities(facilities);
+		Country country = countryService.getCountryByid(createPropertyDto.getCountryId());
+		City city = cityService.getCityByid(createPropertyDto.getCityId());
+		city.setCountry(country);
+		Address address = new Address();
+		address.setAddressLine(createPropertyDto.getAddressLine());
+		address.setZip(createPropertyDto.getZip());
+		address.setCity(cityService.getCityByid(createPropertyDto.getCityId()));
+		property.setAddress(address);
+		propertyRepository.save(property);
+	}
+
 	@Transactional
 	public boolean updateProperty(PropertyDto propertyDto, Long propertyId, Long ownerId)
 			throws PropertyNotFoundException, PropertyConfirmOwnerException {
@@ -150,35 +144,12 @@ public class PropertyService {
 
 	@Transactional
 	public List<PropertyDto> searchProperty(SearchDto searchDto) {
-		List<Property> properties = propertyRepository.getAllPropertyByCityId(2L);
-		List<PropertyDto> result = new ArrayList<>();
-		Boolean conflictboookings = false;
-		Integer unbookableApartments = 0;
-		for (Property property : properties) {
-			for (Apartment apartment : property.getApartments()) {
-				if (apartment.getNumberOfGuests() < searchDto.getNumberOfGuests()) {
-					unbookableApartments++;
-					continue;
-				}
-				for (Booking booking : apartment.getBookingList()) {
-					if ((booking.getCheckIn().after(searchDto.getCheckIn())
-							&& booking.getCheckOut().before(searchDto.getCheckIn()))
-							|| (booking.getCheckIn().after(searchDto.getCheckOut())
-									&& booking.getCheckOut().before(searchDto.getCheckOut()))) {
-						conflictboookings = true;
-					}
-				}
-				if (conflictboookings) {
-					conflictboookings = false;
-					unbookableApartments++;
-				}
-			}
-			if (property.getApartments().size() > unbookableApartments) {
-				unbookableApartments = 0;
-				result.add(PropertyMapper.instance.propertyToBasePropertyDtoWithAddress(property));
-			}
-		}
-		return result;
+		List<PropertyDto> propertyDtos = new ArrayList<>();
+		propertyRepository
+				.searchProperties(searchDto.getNumberOfGuests(), searchDto.getCityId(), searchDto.getCountryId(),
+						searchDto.getCheckIn(), searchDto.getCheckOut())
+				.forEach(p -> propertyDtos.add(PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(p)));
+		return propertyDtos;
 	}
 
 	@Transactional

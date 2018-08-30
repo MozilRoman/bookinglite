@@ -49,7 +49,7 @@ public interface PropertyMapper {
     List<ApartmentDto> map(List<ApartmentDto> apartments);
 
     default ApartmentDto map(Apartment apartment) {
-        return ApartmentMapper.instance.toDto(apartment);
+        return ApartmentMapper.instance.toDtoWithOutPropertyDto(apartment);
     }
     Address map(Address address);
     default UserDto map(User user){

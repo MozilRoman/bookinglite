@@ -1,12 +1,14 @@
 package com.softserve.edu.bookinglite.repository;
 
-import com.softserve.edu.bookinglite.entity.Property;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.softserve.edu.bookinglite.entity.Property;
 
 @Repository
 public interface PropertyRepository extends JpaRepository<Property, Long> {
@@ -26,6 +28,21 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
 	@Query("SELECT p FROM Property p JOIN p.address "
 			+ "a JOIN a.city c JOIN c.country ct WHERE lower(ct.name) = :name")
 	public List<Property> getAllPropertyByCountryName(@Param("name") String name);
+	
+	
+	@Query("SELECT DISTINCT p  FROM Property p "
+			+ "INNER JOIN Apartment ap ON ap.property.id = p.id "
+			+ "INNER JOIN Address addr ON p.address.id = addr.id "
+			+ "INNER JOIN City ct ON addr.city.id = ct.id "
+			+ "INNER JOIN Country cn ON ct.country.id = cn.id "
+			+ "WHERE ap.numberOfGuests >= ?1 "
+			+ "AND ((ct.id = ?2 AND cn.id = ?3)) "
+			+ "AND ap.id NOT IN ("
+			+ "SELECT DISTINCT book FROM Booking book WHERE NOT ( "
+			+ "(?4 < book.checkIn AND ?5 < book.checkIn) OR"
+			+ "(?4 > book.checkOut AND ?5 > book.checkOut)))")
+	public List<Property> searchProperties(int numOfGuests,Long cityId, Long countryId, Date checkIn, Date checkOut);
+	
 
 	List<Property> getAllByUserId(Long idOwnerUser);
 }
