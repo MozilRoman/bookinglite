@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.softserve.edu.bookinglite.config.CloudinaryConfig.UploadOptions;
+import com.softserve.edu.bookinglite.config.CloudinaryConfig;
 import com.softserve.edu.bookinglite.entity.Photo;
 import com.softserve.edu.bookinglite.events.UploadPhotoEvent;
 import com.softserve.edu.bookinglite.exception.PhotoNotFoundException;
@@ -62,7 +62,7 @@ public class PhotoService {
 		if(!photo.getProperty().getUser().getId().equals(user_id))
 			throw new PropertyConfirmOwnerException();
 		
-		cloudinary.uploader().destroy(UploadOptions.FOLDER_OPTION.getValue()+"/"+name, ObjectUtils.emptyMap());
+		cloudinary.uploader().destroy(CloudinaryConfig.PROPERTY_PHOTO_FOLDER_OPTION_VALUE+"/"+name, ObjectUtils.emptyMap());
 		photoRepository.delete(photo);
 		
 		return true;
