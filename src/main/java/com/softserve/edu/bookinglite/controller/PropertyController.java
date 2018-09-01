@@ -60,22 +60,22 @@ public class PropertyController {
 		return propertyService.getPropertyDtosByCountryName(countryName);
 	}
 
-	@PostMapping("/property")
-	public ResponseEntity<PropertyDto> createProperty(@Valid @RequestBody PropertyDto propertyDto, Principal principal) {
-		Long userId = Long.parseLong(principal.getName());
-		if (propertyService.saveProperty(propertyDto, userId)) {
-			return new ResponseEntity<PropertyDto>(HttpStatus.CREATED);
-		} else {
-			return new ResponseEntity<PropertyDto>(HttpStatus.BAD_REQUEST);
-		}
-	}
+//	@PostMapping("/property")
+//	public ResponseEntity<PropertyDto> createProperty(@Valid @RequestBody PropertyDto propertyDto, Principal principal) {
+//		Long userId = Long.parseLong(principal.getName());
+//		if (propertyService.saveProperty(propertyDto, userId)) {
+//			return new ResponseEntity<PropertyDto>(HttpStatus.CREATED);
+//		} else {
+//			return new ResponseEntity<PropertyDto>(HttpStatus.BAD_REQUEST);
+//		}
+//	}
 	
 	@PostMapping("/addproperty")
 	public ResponseEntity<CreatePropertyDto> createPropertyTestVersion(
 			@Valid @RequestBody CreatePropertyDto createPropertyDto, Principal principal) {
 		Long userId = Long.parseLong(principal.getName());
 		
-		propertyService.saveCreatePropertyDto(createPropertyDto, userId);
+		propertyService.save(createPropertyDto, userId);
 		return new ResponseEntity<CreatePropertyDto>(HttpStatus.OK);
 	}
 	

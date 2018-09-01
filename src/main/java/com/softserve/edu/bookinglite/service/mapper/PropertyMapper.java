@@ -13,6 +13,7 @@ import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.service.dto.ApartmentDto;
+import com.softserve.edu.bookinglite.service.dto.CreatePropertyDto;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.dto.UserDto;
 
@@ -45,7 +46,16 @@ public interface PropertyMapper {
     PropertyDto propertyToBasePropertyDtoWithApartmentAddressUser(Property property);
 
     Property toEntity(PropertyDto propertyDto);
-
+    
+    @Mappings({
+    @Mapping(source = "propertyTypeId", target = "propertyType.id"),
+    @Mapping(source = "countryId", target = "address.city.country.id"),
+    @Mapping(source = "cityId", target = "address.city.id"),
+    @Mapping(source = "addressLine", target = "address.addressLine"),
+    @Mapping(source = "zip", target = "address.zip"),
+    })
+    Property toEntityFromCreatePropertyDto(CreatePropertyDto createPropertyDto);
+    
     List<ApartmentDto> map(List<ApartmentDto> apartments);
 
     default ApartmentDto map(Apartment apartment) {
