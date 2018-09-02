@@ -13,6 +13,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface BookingMapper {
@@ -40,6 +41,8 @@ public interface BookingMapper {
     default ReviewDto map(Review review){
         return ReviewMapper.instance.reviewToBaseReviewDto(review);
     }
-
-
+    
+    default Page<BookingDto> toPageBookingDto(Page<Booking> page){
+    	return page.map(this::bookingToBaseBookingDto);
+    }
 }

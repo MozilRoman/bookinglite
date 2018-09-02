@@ -64,11 +64,9 @@ public class BookingService {
 	}
 
 	@Transactional
-	public List<BookingDto> findPageAllBookingsDtoByUserId(Long userId, int page, int size) {
-		List<BookingDto> listBookingDto = new ArrayList<>();
-		bookingRepository.getPageAllByUserIdOrderByCheckInAsc(userId, PageRequest.of(page, size)).forEach(
-				b ->listBookingDto.add(BookingMapper.instance.bookingToBaseBookingDto(b)) );	
-		return listBookingDto;
+	public Page<BookingDto> findPageAllBookingsDtoByUserId(Long userId, int page, int size) {
+		return BookingMapper.instance.toPageBookingDto(
+				bookingRepository.getPageAllByUserIdOrderByCheckInAsc(userId, PageRequest.of(page, size)));
     }
 
 	@Transactional
@@ -100,11 +98,9 @@ public class BookingService {
 	}
 
 	@Transactional
-	public List<BookingDto> getPageAllBookingsDtoByOwnerId(Long ownerId, int page, int size) {
-		List<BookingDto> listBookingDto = new ArrayList<>();
-		bookingRepository.getPageAllBookingsByOwnerId(ownerId, PageRequest.of(page, size)).forEach(
-				b ->listBookingDto.add(BookingMapper.instance.bookingToBaseBookingDto(b)) );
-		return listBookingDto;
+	public Page<BookingDto> getPageAllBookingsDtoByOwnerId(Long ownerId, int page, int size) {
+		return BookingMapper.instance.toPageBookingDto(
+				bookingRepository.getPageAllBookingsByOwnerId(ownerId, PageRequest.of(page, size)));
     }
 
 	@Transactional
@@ -133,7 +129,7 @@ public class BookingService {
 			DateUtils.setHourAndMinToDate(out, HOUR_CHECK_OUT))){
 		return true;
 	}else throw new BookingExistingException();
-}
+	}
     @Transactional
 	void saveBooking(Long userId, Apartment apartment, CreateBookingDto createBookingDto){
 	Booking booking = new Booking();

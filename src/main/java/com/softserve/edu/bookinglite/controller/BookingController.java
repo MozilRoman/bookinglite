@@ -8,6 +8,7 @@ import com.softserve.edu.bookinglite.service.dto.CreateBookingDto;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,7 @@ public class BookingController {
     }
 
     @GetMapping("/bookings/pages")
-    public List<BookingDto> findPageAllBookingsDtoByUserId(Principal principal,
+    public Page<BookingDto> findPageAllBookingsDtoByUserId(Principal principal,
                                                            @RequestParam("getPageNumber") int pageNumber,
                                                            @RequestParam("getPageSize") int pageSize) {
         Long userId = Long.parseLong(principal.getName());
@@ -56,7 +57,7 @@ public class BookingController {
     }
 
     @GetMapping("/guestarivals/pages")
-    public List<BookingDto> getPageAllBookingsDtoByOwnerId(Principal principal,
+    public Page<BookingDto> getPageAllBookingsDtoByOwnerId(Principal principal,
                                                            @RequestParam("getPageNumber") int pageNumber,
                                                            @RequestParam("getPageSize") int pageSize) {
         Long userId = Long.parseLong(principal.getName());
