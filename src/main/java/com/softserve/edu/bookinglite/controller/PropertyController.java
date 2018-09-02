@@ -1,7 +1,9 @@
 package com.softserve.edu.bookinglite.controller;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.exception.PropertyConfirmOwnerException;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
+import com.softserve.edu.bookinglite.service.AdvanceSearchDto;
 import com.softserve.edu.bookinglite.service.PropertyService;
 import com.softserve.edu.bookinglite.service.dto.CreatePropertyDto;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
@@ -105,6 +108,27 @@ public class PropertyController {
 		searchDto.setNumberOfGuests(numberOfGuests);
 		return propertyService.searchProperty(searchDto);
 	}
+	
+	 @GetMapping("/property/advancesearch")
+	    public List<PropertyDto> globalSearch(@RequestParam("checkIn") Date checkIn,
+	                                          @RequestParam("checkOut") Date checkOut,
+	                                          @RequestParam("numberOfGuests") Integer numberOfGuests,
+	                                          @RequestParam("cityId") Long cityId,
+	                                          @RequestParam("countryId") Long countryId,
+	                                          @RequestParam("price") BigDecimal price,
+	                                          @RequestParam("facilityIds") List<Long> facilityIds,
+	                                          @RequestParam("amenityIds") List<Long> amenityIds) {
+	        AdvanceSearchDto advanceSearchDto = new AdvanceSearchDto();
+	        advanceSearchDto.setCheckIn(checkIn);
+	        advanceSearchDto.setCheckOut(checkOut);
+	        advanceSearchDto.setCityId(cityId);
+	        advanceSearchDto.setCountryId(countryId);
+	        advanceSearchDto.setNumberOfGuests(numberOfGuests);
+	        advanceSearchDto.setPriceFromUser(price);
+	        advanceSearchDto.setFacilitiesId(facilityIds);
+	        advanceSearchDto.setAmenitiesId(amenityIds);
+	        return propertyService.advanceSearchProperty(advanceSearchDto);
+	    }
 
 	@GetMapping("/property/pages")
 	public List<PropertyDto> getPropertiesByPage(

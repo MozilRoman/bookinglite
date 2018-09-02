@@ -80,44 +80,6 @@ public class PropertyService {
 		propertyRepository.save(property);
 		
 	}
-//	@Transactional
-//	public void save(CreatePropertyDto createPropertyDto, Long userId) {
-//		Property property = new Property();
-//		property.setName(createPropertyDto.getName());
-//		property.setDescription(createPropertyDto.getDescription());
-//		property.setPhoneNumber(createPropertyDto.getPhoneNumber());
-//		property.setContactEmail(createPropertyDto.getContactEmail());
-//		//User
-//		User user = new User();
-//		user.setId(userId);
-//		property.setUser(user);
-//		//PropertyType
-//		PropertyType propertyType = new PropertyType();
-//		propertyType.setId(createPropertyDto.getPropertyTypeId());
-//		property.setPropertyType(propertyType);
-//		//Country  
-//		Country country = new Country();
-//		country.setId(createPropertyDto.getCountryId());
-//		//City
-//		City city = new City();
-//		city.setId(createPropertyDto.getCityId());
-//		city.setCountry(country);
-//		//Address
-//		Address address = new Address();
-//		address.setAddressLine(createPropertyDto.getAddressLine());
-//		address.setZip(createPropertyDto.getZip());
-//		address.setCity(city);
-//		property.setAddress(address);
-//		//Facilities
-//		Set<Facility> facilities = new HashSet<>();
-//		for (Long id : createPropertyDto.getFacilityId()) {
-//			Facility facility = new Facility();
-//			facility.setId(id);
-//			facilities.add(facility);
-//		}
-//		property.setFacilities(facilities);
-//		propertyRepository.save(property);
-//	}
 
 	@Transactional
 	public boolean updateProperty(PropertyDto propertyDto, Long propertyId, Long ownerId)
@@ -148,6 +110,23 @@ public class PropertyService {
 						.add(PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(p)));
 		return propertyDtos;
 	}
+
+	//ADVANCE SEARCH
+	public List<PropertyDto> advanceSearchProperty(AdvanceSearchDto advanceSearchDto) {
+		List<PropertyDto> propertyDtos = new ArrayList<>();
+		propertyRepository.advanceSearchProperties(
+				advanceSearchDto.getNumberOfGuests(),
+				advanceSearchDto.getCityId(), 
+				advanceSearchDto.getCountryId(),
+				advanceSearchDto.getCheckIn(),
+				advanceSearchDto.getCheckOut(),
+				advanceSearchDto.getAmenitiesId(),
+				advanceSearchDto.getFacilitiesId(),
+				advanceSearchDto.getPriceFromUser()).forEach(p -> 
+				propertyDtos.add(PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(p)));
+		return propertyDtos;
+	}
+	 
 
 	@Transactional
 	public Page<Property> findPropertyByPage(int page, int size) {
