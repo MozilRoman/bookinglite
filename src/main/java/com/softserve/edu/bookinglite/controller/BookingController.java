@@ -36,18 +36,13 @@ public class BookingController {
         return bookingService.findBookinDTOById(userId, bookingId);
     }
 
-    @GetMapping(value = "/bookings")
-    public List<BookingDto> getAllBookingsDtoByUserId(Principal principal) {
-        Long userId = Long.parseLong(principal.getName());
-        return bookingService.findAllBookingsDtoByUserId(userId);
-    }
-
-    @GetMapping("/bookings/pages")
+    @GetMapping("/bookings")
     public Page<BookingDto> findPageAllBookingsDtoByUserId(Principal principal,
                                                            @RequestParam("getPageNumber") int pageNumber,
-                                                           @RequestParam("getPageSize") int pageSize) {
+                                                           @RequestParam("getPageSize") int pageSize,
+                                                           @RequestParam("filterByDates") String filterByDates) {    	
         Long userId = Long.parseLong(principal.getName());
-        return bookingService.findPageAllBookingsDtoByUserId(userId, pageNumber, pageSize);
+        return bookingService.findPageAllBookingsDtoByUserId(userId, pageNumber, pageSize, filterByDates);
     }
 
     @GetMapping(value = "/guestarivals")

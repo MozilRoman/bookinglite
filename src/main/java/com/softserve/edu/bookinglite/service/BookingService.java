@@ -31,6 +31,8 @@ public class BookingService {
 	private final String CANCELED = "Canceled";
 	private final int HOUR_CHECK_IN= 17;
 	private final int HOUR_CHECK_OUT= 15;
+    private final String ACTUAL_BOOKINGS = "ActualBookings";
+    private final String ARCHIEVE_BOOKINGS = "ArchieveBookings";
 
 
 	private final BookingRepository bookingRepository;
@@ -49,24 +51,28 @@ public class BookingService {
 	}
 
 	@Transactional
-	public BookingDto findBookinDTOById(Long idUser,Long bookingId)  throws BookingNotFoundException{ //add unit tests
+	public BookingDto findBookinDTOById(Long idUser,Long bookingId)  throws BookingNotFoundException{ 
 		Booking booking = bookingRepository.findBookingById(idUser, bookingId); 
 		if(booking==null) throw new BookingNotFoundException(bookingId);
 		return BookingMapper.instance.bookingToBaseBookingDto(booking);
 	}
 
 	@Transactional
-	public List<BookingDto> findAllBookingsDtoByUserId(Long userId) {
-		List<BookingDto> listBookingDto = new ArrayList<>();
-		bookingRepository.getAllByUserIdOrderByCheckInAsc(userId).forEach(
-				b -> listBookingDto.add(BookingMapper.instance.bookingToBaseBookingDto(b)));
-		return listBookingDto;
-	}
-
-	@Transactional
-	public Page<BookingDto> findPageAllBookingsDtoByUserId(Long userId, int page, int size) {
-		return BookingMapper.instance.toPageBookingDto(
-				bookingRepository.getPageAllByUserIdOrderByCheckInAsc(userId, PageRequest.of(page, size)));
+	public Page<BookingDto> findPageAllBookingsDtoByUserId(Long userId, int page, int size, String filterByDates) {
+		Page <BookingDto> pageBookings = null;
+		Date nowDate = new Date();
+		if (ACTUAL_BOOKINGS.equals(filterByDates)) {
+			pageBookings= BookingMapper.instance.toPageBookingDto(
+					bookingRepository.getPageActualBookingsByUserId(userId, nowDate, PageRequest.of(page, size)));
+		} 
+		else if(ARCHIEVE_BOOKINGS.equals(filterByDates)) {
+			pageBookings= BookingMapper.instance.toPageBookingDto(
+					bookingRepository.getPageArchieveBookingsByUserId(userId, nowDate, PageRequest.of(page, size)));
+		} else {
+			pageBookings= BookingMapper.instance.toPageBookingDto(
+					bookingRepository.getPageAllBookingsByUserId(userId, PageRequest.of(page, size) ));
+		}		
+		return pageBookings;
     }
 
 	@Transactional

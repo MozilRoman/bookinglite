@@ -1,8 +1,5 @@
 package com.softserve.edu.bookinglite.repository;
 
-import com.softserve.edu.bookinglite.entity.Apartment;
-
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,13 +16,16 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query("Select b from Booking b where user.id= ?1 and b.id= ?2 ")
     Booking findBookingById(Long idUser, Long bookingId);
-
+    
     @Query("Select b from Booking b where user.id= ?1 ORDER BY b.checkIn desc")
-    List<Booking> getAllByUserIdOrderByCheckInAsc(Long idUser);
-
-    @Query("Select b from Booking b where user.id= ?1 ORDER BY b.checkIn desc")
-    Page<Booking> getPageAllByUserIdOrderByCheckInAsc(Long idUser, Pageable pageable);
-
+    Page<Booking> getPageAllBookingsByUserId(Long idUser, Pageable pageable);
+    
+    @Query("Select b from Booking b where user.id= ?1 and b.checkOut >?2 ORDER BY b.checkIn desc")
+    Page<Booking> getPageActualBookingsByUserId(Long idUser, Date nowDate, Pageable pageable);
+    
+    @Query("Select b from Booking b where user.id= ?1 and b.checkOut <?2 ORDER BY b.checkIn desc")
+    Page<Booking> getPageArchieveBookingsByUserId(Long idUser, Date nowDate, Pageable pageable);
+    
     //if booking exist it will return true
     @Query("select CASE WHEN COUNT(b.id) > 0 THEN TRUE ELSE FALSE END  from Booking b " +
             "where  b.apartment.id=?1 and b.bookingStatus.name<>'Canceled' " +

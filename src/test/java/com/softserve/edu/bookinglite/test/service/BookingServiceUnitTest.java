@@ -48,6 +48,10 @@ public class BookingServiceUnitTest {
     private final String CANCELED = "Canceled";
     private final int HOUR_CHECK_IN = 17;
     private final int HOUR_CHECK_OUT = 15;
+    private final Date NOW_DATE = new Date();
+    private final String ALL_BOOKINGS = "AllBookings";
+    private final String ACTUAL_BOOKINGS = "ActualBookings";
+    private final String ARCHIEVE_BOOKINGS = "ArchieveBookings";
 
     @Mock
     private BookingRepository bookingRepository;
@@ -73,17 +77,6 @@ public class BookingServiceUnitTest {
         Booking booking = null;
         Mockito.when(bookingRepository.findBookingById(ID, ID)).thenReturn(booking);
         bookingService.findBookinDTOById(ID, ID);
-    }
-
-    @Test
-    public void findAllBookingsDtoByUserIdTest() {
-        Booking booking = getBookingInstance();
-        List<Booking> bookings = new ArrayList<>();
-        bookings.add(booking);
-        BookingDto actualBookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
-        Mockito.when(bookingRepository.getAllByUserIdOrderByCheckInAsc(ID)).thenReturn(bookings);
-        List<BookingDto> expectedBookingDto = bookingService.findAllBookingsDtoByUserId(1L);
-        assertThat(actualBookingDto).isEqualTo(expectedBookingDto.get(INDEX));
     }
 
     @Test
@@ -128,14 +121,53 @@ public class BookingServiceUnitTest {
     }
     
     @Test
-    public void findPageAllBookingsDtoByUserId()  {
+    public void findPageAllBookingsDtoByUserIdAllBookings()  {
+    	List<Booking> bookingsList = new ArrayList<>();
+    	bookingsList.add(getBookingInstance());
+    	List<BookingDto> bookingsDtoList = new ArrayList<>();
+    	bookingsDtoList.add(BookingMapper.instance.bookingToBaseBookingDto(getBookingInstance()));
+        Page<Booking> pageBooking = new PageImpl(bookingsList);    	
+        Page<BookingDto> pageBookingDto = new PageImpl(bookingsDtoList );    	
+        Mockito.when(bookingRepository.getPageAllBookingsByUserId(ID, PageRequest.of(PAGE_AND_SIZE, PAGE_AND_SIZE)))
+        .thenReturn(pageBooking);                        		        
+        Page<BookingDto> pageBookingExpected= bookingService.findPageAllBookingsDtoByUserId(
+        		ID, PAGE_AND_SIZE, PAGE_AND_SIZE, ALL_BOOKINGS);        
+        assertThat(pageBookingDto.getContent().get(INDEX)).isEqualTo(pageBookingExpected.getContent().get(INDEX));
+    }
+    
+    @Test
+    public void findPageAllBookingsDtoByUserIdActualBookings()  {
+    	List<Booking> bookingsList = new ArrayList<>();
+    	bookingsList.add(getBookingInstance());
+    	List<BookingDto> bookingsDtoList = new ArrayList<>();
+    	bookingsDtoList.add(BookingMapper.instance.bookingToBaseBookingDto(getBookingInstance()));
+        Page<Booking> pageBooking = new PageImpl(bookingsList);    	
+        Page<BookingDto> pageBookingDto = new PageImpl(bookingsDtoList );    	
+        Mockito.when(bookingRepository.getPageActualBookingsByUserId(ID, NOW_DATE,
+        		PageRequest.of(PAGE_AND_SIZE, PAGE_AND_SIZE)))
+        .thenReturn(pageBooking);                        		        
+        Page<BookingDto> pageBookingExpected= bookingService.findPageAllBookingsDtoByUserId(
+        		ID, PAGE_AND_SIZE, PAGE_AND_SIZE, ACTUAL_BOOKINGS);        
+        assertThat(pageBookingDto.getContent().get(INDEX)).isEqualTo(pageBookingExpected.getContent().get(INDEX));
+    }
+    
+    @Test
+    public void findPageAllBookingsDtoByUserIdArcieveBookings()  {
     	Booking booking = getBookingInstance();
-    	List<Booking> bookings = new ArrayList<>();
-    	bookings.add(booking);
-    	Page<Booking> pageBooking = new PageImpl(bookings);
-        Mockito.when(bookingRepository.getPageAllByUserIdOrderByCheckInAsc(
-        		ID, PageRequest.of(PAGE_AND_SIZE, PAGE_AND_SIZE))).thenReturn(pageBooking);
-        bookingService.findPageAllBookingsDtoByUserId(ID, PAGE_AND_SIZE, PAGE_AND_SIZE);
+    	booking.setCheckIn(setAllDate("2017-01-11-14-00-00"));
+        booking.setCheckOut(setAllDate("2017-01-12-12-00-00"));
+    	List<Booking> bookingsList = new ArrayList<>();
+    	bookingsList.add(booking);
+    	List<BookingDto> bookingsDtoList = new ArrayList<>();
+    	bookingsDtoList.add(BookingMapper.instance.bookingToBaseBookingDto(booking));
+        Page<Booking> pageBooking = new PageImpl(bookingsList);    	
+        Page<BookingDto> pageBookingDto = new PageImpl(bookingsDtoList );    	
+        Mockito.when(bookingRepository.getPageArchieveBookingsByUserId(ID, NOW_DATE,
+        		PageRequest.of(PAGE_AND_SIZE, PAGE_AND_SIZE)))
+        .thenReturn(pageBooking);                        		        
+        Page<BookingDto> pageBookingExpected= bookingService.findPageAllBookingsDtoByUserId(
+        		ID, PAGE_AND_SIZE, PAGE_AND_SIZE, ARCHIEVE_BOOKINGS);        
+        assertThat(pageBookingDto.getContent().get(INDEX)).isEqualTo(pageBookingExpected.getContent().get(INDEX));
     }
     
     @Test
@@ -289,8 +321,8 @@ public class BookingServiceUnitTest {
         //Booking
         Booking booking = new Booking();
         booking.setId(1L);
-        Date in = setAllDate("2018-11-11-14-00-00");
-        Date out = setAllDate("2018-11-15-12-00-00");
+        Date in = setAllDate("2019-11-11-14-00-00");
+        Date out = setAllDate("2019-11-15-12-00-00");
         out.setHours(12);
         booking.setCheckIn(in);
         booking.setCheckOut(out);
