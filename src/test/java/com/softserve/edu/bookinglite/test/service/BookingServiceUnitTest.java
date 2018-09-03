@@ -49,9 +49,9 @@ public class BookingServiceUnitTest {
     private final int HOUR_CHECK_IN = 17;
     private final int HOUR_CHECK_OUT = 15;
     private final Date NOW_DATE = new Date();
-    private final String ALL_BOOKINGS = "AllBookings";
-    private final String ACTUAL_BOOKINGS = "ActualBookings";
-    private final String ARCHIEVE_BOOKINGS = "ArchieveBookings";
+    private final String ALL_BOOKINGS = "allBookings";
+    private final String ACTUAL_BOOKINGS = "actualBookings";
+    private final String ARCHIEVE_BOOKINGS = "archieveBookings";
 
     @Mock
     private BookingRepository bookingRepository;
@@ -152,7 +152,7 @@ public class BookingServiceUnitTest {
     }
     
     @Test
-    public void findPageAllBookingsDtoByUserIdArcieveBookings()  {
+    public void findPageAllBookingsDtoByUserIdArchieveBookings()  {
     	Booking booking = getBookingInstance();
     	booking.setCheckIn(setAllDate("2017-01-11-14-00-00"));
         booking.setCheckOut(setAllDate("2017-01-12-12-00-00"));

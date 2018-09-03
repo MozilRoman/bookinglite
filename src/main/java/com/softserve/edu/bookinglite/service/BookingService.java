@@ -31,8 +31,8 @@ public class BookingService {
 	private final String CANCELED = "Canceled";
 	private final int HOUR_CHECK_IN= 17;
 	private final int HOUR_CHECK_OUT= 15;
-    private final String ACTUAL_BOOKINGS = "ActualBookings";
-    private final String ARCHIEVE_BOOKINGS = "ArchieveBookings";
+    private final String ACTUAL_BOOKINGS = "actualBookings";
+    private final String ARCHIEVE_BOOKINGS = "archieveBookings";
 
 
 	private final BookingRepository bookingRepository;
@@ -58,14 +58,14 @@ public class BookingService {
 	}
 
 	@Transactional
-	public Page<BookingDto> findPageAllBookingsDtoByUserId(Long userId, int page, int size, String filterByDates) {
+	public Page<BookingDto> findPageAllBookingsDtoByUserId(Long userId, int page, int size, String filterBookingsByDates) {
 		Page <BookingDto> pageBookings = null;
 		Date nowDate = new Date();
-		if (ACTUAL_BOOKINGS.equals(filterByDates)) {
+		if (ACTUAL_BOOKINGS.equals(filterBookingsByDates)) {
 			pageBookings= BookingMapper.instance.toPageBookingDto(
 					bookingRepository.getPageActualBookingsByUserId(userId, nowDate, PageRequest.of(page, size)));
 		} 
-		else if(ARCHIEVE_BOOKINGS.equals(filterByDates)) {
+		else if(ARCHIEVE_BOOKINGS.equals(filterBookingsByDates)) {
 			pageBookings= BookingMapper.instance.toPageBookingDto(
 					bookingRepository.getPageArchieveBookingsByUserId(userId, nowDate, PageRequest.of(page, size)));
 		} else {
