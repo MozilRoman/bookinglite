@@ -41,11 +41,10 @@ import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
 @RunWith(MockitoJUnitRunner.class)
 public class BookingServiceUnitTest {
 
-    private final int INDEX = 0;
-    private final int PAGE_AND_SIZE = 1;
+	private final int INDEX = 0;
     private final Long ID = 1L;
-    private final String RESERVED = "Reserved";
     private final String CANCELED = "Canceled";
+    private final int PAGE_AND_SIZE = 1;
     private final int HOUR_CHECK_IN = 17;
     private final int HOUR_CHECK_OUT = 15;
     private final Date NOW_FULL_DATE = new Date();
@@ -145,8 +144,6 @@ public class BookingServiceUnitTest {
     	bookingsDtoList.add(BookingMapper.instance.bookingToBaseBookingDto(getBookingInstance()));
         Page<Booking> pageBooking = new PageImpl(bookingsList);    	
         Page<BookingDto> pageBookingDto = new PageImpl(bookingsDtoList );    	
-
-        
         Mockito.when(bookingRepository.getPageActualBookingsByUserId(ID, NOW_SHORT_DATE, 
         		PageRequest.of(PAGE_AND_SIZE, PAGE_AND_SIZE))).thenReturn(pageBooking); 
         Page<BookingDto> pageBookingExpected= bookingService.findPageAllBookingsDtoByUserId(
@@ -172,33 +169,6 @@ public class BookingServiceUnitTest {
         		ID, PAGE_AND_SIZE, PAGE_AND_SIZE, ARCHIEVE_BOOKINGS);        
         assertThat(pageBookingDto.getContent().get(INDEX)).isEqualTo(pageBookingExpected.getContent().get(INDEX));
     }
-    
-    @Test
-    public void getPageAllBookingsDtoByOwnerId()  {
-    	Booking booking = getBookingInstance();
-    	List<Booking> bookings = new ArrayList<>();
-    	bookings.add(booking);
-    	Page<Booking> pageBooking = new PageImpl(bookings);
-        Mockito.when(bookingRepository.getPageAllBookingsByOwnerId(
-        		ID, PageRequest.of(PAGE_AND_SIZE, PAGE_AND_SIZE))).thenReturn(pageBooking);
-        bookingService.getPageAllBookingsDtoByOwnerId(ID, PAGE_AND_SIZE, PAGE_AND_SIZE);
-    }
-
-    //Ivan
-    @Test
-    public void getAllBookingsDtoByOwnerIdTest() {
-        Booking booking = getBookingInstance();
-        List<Booking> bookings = new ArrayList<>();
-        bookings.add(booking);
-        Mockito.when(bookingRepository.getAllBookingsByOwnerId(ID)).thenReturn(bookings);
-        assertThat((BookingMapper.instance.bookingToBaseBookingDto(booking))).isEqualTo(bookingService.getAllBookingsDtoByOwnerId(ID).get(INDEX));
-    }
-
-    @Test
-    public void getAllBookingsDtoByOwnerIdWhenReturnNullTest() {
-        Mockito.when(bookingRepository.getAllBookingsByOwnerId(ID)).thenReturn(new ArrayList<>());
-        assertThat(true).isEqualTo(bookingService.getAllBookingsDtoByOwnerId(ID).isEmpty());
-    }
 
     @Test(expected = BookingInvalidDataException.class)
     public void createBookingInvalidData() throws BookingInvalidDataException, ApartmentNotFoundException, BookingExistingException, NumberOfGuestsException {
@@ -207,7 +177,7 @@ public class BookingServiceUnitTest {
         createBookingDto.setCheckOut(setAllDate("2018-01-01-12-00-00"));
         Booking booking = getBookingInstance();
         Mockito.when(apartmentRepository.findById(ID)).thenReturn(Optional.of(booking.getApartment()));
-        assertThat(bookingService.createBookingWithValidation(createBookingDto, 1l, ID));
+        bookingService.createBookingWithValidation(createBookingDto, 1l, ID);
     }
 
     @Test(expected = NumberOfGuestsException.class)
@@ -218,7 +188,7 @@ public class BookingServiceUnitTest {
         createBookingDto.setNumberOfGuests(4);
         Booking booking = getBookingInstance();
         Mockito.when(apartmentRepository.findById(ID)).thenReturn(Optional.of(booking.getApartment()));
-        assertThat(bookingService.createBookingWithValidation(createBookingDto, 1l, ID));
+        bookingService.createBookingWithValidation(createBookingDto, 1l, ID);
     }
 
     @Test(expected = ApartmentNotFoundException.class)
@@ -226,7 +196,7 @@ public class BookingServiceUnitTest {
         Date in = setAllDate("2020-11-11-14-00-00");
         Date out = setAllDate("2020-11-15-12-00-00");
         Mockito.when(apartmentRepository.findById(ID)).thenReturn(Optional.empty());
-        assertThat(bookingService.validateApartmentAndDate(ID, in, out));
+       bookingService.validateApartmentAndDate(ID, in, out);
     }
 
     @Test(expected = BookingExistingException.class)
@@ -239,12 +209,12 @@ public class BookingServiceUnitTest {
         createBookingDto.setNumberOfGuests(2);
         Booking booking = getBookingInstance();
         Mockito.when(apartmentRepository.findById(ID)).thenReturn(Optional.of(booking.getApartment()));
-        Mockito.when(bookingRepository.getBookingByCheck(ID, createBookingDto.getCheckIn(), createBookingDto.getCheckOut())).thenReturn(true);
-        assertThat(bookingService.createBookingWithValidation(createBookingDto, ID, ID));
+        Mockito.when(bookingRepository.isApartmentBookedWithinDateRange(ID, createBookingDto.getCheckIn(), createBookingDto.getCheckOut())).thenReturn(true);
+        bookingService.createBookingWithValidation(createBookingDto, ID, ID);
     }
 
     @Test
-    public void createBooking() throws BookingInvalidDataException, ApartmentNotFoundException, BookingExistingException, NumberOfGuestsException {
+    public void createBooking() throws Exception {
         CreateBookingDto createBookingDto = new CreateBookingDto();
         Date in = DateUtils.setHourAndMinToDate(new Date(2018, 11, 8), HOUR_CHECK_IN);
         Date out = DateUtils.setHourAndMinToDate(new Date(2018, 11, 11), HOUR_CHECK_OUT);
@@ -253,7 +223,7 @@ public class BookingServiceUnitTest {
         createBookingDto.setNumberOfGuests(2);
         Booking booking = getBookingInstance();
         Mockito.when(apartmentRepository.findById(ID)).thenReturn(Optional.of(booking.getApartment()));
-        Mockito.when(bookingRepository.getBookingByCheck(ID, createBookingDto.getCheckIn(), createBookingDto.getCheckOut())).thenReturn(false);
+        Mockito.when(bookingRepository.isApartmentBookedWithinDateRange(ID, createBookingDto.getCheckIn(), createBookingDto.getCheckOut())).thenReturn(false);
         assertThat(bookingService.createBookingWithValidation(createBookingDto, ID, ID)).isTrue();
     }
 
@@ -319,6 +289,7 @@ public class BookingServiceUnitTest {
         //BookingStatus
         BookingStatus bookingStatus = new BookingStatus();
         bookingStatus.setId(1L);
+        String RESERVED = "Reserved";
         bookingStatus.setName(RESERVED);
 
         //Booking

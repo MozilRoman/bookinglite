@@ -66,3 +66,4 @@ application-local.properties
 
 /logs
 /bin/
+/.apt_generated/

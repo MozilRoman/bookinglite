@@ -90,23 +90,22 @@ public class PropertyController {
 			return new ResponseEntity<PropertyDto>(HttpStatus.BAD_REQUEST);
 		}
 	}
-
+	
 	@GetMapping("/property/search")
 	public List<PropertyDto> searchProperty(@RequestParam("checkIn") Date checkIn,
-                                            @RequestParam("checkOut")  Date checkOut,
-                                            @RequestParam("numberOfGuests") Integer numberOfGuests,
-                                            @RequestParam("cityId") Long cityId,
-                                            @RequestParam("countryId") Long countryId){
-        SearchDto searchDto = new SearchDto();
-        searchDto.setCheckIn(checkIn);
-        searchDto.setCheckOut(checkOut);
-        searchDto.setCityId(cityId);
-        searchDto.setCountryId(countryId);
-        searchDto.setNumberOfGuests(numberOfGuests);
-		List<PropertyDto> result  = propertyService.searchProperty(searchDto);
-        return result;
+            									@RequestParam("checkOut")  Date checkOut,
+            									@RequestParam("numberOfGuests") Integer numberOfGuests,
+            									@RequestParam("cityId") Long cityId,
+            									@RequestParam("countryId") Long countryId){
+		SearchDto searchDto = new SearchDto();
+		searchDto.setCheckIn(checkIn);
+		searchDto.setCheckOut(checkOut);
+		searchDto.setCityId(cityId);
+		searchDto.setCountryId(countryId);
+		searchDto.setNumberOfGuests(numberOfGuests);
+		return propertyService.searchProperty(searchDto);
 	}
-	
+
 	@GetMapping("/property/pages")
 	public List<PropertyDto> getPropertiesByPage(
 			@RequestParam("getPageNumber") int getPageNumber,
@@ -119,5 +118,11 @@ public class PropertyController {
 			dtos.add(propertyDto);
 		}
 		return dtos;
+	}
+
+	@GetMapping(value = "/guestArrivals")
+	public List<PropertyDto> getAllPropetiesByOwnerId(Principal principal){
+		Long userId = Long.parseLong(principal.getName());
+		return propertyService.getAllPropertyByOwner(userId);
 	}
 }
