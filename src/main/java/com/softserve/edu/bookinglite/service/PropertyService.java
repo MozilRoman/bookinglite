@@ -128,6 +128,7 @@ public class PropertyService {
 	}
 	 
 
+	
 	@Transactional
 	public Page<Property> findPropertyByPage(int page, int size) {
 		return propertyRepository.findAll(PageRequest.of(page, size));

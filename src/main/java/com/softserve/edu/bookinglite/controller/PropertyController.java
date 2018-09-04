@@ -3,7 +3,6 @@ package com.softserve.edu.bookinglite.controller;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -63,17 +62,7 @@ public class PropertyController {
 		return propertyService.getPropertyDtosByCountryName(countryName);
 	}
 
-//	@PostMapping("/property")
-//	public ResponseEntity<PropertyDto> createProperty(@Valid @RequestBody PropertyDto propertyDto, Principal principal) {
-//		Long userId = Long.parseLong(principal.getName());
-//		if (propertyService.saveProperty(propertyDto, userId)) {
-//			return new ResponseEntity<PropertyDto>(HttpStatus.CREATED);
-//		} else {
-//			return new ResponseEntity<PropertyDto>(HttpStatus.BAD_REQUEST);
-//		}
-//	}
-	
-	@PostMapping("/addproperty")
+	@PostMapping("/property")
 	public ResponseEntity<CreatePropertyDto> createPropertyTestVersion(
 			@Valid @RequestBody CreatePropertyDto createPropertyDto, Principal principal) {
 		Long userId = Long.parseLong(principal.getName());
@@ -81,7 +70,6 @@ public class PropertyController {
 		propertyService.save(createPropertyDto, userId);
 		return new ResponseEntity<CreatePropertyDto>(HttpStatus.OK);
 	}
-	
 
 	@PutMapping("/property/{propertyId}")
 	public ResponseEntity<PropertyDto> update(@RequestBody PropertyDto propertyDto, @PathVariable("propertyId") Long id,
@@ -143,8 +131,8 @@ public class PropertyController {
 		}
 		return dtos;
 	}
-
-	@GetMapping(value = "/guestArrivals")
+	
+	@GetMapping("/myproperties")
 	public List<PropertyDto> getAllPropetiesByOwnerId(Principal principal){
 		Long userId = Long.parseLong(principal.getName());
 		return propertyService.getAllPropertyByOwner(userId);
