@@ -31,8 +31,6 @@ public class BookingService {
 	private final int HOUR_CHECK_OUT= 15;
     private final String ACTUAL_BOOKINGS = "actualBookings";
     private final String ARCHIEVE_BOOKINGS = "archieveBookings";
-
-
     private final BookingRepository bookingRepository;
     private final BookingStatusRepository bookingStatusRepository;
     private final ApartmentRepository apartmentRepository;
