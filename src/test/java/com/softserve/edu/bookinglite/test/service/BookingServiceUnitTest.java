@@ -48,7 +48,9 @@ public class BookingServiceUnitTest {
     private final String CANCELED = "Canceled";
     private final int HOUR_CHECK_IN = 17;
     private final int HOUR_CHECK_OUT = 15;
-    private final Date NOW_DATE = new Date();
+    private final Date NOW_FULL_DATE = new Date();
+    private final Date NOW_SHORT_DATE = DateUtils.setHourAndMinToDate(new Date(
+    		NOW_FULL_DATE.getYear(), NOW_FULL_DATE.getMonth(),NOW_FULL_DATE.getDay()), NOW_FULL_DATE.getHours());
     private final String ALL_BOOKINGS = "allBookings";
     private final String ACTUAL_BOOKINGS = "actualBookings";
     private final String ARCHIEVE_BOOKINGS = "archieveBookings";
@@ -143,11 +145,12 @@ public class BookingServiceUnitTest {
     	bookingsDtoList.add(BookingMapper.instance.bookingToBaseBookingDto(getBookingInstance()));
         Page<Booking> pageBooking = new PageImpl(bookingsList);    	
         Page<BookingDto> pageBookingDto = new PageImpl(bookingsDtoList );    	
-        Mockito.when(bookingRepository.getPageActualBookingsByUserId(ID, NOW_DATE,
-        		PageRequest.of(PAGE_AND_SIZE, PAGE_AND_SIZE)))
-        .thenReturn(pageBooking);                        		        
+
+        
+        Mockito.when(bookingRepository.getPageActualBookingsByUserId(ID, NOW_SHORT_DATE, 
+        		PageRequest.of(PAGE_AND_SIZE, PAGE_AND_SIZE))).thenReturn(pageBooking); 
         Page<BookingDto> pageBookingExpected= bookingService.findPageAllBookingsDtoByUserId(
-        		ID, PAGE_AND_SIZE, PAGE_AND_SIZE, ACTUAL_BOOKINGS);        
+        		ID, PAGE_AND_SIZE, PAGE_AND_SIZE, ACTUAL_BOOKINGS);  
         assertThat(pageBookingDto.getContent().get(INDEX)).isEqualTo(pageBookingExpected.getContent().get(INDEX));
     }
     
@@ -162,7 +165,7 @@ public class BookingServiceUnitTest {
     	bookingsDtoList.add(BookingMapper.instance.bookingToBaseBookingDto(booking));
         Page<Booking> pageBooking = new PageImpl(bookingsList);    	
         Page<BookingDto> pageBookingDto = new PageImpl(bookingsDtoList );    	
-        Mockito.when(bookingRepository.getPageArchieveBookingsByUserId(ID, NOW_DATE,
+        Mockito.when(bookingRepository.getPageArchieveBookingsByUserId(ID, NOW_SHORT_DATE,
         		PageRequest.of(PAGE_AND_SIZE, PAGE_AND_SIZE)))
         .thenReturn(pageBooking);                        		        
         Page<BookingDto> pageBookingExpected= bookingService.findPageAllBookingsDtoByUserId(
