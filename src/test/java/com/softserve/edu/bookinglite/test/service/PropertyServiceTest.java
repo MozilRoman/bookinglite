@@ -26,6 +26,7 @@ import com.softserve.edu.bookinglite.exception.PropertyConfirmOwnerException;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.service.PropertyService;
+import com.softserve.edu.bookinglite.service.dto.CreatePropertyDto;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
 
@@ -155,11 +156,8 @@ public class PropertyServiceTest {
 	@Test(expected = PropertyNotFoundException.class)
 	public void updatePropertyExceptionTest() throws PropertyNotFoundException, PropertyConfirmOwnerException {
 		// Arrange
-		Property property = getPropertyInstance();
-		PropertyDto actualPropertyDto = PropertyMapper.instance
-				.propertyToBasePropertyDtoWithApartmentAddressUser(property);
+		CreatePropertyDto actualPropertyDto = new CreatePropertyDto();
 		Mockito.when(propertyRepository.findById(ID)).thenReturn(Optional.empty());
-		
 		// Act
 		propertyService.updateProperty(actualPropertyDto, ID,ID);
 	}
@@ -168,8 +166,7 @@ public class PropertyServiceTest {
 		// Arrange
 		Property property = getPropertyInstance();
 		Optional<Property> optinalProperty = Optional.of(property);
-		PropertyDto actualPropertyDto = PropertyMapper.instance
-				.propertyToBasePropertyDtoWithApartmentAddressUser(property);
+		CreatePropertyDto actualPropertyDto = new CreatePropertyDto();
 		Long ownerId = 12L;
 		Mockito.when(propertyRepository.findById(ID)).thenReturn(optinalProperty);
 		//Act
