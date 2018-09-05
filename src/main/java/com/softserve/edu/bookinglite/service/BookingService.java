@@ -15,6 +15,7 @@ import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
 import com.softserve.edu.bookinglite.util.BookingUtil;
 import com.softserve.edu.bookinglite.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,69 +25,76 @@ import java.util.*;
 @Service
 public class BookingService {
 
-    private final String RESERVED = "Reserved";
-    private final int HOUR_CHECK_IN = 17;
-    private final int HOUR_CHECK_OUT = 15;
-
+	private final String RESERVED = "Reserved";
+	private final String CANCELED = "Canceled";
+	private final int HOUR_CHECK_IN= 17;
+	private final int HOUR_CHECK_OUT= 15;
+    private final String ACTUAL_BOOKINGS = "actualBookings";
+    private final String ARCHIEVE_BOOKINGS = "archieveBookings";
     private final BookingRepository bookingRepository;
     private final BookingStatusRepository bookingStatusRepository;
     private final ApartmentRepository apartmentRepository;
     private final PropertyRepository propertyRepository;
 
-    @Autowired
-    public BookingService(BookingRepository bookingRepository,
-                          BookingStatusRepository bookingStatusRepository,
-                          ApartmentRepository apartmentRepository,
-                          PropertyRepository propertyRepository
-    ) {
-        this.bookingRepository = bookingRepository;
-        this.bookingStatusRepository = bookingStatusRepository;
-        this.apartmentRepository = apartmentRepository;
-        this.propertyRepository = propertyRepository;
+	
+	@Autowired
+	   public BookingService(BookingRepository bookingRepository,
+	                         BookingStatusRepository bookingStatusRepository,
+	                         ApartmentRepository apartmentRepository,
+	                         PropertyRepository propertyRepository
+	   ) {
+	       this.bookingRepository = bookingRepository;
+	       this.bookingStatusRepository = bookingStatusRepository;
+	       this.apartmentRepository = apartmentRepository;
+	       this.propertyRepository = propertyRepository;
+	   }
+
+	@Transactional
+	public BookingDto findBookinDTOById(Long idUser,Long bookingId)  throws BookingNotFoundException{ 
+		Booking booking = bookingRepository.findBookingById(idUser, bookingId); 
+		if(booking==null) throw new BookingNotFoundException(bookingId);
+		return BookingMapper.instance.bookingToBaseBookingDto(booking);
+	}
+
+	@Transactional
+	public Page<BookingDto> findPageAllBookingsDtoByUserId(Long userId, int page, int size, String filterBookingsByDates) {
+		Page <BookingDto> pageBookings = null;
+		Date nowFullDate = new Date();
+		Date nowShortDate =  DateUtils.setHourAndMinToDate(
+				new Date(nowFullDate.getYear(), nowFullDate.getMonth(), nowFullDate.getDay()), nowFullDate.getHours());
+		if (ACTUAL_BOOKINGS.equals(filterBookingsByDates)) {			
+			pageBookings= BookingMapper.instance.toPageBookingDto(
+					bookingRepository.getPageActualBookingsByUserId(userId, nowShortDate, PageRequest.of(page, size)));
+		} 
+		else if(ARCHIEVE_BOOKINGS.equals(filterBookingsByDates)) {
+			pageBookings= BookingMapper.instance.toPageBookingDto(
+					bookingRepository.getPageArchieveBookingsByUserId(userId, nowShortDate, PageRequest.of(page, size)));
+		} else {
+			pageBookings= BookingMapper.instance.toPageBookingDto(
+					bookingRepository.getPageAllBookingsByUserId(userId, PageRequest.of(page, size) ));
+		}	
+		return pageBookings;
     }
 
-    @Transactional
-    public BookingDto findBookinDTOById(Long idUser, Long bookingId) throws BookingNotFoundException { //add unit tests
-        Booking booking = bookingRepository.findBookingById(idUser, bookingId);
-        if (booking == null) throw new BookingNotFoundException(bookingId);
-        return BookingMapper.instance.bookingToBaseBookingDto(booking);
-    }
-
-    @Transactional
-    public List<BookingDto> findAllBookingsDtoByUserId(Long userId) {
-        List<BookingDto> listBookingDto = new ArrayList<>();
-        bookingRepository.getAllByUserIdOrderByCheckInAsc(userId).forEach(
-                b -> listBookingDto.add(BookingMapper.instance.bookingToBaseBookingDto(b)));
-        return listBookingDto;
-    }
-
-    @Transactional
-    public List<BookingDto> findPageAllBookingsDtoByUserId(Long userId, int page, int size) {
-        List<BookingDto> listBookingDto = new ArrayList<>();
-        bookingRepository.getPageAllByUserIdOrderByCheckInAsc(userId, PageRequest.of(page, size)).forEach(
-                b -> listBookingDto.add(BookingMapper.instance.bookingToBaseBookingDto(b)));
-        return listBookingDto;
-    }
-
-    @Transactional
-    public boolean cancelBooking(Long userId, Long bookingId) throws BookingNotFoundException, BookingCancelException {
-        Booking booking = bookingRepository.findBookingById(userId, bookingId);
-        if (booking == null) {
-            throw new BookingNotFoundException(bookingId);
-        }
-        if (!booking.getBookingStatus().getName().equals(RESERVED)) {
-            throw new BookingCancelException(booking.getBookingStatus().getName());
-        }
-        if ((booking.getCheckIn().compareTo(new Date()) == 0 &&
-                booking.getCheckIn().before(DateUtils.setHourAndMinToDate
-                        (new Date(), HOUR_CHECK_IN))) ||
-                booking.getCheckIn().after(new Date())) {
-            String CANCELED = "Canceled";
-            booking.setBookingStatus(bookingStatusRepository.findByName(CANCELED));
-            bookingRepository.save(booking);
-            return true;
-        } else throw new BookingCancelException();
-    }
+	@Transactional
+	public boolean cancelBooking(Long userId, Long bookingId) throws BookingNotFoundException, BookingCancelException {
+		Booking booking = bookingRepository.findBookingById(userId, bookingId);
+		if(booking==null){
+			throw new BookingNotFoundException(bookingId);
+		}
+		if(!booking.getBookingStatus().getName().equals(RESERVED)){
+			throw new BookingCancelException(booking.getBookingStatus().getName());
+		}
+		if( (booking.getCheckIn().compareTo(new Date())==0 &&
+				booking.getCheckIn().before(DateUtils.setHourAndMinToDate
+						(new Date(),HOUR_CHECK_IN))) ||
+				booking.getCheckIn().after(new Date())) {
+			booking.setBookingStatus(bookingStatusRepository.findByName(CANCELED));
+			bookingRepository.save(booking);
+			return true;
+		}
+		else throw new BookingCancelException();
+	}
 
     @Transactional
     public List<BookingDto> getAllBookingsByPropertyAndOwnerId(Long idProperty, Long idUserOwner) throws PropertyNotFoundException {

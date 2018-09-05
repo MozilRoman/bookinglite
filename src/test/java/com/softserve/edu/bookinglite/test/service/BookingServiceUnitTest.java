@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
@@ -40,10 +41,18 @@ import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
 @RunWith(MockitoJUnitRunner.class)
 public class BookingServiceUnitTest {
 
+	private final int INDEX = 0;
     private final Long ID = 1L;
     private final String CANCELED = "Canceled";
+    private final int PAGE_AND_SIZE = 1;
     private final int HOUR_CHECK_IN = 17;
     private final int HOUR_CHECK_OUT = 15;
+    private final Date NOW_FULL_DATE = new Date();
+    private final Date NOW_SHORT_DATE = DateUtils.setHourAndMinToDate(new Date(
+    		NOW_FULL_DATE.getYear(), NOW_FULL_DATE.getMonth(),NOW_FULL_DATE.getDay()), NOW_FULL_DATE.getHours());
+    private final String ALL_BOOKINGS = "allBookings";
+    private final String ACTUAL_BOOKINGS = "actualBookings";
+    private final String ARCHIEVE_BOOKINGS = "archieveBookings";
 
     @Mock
     private BookingRepository bookingRepository;
@@ -69,18 +78,6 @@ public class BookingServiceUnitTest {
         Booking booking = null;
         Mockito.when(bookingRepository.findBookingById(ID, ID)).thenReturn(booking);
         bookingService.findBookinDTOById(ID, ID);
-    }
-
-    @Test
-    public void findAllBookingsDtoByUserIdTest() {
-        Booking booking = getBookingInstance();
-        List<Booking> bookings = new ArrayList<>();
-        bookings.add(booking);
-        BookingDto actualBookingDto = BookingMapper.instance.bookingToBaseBookingDto(booking);
-        Mockito.when(bookingRepository.getAllByUserIdOrderByCheckInAsc(ID)).thenReturn(bookings);
-        List<BookingDto> expectedBookingDto = bookingService.findAllBookingsDtoByUserId(1L);
-        int INDEX = 0;
-        assertThat(actualBookingDto).isEqualTo(expectedBookingDto.get(INDEX));
     }
 
     @Test
@@ -123,17 +120,54 @@ public class BookingServiceUnitTest {
         Mockito.when(bookingRepository.findBookingById(ID, ID)).thenReturn(booking);
         bookingService.cancelBooking(ID, ID);
     }
-
+    
     @Test
-    public void findPageAllBookingsDtoByUserId() {
-        Booking booking = getBookingInstance();
-        List<Booking> bookings = new ArrayList<>();
-        bookings.add(booking);
-        PageImpl<Booking> pageBooking = new PageImpl<>(bookings);
-        int PAGE_AND_SIZE = 1;
-        Mockito.when(bookingRepository.getPageAllByUserIdOrderByCheckInAsc(
-                ID, PageRequest.of(PAGE_AND_SIZE, PAGE_AND_SIZE))).thenReturn(pageBooking);
-        bookingService.findPageAllBookingsDtoByUserId(ID, PAGE_AND_SIZE, PAGE_AND_SIZE);
+    public void findPageAllBookingsDtoByUserIdAllBookings()  {
+    	List<Booking> bookingsList = new ArrayList<>();
+    	bookingsList.add(getBookingInstance());
+    	List<BookingDto> bookingsDtoList = new ArrayList<>();
+    	bookingsDtoList.add(BookingMapper.instance.bookingToBaseBookingDto(getBookingInstance()));
+        Page<Booking> pageBooking = new PageImpl(bookingsList);    	
+        Page<BookingDto> pageBookingDto = new PageImpl(bookingsDtoList );    	
+        Mockito.when(bookingRepository.getPageAllBookingsByUserId(ID, PageRequest.of(PAGE_AND_SIZE, PAGE_AND_SIZE)))
+        .thenReturn(pageBooking);                        		        
+        Page<BookingDto> pageBookingExpected= bookingService.findPageAllBookingsDtoByUserId(
+        		ID, PAGE_AND_SIZE, PAGE_AND_SIZE, ALL_BOOKINGS);        
+        assertThat(pageBookingDto.getContent().get(INDEX)).isEqualTo(pageBookingExpected.getContent().get(INDEX));
+    }
+    
+    @Test
+    public void findPageAllBookingsDtoByUserIdActualBookings()  {
+    	List<Booking> bookingsList = new ArrayList<>();
+    	bookingsList.add(getBookingInstance());
+    	List<BookingDto> bookingsDtoList = new ArrayList<>();
+    	bookingsDtoList.add(BookingMapper.instance.bookingToBaseBookingDto(getBookingInstance()));
+        Page<Booking> pageBooking = new PageImpl(bookingsList);    	
+        Page<BookingDto> pageBookingDto = new PageImpl(bookingsDtoList );    	
+        Mockito.when(bookingRepository.getPageActualBookingsByUserId(ID, NOW_SHORT_DATE, 
+        		PageRequest.of(PAGE_AND_SIZE, PAGE_AND_SIZE))).thenReturn(pageBooking); 
+        Page<BookingDto> pageBookingExpected= bookingService.findPageAllBookingsDtoByUserId(
+        		ID, PAGE_AND_SIZE, PAGE_AND_SIZE, ACTUAL_BOOKINGS);  
+        assertThat(pageBookingDto.getContent().get(INDEX)).isEqualTo(pageBookingExpected.getContent().get(INDEX));
+    }
+    
+    @Test
+    public void findPageAllBookingsDtoByUserIdArchieveBookings()  {
+    	Booking booking = getBookingInstance();
+    	booking.setCheckIn(setAllDate("2017-01-11-14-00-00"));
+        booking.setCheckOut(setAllDate("2017-01-12-12-00-00"));
+    	List<Booking> bookingsList = new ArrayList<>();
+    	bookingsList.add(booking);
+    	List<BookingDto> bookingsDtoList = new ArrayList<>();
+    	bookingsDtoList.add(BookingMapper.instance.bookingToBaseBookingDto(booking));
+        Page<Booking> pageBooking = new PageImpl(bookingsList);    	
+        Page<BookingDto> pageBookingDto = new PageImpl(bookingsDtoList );    	
+        Mockito.when(bookingRepository.getPageArchieveBookingsByUserId(ID, NOW_SHORT_DATE,
+        		PageRequest.of(PAGE_AND_SIZE, PAGE_AND_SIZE)))
+        .thenReturn(pageBooking);                        		        
+        Page<BookingDto> pageBookingExpected= bookingService.findPageAllBookingsDtoByUserId(
+        		ID, PAGE_AND_SIZE, PAGE_AND_SIZE, ARCHIEVE_BOOKINGS);        
+        assertThat(pageBookingDto.getContent().get(INDEX)).isEqualTo(pageBookingExpected.getContent().get(INDEX));
     }
 
     @Test(expected = BookingInvalidDataException.class)
@@ -261,8 +295,9 @@ public class BookingServiceUnitTest {
         //Booking
         Booking booking = new Booking();
         booking.setId(1L);
-        Date in = setAllDate("2018-11-11-14-00-00");
-        Date out = setAllDate("2018-11-15-12-00-00");
+        Date in = setAllDate("2019-11-11-14-00-00");
+        Date out = setAllDate("2019-11-15-12-00-00");
+        out.setHours(12);
         booking.setCheckIn(in);
         booking.setCheckOut(out);
         booking.setTotalPrice(new BigDecimal(100));

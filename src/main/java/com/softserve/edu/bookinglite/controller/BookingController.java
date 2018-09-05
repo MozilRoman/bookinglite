@@ -5,8 +5,8 @@ import com.softserve.edu.bookinglite.exception.*;
 import com.softserve.edu.bookinglite.service.BookingService;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
 import com.softserve.edu.bookinglite.service.dto.CreateBookingDto;
-import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,18 +34,13 @@ public class BookingController {
         return bookingService.findBookinDTOById(userId, bookingId);
     }
 
-    @GetMapping(value = "/bookings")
-    public List<BookingDto> getAllBookingsDtoByUserId(Principal principal) {
-        Long userId = Long.parseLong(principal.getName());
-        return bookingService.findAllBookingsDtoByUserId(userId);
-    }
-
-    @GetMapping("/bookings/pages")
-    public List<BookingDto> findPageAllBookingsDtoByUserId(Principal principal,
+    @GetMapping("/bookings")
+    public Page<BookingDto> findPageAllBookingsDtoByUserId(Principal principal,
                                                            @RequestParam("getPageNumber") int pageNumber,
-                                                           @RequestParam("getPageSize") int pageSize) {
+                                                           @RequestParam("getPageSize") int pageSize,
+                                                           @RequestParam("filterBookingsByDates") String filterBookingsByDates) {    	
         Long userId = Long.parseLong(principal.getName());
-        return bookingService.findPageAllBookingsDtoByUserId(userId, pageNumber, pageSize);
+        return bookingService.findPageAllBookingsDtoByUserId(userId, pageNumber, pageSize, filterBookingsByDates);
     }
 
     @GetMapping(value = "/guestArrivals/{propertyId}")
