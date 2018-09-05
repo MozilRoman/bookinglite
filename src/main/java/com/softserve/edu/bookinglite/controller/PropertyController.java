@@ -1,5 +1,6 @@
 package com.softserve.edu.bookinglite.controller;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.exception.PropertyConfirmOwnerException;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
+import com.softserve.edu.bookinglite.service.AdvanceSearchDto;
 import com.softserve.edu.bookinglite.service.PropertyService;
 import com.softserve.edu.bookinglite.service.dto.CreatePropertyDto;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
@@ -61,24 +63,13 @@ public class PropertyController {
 	}
 
 	@PostMapping("/property")
-	public ResponseEntity<PropertyDto> createProperty(@Valid @RequestBody PropertyDto propertyDto, Principal principal) {
-		Long userId = Long.parseLong(principal.getName());
-		if (propertyService.saveProperty(propertyDto, userId)) {
-			return new ResponseEntity<PropertyDto>(HttpStatus.CREATED);
-		} else {
-			return new ResponseEntity<PropertyDto>(HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	@PostMapping("/addproperty")
 	public ResponseEntity<CreatePropertyDto> createPropertyTestVersion(
 			@Valid @RequestBody CreatePropertyDto createPropertyDto, Principal principal) {
 		Long userId = Long.parseLong(principal.getName());
 		
-		propertyService.saveCreatePropertyDto(createPropertyDto, userId);
+		propertyService.save(createPropertyDto, userId);
 		return new ResponseEntity<CreatePropertyDto>(HttpStatus.OK);
 	}
-	
 
 	@PutMapping("/property/{propertyId}")
 	public ResponseEntity<PropertyDto> update(@RequestBody PropertyDto propertyDto, @PathVariable("propertyId") Long id,
@@ -105,6 +96,27 @@ public class PropertyController {
 		searchDto.setNumberOfGuests(numberOfGuests);
 		return propertyService.searchProperty(searchDto);
 	}
+	
+	 @GetMapping("/property/advancesearch")
+	    public List<PropertyDto> globalSearch(@RequestParam("checkIn") Date checkIn,
+	                                          @RequestParam("checkOut") Date checkOut,
+	                                          @RequestParam("numberOfGuests") Integer numberOfGuests,
+	                                          @RequestParam("cityId") Long cityId,
+	                                          @RequestParam("countryId") Long countryId,
+	                                          @RequestParam("price") BigDecimal price,
+	                                          @RequestParam("facilityIds") List<Long> facilityIds,
+	                                          @RequestParam("amenityIds") List<Long> amenityIds) {
+	        AdvanceSearchDto advanceSearchDto = new AdvanceSearchDto();
+	        advanceSearchDto.setCheckIn(checkIn);
+	        advanceSearchDto.setCheckOut(checkOut);
+	        advanceSearchDto.setCityId(cityId);
+	        advanceSearchDto.setCountryId(countryId);
+	        advanceSearchDto.setNumberOfGuests(numberOfGuests);
+	        advanceSearchDto.setPriceFromUser(price);
+	        advanceSearchDto.setFacilitiesId(facilityIds);
+	        advanceSearchDto.setAmenitiesId(amenityIds);
+	        return propertyService.advanceSearchProperty(advanceSearchDto);
+	    }
 
 	@GetMapping("/property/pages")
 	public List<PropertyDto> getPropertiesByPage(
@@ -119,8 +131,8 @@ public class PropertyController {
 		}
 		return dtos;
 	}
-
-	@GetMapping(value = "/guestArrivals")
+	
+	@GetMapping("/myproperties")
 	public List<PropertyDto> getAllPropetiesByOwnerId(Principal principal){
 		Long userId = Long.parseLong(principal.getName());
 		return propertyService.getAllPropertyByOwner(userId);
