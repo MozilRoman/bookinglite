@@ -66,16 +66,15 @@ public class PropertyController {
 	public ResponseEntity<CreatePropertyDto> createPropertyTestVersion(
 			@Valid @RequestBody CreatePropertyDto createPropertyDto, Principal principal) {
 		Long userId = Long.parseLong(principal.getName());
-		
 		propertyService.save(createPropertyDto, userId);
 		return new ResponseEntity<CreatePropertyDto>(HttpStatus.OK);
 	}
-
+	
 	@PutMapping("/property/{propertyId}")
-	public ResponseEntity<PropertyDto> update(@RequestBody PropertyDto propertyDto, @PathVariable("propertyId") Long id,
+	public ResponseEntity<PropertyDto> update(@RequestBody CreatePropertyDto createPropertyDto, @PathVariable("propertyId") Long id,
 			Principal principal) throws PropertyNotFoundException, PropertyConfirmOwnerException {
 		Long ownerId = Long.parseLong(principal.getName());
-		if (propertyService.updateProperty(propertyDto, id, ownerId)) {
+		if (propertyService.updateProperty(createPropertyDto, id, ownerId)) {
 			return new ResponseEntity<PropertyDto>(HttpStatus.OK);
 		} else {
 			return new ResponseEntity<PropertyDto>(HttpStatus.BAD_REQUEST);

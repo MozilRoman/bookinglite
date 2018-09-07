@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.softserve.edu.bookinglite.entity.Facility;
 import com.softserve.edu.bookinglite.entity.Property;
+import com.softserve.edu.bookinglite.entity.PropertyType;
 import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.exception.PropertyConfirmOwnerException;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
@@ -78,26 +79,28 @@ public class PropertyService {
 		property.setUser(user);
 		property.setFacilities(getFacilities(createPropertyDto.getFacilityId()));
 		propertyRepository.save(property);
-		
 	}
-
+	
 	@Transactional
-	public boolean updateProperty(PropertyDto propertyDto, Long propertyId, Long ownerId)
+	public boolean updateProperty(CreatePropertyDto createPropertyDto, Long propertyId, Long ownerId) 
 			throws PropertyNotFoundException, PropertyConfirmOwnerException {
 		Property property = propertyRepository.findById(propertyId)
 				.orElseThrow(() -> new PropertyNotFoundException(propertyId));
-		if (propertyDto != null && property.getUser().getId() == ownerId) {
-			property.setName(propertyDto.getName());
-			property.setDescription(propertyDto.getDescription());
-			property.setPhoneNumber(propertyDto.getPhoneNumber());
-			property.setContactEmail(propertyDto.getContactEmail());
-			property.setPropertyType(propertyDto.getPropertyType());
-			property.setFacilities(propertyDto.getFacilities());
+		if (createPropertyDto != null && property.getUser().getId() == ownerId) {
+			property.setName(createPropertyDto.getName());
+			property.setDescription(createPropertyDto.getDescription());
+			property.setPhoneNumber(createPropertyDto.getPhoneNumber());
+			property.setContactEmail(createPropertyDto.getContactEmail());
+			PropertyType propertyType = new PropertyType();
+			propertyType.setId(createPropertyDto.getPropertyTypeId());
+			property.setPropertyType(propertyType);
+			property.setFacilities(getFacilities(createPropertyDto.getFacilityId()));
 			propertyRepository.save(property);
 			return true;
 		} else {
 			throw new PropertyConfirmOwnerException();
 		}
+		
 	}
 
 	@Transactional
@@ -127,8 +130,6 @@ public class PropertyService {
 		return propertyDtos;
 	}
 	 
-
-	
 	@Transactional
 	public Page<Property> findPropertyByPage(int page, int size) {
 		return propertyRepository.findAll(PageRequest.of(page, size));
