@@ -80,7 +80,6 @@ public class PropertyService {
 		property.setUser(user);
 		property.setFacilities(getFacilities(createPropertyDto.getFacilityId()));
 		propertyRepository.save(property);
-		System.out.println(createPropertyDto.getDescription());
 	}
 	
 	@Transactional
