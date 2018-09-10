@@ -1,4 +1,4 @@
-package com.softserve.edu.bookinglite.service;
+package com.softserve.edu.bookinglite.service.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;

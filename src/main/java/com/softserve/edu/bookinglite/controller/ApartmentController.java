@@ -35,26 +35,27 @@ public class ApartmentController {
 	}
 
 	@GetMapping("/property/{id}/apartment/{id}")
-	public ApartmentDto getApartment(@PathVariable("id") Long apartmentId)
-			throws ApartmentNotFoundException {
+	public ApartmentDto getApartment(@PathVariable("id") Long apartmentId) throws ApartmentNotFoundException {
 		return apartmentService.findApartmentDtoById(apartmentId);
 	}
 
 	@PostMapping("/property/{id}/apartment")
 	public ResponseEntity<CreateApartmentDto> saveApartment(@Valid @RequestBody CreateApartmentDto createApartmentDto,
-															@PathVariable("id") Long propertyId,
-															Principal principal) throws PropertyNotFoundException {
+			@PathVariable("id") Long propertyId, Principal principal) throws PropertyNotFoundException {
 		Long userId = Long.parseLong(principal.getName());
-		apartmentService.saveCreatedApartmentDto(createApartmentDto, propertyId, userId);
-		return new ResponseEntity<CreateApartmentDto>(HttpStatus.CREATED);
+		if (apartmentService.save(createApartmentDto, propertyId, userId)) {
+			return new ResponseEntity<CreateApartmentDto>(HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<CreateApartmentDto>(HttpStatus.CONFLICT);
+		}
 	}
 
 	@PutMapping("/apartment/{id}")
-	public ResponseEntity<Void> update(@Valid @RequestBody ApartmentDto apartmentDto,
-									   @PathVariable("id") Long apartmentId,
-									   Principal principal) throws ApartmentNotFoundException, ApartmentUpdateException {
+	public ResponseEntity<Void> update(@Valid @RequestBody CreateApartmentDto createApartmentDto,
+			@PathVariable("id") Long apartmentId, Principal principal)
+			throws ApartmentNotFoundException, ApartmentUpdateException {
 		Long userId = Long.parseLong(principal.getName());
-		if (apartmentService.updateApartment(apartmentDto, apartmentId, userId)) {
+		if (apartmentService.updateApartment(createApartmentDto, apartmentId, userId)) {
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
@@ -62,13 +63,12 @@ public class ApartmentController {
 	}
 
 	@GetMapping("/create-apartment/apartment-type")
-	public List<ApartmentType> getApartmentTypes(){
+	public List<ApartmentType> getApartmentTypes() {
 		return apartmentService.findApartmentTypes();
 	}
 
 	@GetMapping("/create-apartment/amenities")
-	public List<Amenity> getAmenities(){
+	public List<Amenity> getAmenities() {
 		return apartmentService.findAmenities();
 	}
-
 }

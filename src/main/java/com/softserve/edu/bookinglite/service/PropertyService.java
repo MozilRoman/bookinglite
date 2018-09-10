@@ -19,6 +19,7 @@ import com.softserve.edu.bookinglite.entity.User;
 import com.softserve.edu.bookinglite.exception.PropertyConfirmOwnerException;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
+import com.softserve.edu.bookinglite.service.dto.AdvanceSearchDto;
 import com.softserve.edu.bookinglite.service.dto.CreatePropertyDto;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 import com.softserve.edu.bookinglite.service.dto.SearchDto;
@@ -79,6 +80,7 @@ public class PropertyService {
 		property.setUser(user);
 		property.setFacilities(getFacilities(createPropertyDto.getFacilityId()));
 		propertyRepository.save(property);
+		System.out.println(createPropertyDto.getDescription());
 	}
 	
 	@Transactional
@@ -100,7 +102,6 @@ public class PropertyService {
 		} else {
 			throw new PropertyConfirmOwnerException();
 		}
-		
 	}
 
 	@Transactional
