@@ -12,30 +12,30 @@ import com.softserve.edu.bookinglite.entity.Apartment;
 import com.softserve.edu.bookinglite.entity.ApartmentType;
 import com.softserve.edu.bookinglite.entity.Property;
 import com.softserve.edu.bookinglite.service.dto.ApartmentDto;
+import com.softserve.edu.bookinglite.service.dto.CreateApartmentDto;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
 
 @Mapper
 public interface ApartmentMapper {
 
+	ApartmentMapper instance = Mappers.getMapper(ApartmentMapper.class);
 
-    ApartmentMapper instance = Mappers.getMapper(ApartmentMapper.class);
+	@Mappings({ @Mapping(target = "propertyDto", source = "apartment.property"), })
+	ApartmentDto toDto(Apartment apartment);
 
-    @Mappings({
-            @Mapping(target="propertyDto", source="apartment.property"),
-    })
-    ApartmentDto toDto(Apartment apartment);
-    
-    ApartmentDto toDtoWithOutPropertyDto(Apartment apartment);
+	ApartmentDto toDtoWithOutPropertyDto(Apartment apartment);
 
-    
-    Set<Amenity> map(Set<Amenity> amenities);
+	@Mappings({ @Mapping(source = "apartmentTypeId", target = "apartmentType.id") })
+	Apartment toEntity(CreateApartmentDto createApartmentDto);
 
-    Amenity map(Amenity amenity);
+	Set<Amenity> map(Set<Amenity> amenities);
 
-    ApartmentType map(ApartmentType apartmentType);
+	Amenity map(Amenity amenity);
 
-    default PropertyDto map(Property property){
-        return PropertyMapper.instance.propertyToBasePropertyDtoWithAddress(property);
-    }
+	ApartmentType map(ApartmentType apartmentType);
+
+	default PropertyDto map(Property property) {
+		return PropertyMapper.instance.propertyToBasePropertyDtoWithAddress(property);
+	}
 
 }

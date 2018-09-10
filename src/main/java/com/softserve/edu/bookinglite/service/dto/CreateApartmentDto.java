@@ -13,6 +13,7 @@ public class CreateApartmentDto {
     @NotBlank
     private String name;
     private BigDecimal price;
+    private int numberOfGuests;
     private Long propertyDtoId;
     @NotNull
     private Long apartmentTypeId;
@@ -66,8 +67,16 @@ public class CreateApartmentDto {
     public void setAmenitiesId(Set<Long> amenitiesId) {
         this.amenitiesId = amenitiesId;
     }
+    
+    public int getNumberOfGuests() {
+		return numberOfGuests;
+	}
 
-    @Override
+	public void setNumberOfGuests(int numberOfGuests) {
+		this.numberOfGuests = numberOfGuests;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
