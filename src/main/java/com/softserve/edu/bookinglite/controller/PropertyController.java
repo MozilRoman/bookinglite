@@ -10,6 +10,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -82,8 +83,8 @@ public class PropertyController {
 	}
 	
 	@GetMapping("/property/search")
-	public List<PropertyDto> searchProperty(@RequestParam("checkIn") Date checkIn,
-            									@RequestParam("checkOut")  Date checkOut,
+	public List<PropertyDto> searchProperty(@RequestParam("checkIn") @DateTimeFormat (pattern="yyyy-MM-dd") Date checkIn,
+            									@RequestParam("checkOut") @DateTimeFormat (pattern="yyyy-MM-dd") Date checkOut,
             									@RequestParam("numberOfGuests") Integer numberOfGuests,
             									@RequestParam("cityId") Long cityId,
             									@RequestParam("countryId") Long countryId){
@@ -97,8 +98,8 @@ public class PropertyController {
 	}
 	
 	 @GetMapping("/property/advancesearch")
-	    public List<PropertyDto> globalSearch(@RequestParam("checkIn") Date checkIn,
-	                                          @RequestParam("checkOut") Date checkOut,
+	    public List<PropertyDto> globalSearch(@RequestParam("checkIn") @DateTimeFormat (pattern="yyyy-MM-dd") Date checkIn,
+	                                          @RequestParam("checkOut") @DateTimeFormat (pattern="yyyy-MM-dd") Date checkOut,
 	                                          @RequestParam("numberOfGuests") Integer numberOfGuests,
 	                                          @RequestParam("cityId") Long cityId,
 	                                          @RequestParam("countryId") Long countryId,
@@ -113,7 +114,7 @@ public class PropertyController {
 	        advanceSearchDto.setNumberOfGuests(numberOfGuests);
 	        advanceSearchDto.setPriceFromUser(price);
 	        advanceSearchDto.setFacilitiesId(facilityIds);
-	        advanceSearchDto.setAmenitiesId(amenityIds);
+	        advanceSearchDto.setAmenitiesId(amenityIds);	        
 	        return propertyService.advanceSearchProperty(advanceSearchDto);
 	    }
 

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import com.softserve.edu.bookinglite.entity.Booking;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -21,10 +22,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     Page<Booking> getPageAllBookingsByUserId(Long idUser, Pageable pageable);
     
     @Query("Select b from Booking b where user.id= ?1 and b.checkOut >?2 ORDER BY b.checkIn desc")
-    Page<Booking> getPageActualBookingsByUserId(Long idUser, Date nowDate, Pageable pageable);
+    Page<Booking> getPageActualBookingsByUserId(Long idUser, LocalDateTime nowDate, Pageable pageable);
     
     @Query("Select b from Booking b where user.id= ?1 and b.checkOut <?2 ORDER BY b.checkIn desc")
-    Page<Booking> getPageArchieveBookingsByUserId(Long idUser, Date nowDate, Pageable pageable);
+    Page<Booking> getPageArchieveBookingsByUserId(Long idUser, LocalDateTime nowDate, Pageable pageable);
     
     //if booking exist it will return true
     @Query("select CASE WHEN COUNT(b.id) > 0 THEN TRUE ELSE FALSE END  from Booking b " +

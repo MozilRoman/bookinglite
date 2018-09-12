@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -59,16 +60,16 @@ public class BookingService {
 	@Transactional
 	public Page<BookingDto> findPageAllBookingsDtoByUserId(Long userId, int page, int size, String filterBookingsByDates) {
 		Page <BookingDto> pageBookings = null;
-		Date nowFullDate = new Date();
-		Date nowShortDate =  DateUtils.setHourAndMinToDate(
-				new Date(nowFullDate.getYear(), nowFullDate.getMonth(), nowFullDate.getDay()), nowFullDate.getHours());
+		LocalDateTime dateAndTimeWithoutSeconds = DateUtils.getDateAndTimeWithoutSeconds();
 		if (ACTUAL_BOOKINGS.equals(filterBookingsByDates)) {			
 			pageBookings= BookingMapper.instance.toPageBookingDto(
-					bookingRepository.getPageActualBookingsByUserId(userId, nowShortDate, PageRequest.of(page, size)));
+					bookingRepository.getPageActualBookingsByUserId(userId, dateAndTimeWithoutSeconds,
+							PageRequest.of(page, size)));
 		} 
 		else if(ARCHIEVE_BOOKINGS.equals(filterBookingsByDates)) {
 			pageBookings= BookingMapper.instance.toPageBookingDto(
-					bookingRepository.getPageArchieveBookingsByUserId(userId, nowShortDate, PageRequest.of(page, size)));
+					bookingRepository.getPageArchieveBookingsByUserId(userId, dateAndTimeWithoutSeconds,
+							PageRequest.of(page, size)));
 		} else {
 			pageBookings= BookingMapper.instance.toPageBookingDto(
 					bookingRepository.getPageAllBookingsByUserId(userId, PageRequest.of(page, size) ));
