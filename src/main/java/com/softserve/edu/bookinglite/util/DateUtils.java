@@ -2,7 +2,6 @@ package com.softserve.edu.bookinglite.util;
 
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -21,11 +20,11 @@ public class DateUtils {
         return calendar.getTime();
     }
     
-    public static LocalDateTime getDateAndTimeWithoutSeconds() {    	
-    	LocalDateTime dateAndTimeNow = LocalDateTime.now();
-    	LocalDateTime dateAndTimeWithoutSeconds =  LocalDateTime.of(dateAndTimeNow.getYear(), dateAndTimeNow.getMonth(),
-    			dateAndTimeNow.getDayOfMonth(), dateAndTimeNow.getHour(), dateAndTimeNow.getMinute(), 0);
-    	return dateAndTimeWithoutSeconds;
+    public static Date getDateAndTimeWithoutSeconds() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
     }
 
     public static int countDay(Date checkIn, Date checkOut) {

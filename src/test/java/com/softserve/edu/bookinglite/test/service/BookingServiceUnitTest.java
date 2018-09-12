@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.*;
 
 import com.softserve.edu.bookinglite.exception.*;
@@ -48,6 +47,7 @@ public class BookingServiceUnitTest {
     private final int PAGE_AND_SIZE = 1;
     private final int HOUR_CHECK_IN = 17;
     private final int HOUR_CHECK_OUT = 15;
+    private final Date NOW_SHORT_DATE = DateUtils.getDateAndTimeWithoutSeconds();
     private final String ALL_BOOKINGS = "allBookings";
     private final String ACTUAL_BOOKINGS = "actualBookings";
     private final String ARCHIEVE_BOOKINGS = "archieveBookings";
@@ -136,16 +136,13 @@ public class BookingServiceUnitTest {
     
     @Test
     public void findPageAllBookingsDtoByUserIdActualBookings()  {
-    	LocalDateTime dateAndTimeNow = LocalDateTime.now();
-    	LocalDateTime dateAndTimeWithoutSeconds =  LocalDateTime.of(dateAndTimeNow.getYear(), dateAndTimeNow.getMonth(),
-    			dateAndTimeNow.getDayOfMonth(), dateAndTimeNow.getHour(), dateAndTimeNow.getMinute(), 0);
     	List<Booking> bookingsList = new ArrayList<>();
     	bookingsList.add(getBookingInstance());
     	List<BookingDto> bookingsDtoList = new ArrayList<>();
     	bookingsDtoList.add(BookingMapper.instance.bookingToBaseBookingDto(getBookingInstance()));
         Page<Booking> pageBooking = new PageImpl(bookingsList);    	
         Page<BookingDto> pageBookingDto = new PageImpl(bookingsDtoList );    	
-        Mockito.when(bookingRepository.getPageActualBookingsByUserId(ID, dateAndTimeWithoutSeconds, 
+        Mockito.when(bookingRepository.getPageActualBookingsByUserId(ID, NOW_SHORT_DATE, 
         		PageRequest.of(PAGE_AND_SIZE, PAGE_AND_SIZE))).thenReturn(pageBooking); 
         Page<BookingDto> pageBookingExpected= bookingService.findPageAllBookingsDtoByUserId(
         		ID, PAGE_AND_SIZE, PAGE_AND_SIZE, ACTUAL_BOOKINGS);  
@@ -154,9 +151,6 @@ public class BookingServiceUnitTest {
     
     @Test
     public void findPageAllBookingsDtoByUserIdArchieveBookings()  {
-    	LocalDateTime dateAndTimeNow = LocalDateTime.now();
-    	LocalDateTime dateAndTimeWithoutSeconds =  LocalDateTime.of(dateAndTimeNow.getYear(), dateAndTimeNow.getMonth(),
-    			dateAndTimeNow.getDayOfMonth(), dateAndTimeNow.getHour(), dateAndTimeNow.getMinute(), 0);
     	Booking booking = getBookingInstance();
     	booking.setCheckIn(setAllDate("2017-01-11-14-00-00"));
         booking.setCheckOut(setAllDate("2017-01-12-12-00-00"));
@@ -166,7 +160,7 @@ public class BookingServiceUnitTest {
     	bookingsDtoList.add(BookingMapper.instance.bookingToBaseBookingDto(booking));
         Page<Booking> pageBooking = new PageImpl(bookingsList);    	
         Page<BookingDto> pageBookingDto = new PageImpl(bookingsDtoList );    	
-        Mockito.when(bookingRepository.getPageArchieveBookingsByUserId(ID, dateAndTimeWithoutSeconds,
+        Mockito.when(bookingRepository.getPageArchieveBookingsByUserId(ID, NOW_SHORT_DATE,
         		PageRequest.of(PAGE_AND_SIZE, PAGE_AND_SIZE)))
         .thenReturn(pageBooking);                        		        
         Page<BookingDto> pageBookingExpected= bookingService.findPageAllBookingsDtoByUserId(
