@@ -35,9 +35,21 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query("SELECT b FROM Booking b " + "join Apartment a on a.id=b.apartment.id "
             + "join Property p on p.id=a.property.id "
-            + "where p.user.id=?2 and p.id=?1 and b.bookingStatus.name<>'Canceled' order by b.checkIn desc ")
-    List<Booking> getAllBookingsByPropertyAndOwnerId(Long propertyId, Long idOwnerUser);
+            + "where p.user.id=?2 and p.id=?1 and b.bookingStatus.name<>'Canceled'" +
+            " and ?3 between b.checkIn and b.checkOut order by b.checkOut desc ")
+    Page<Booking> getActiveBookingsByPropertyAndOwnerId(Long propertyId, Long idOwnerUser,Date actualDate,Pageable pageable);
 
+    @Query("SELECT b FROM Booking b " + "join Apartment a on a.id=b.apartment.id "
+            + "join Property p on p.id=a.property.id "
+            + "where p.user.id=?2 and p.id=?1 and b.bookingStatus.name<>'Canceled'" +
+            " and ?3 > b.checkOut  order by b.checkOut desc ")
+    Page<Booking> getPastBookingsByPropertyAndOwnerId(Long propertyId, Long idOwnerUser,Date actualDate,Pageable pageable);
+
+    @Query("SELECT b FROM Booking b " + "join Apartment a on a.id=b.apartment.id "
+            + "join Property p on p.id=a.property.id "
+            + "where p.user.id=?2 and p.id=?1 and b.bookingStatus.name<>'Canceled'" +
+            " and ?3 < b.checkIn  order by b.checkOut desc ")
+    Page<Booking> getFutureBookingsByPropertyAndOwnerId(Long propertyId, Long idOwnerUser,Date actualDate,Pageable pageable);
 }
 
 	
