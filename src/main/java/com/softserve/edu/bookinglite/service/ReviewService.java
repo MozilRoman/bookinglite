@@ -1,9 +1,6 @@
 package com.softserve.edu.bookinglite.service;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Stream;
 
 import javax.transaction.Transactional;
 
@@ -67,14 +64,14 @@ public class ReviewService {
         Property property = booking.getApartment().getProperty();
         if (validBookingUserEqualsReviewUser(booking, userId) && validBookingStatusIsNotCanceledAndCheckOutDateNotBeforeNowDate(booking)) {
             validAndSaveReview(booking, reviewDto);
-            updatePropertyRanking(property, getAvgFromRankingProperty(property.getId()));
+            updatePropertyRanking(property, getAvgRankingFromProperty(property.getId()));
             return true;
         }
         return false;
 
     }
 
-    public float getAvgFromRankingProperty(Long propertyId) {
+    public float getAvgRankingFromProperty(Long propertyId) {
         return reviewRepository.findAvgRankingByIdProperty(propertyId);
     }
 
