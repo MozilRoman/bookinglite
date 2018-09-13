@@ -200,8 +200,8 @@ public class BookingServiceUnitTest {
     @Test(expected = BookingExistingException.class)
     public void createBookingInvalidGetBookingByCheckTest() throws BookingInvalidDataException, ApartmentNotFoundException, BookingExistingException, NumberOfGuestsException {
         CreateBookingDto createBookingDto = new CreateBookingDto();
-        Date in = DateUtils.setHourAndMinToDate(new Date(2018, 11, 8), HOUR_CHECK_IN);
-        Date out = DateUtils.setHourAndMinToDate(new Date(2018, 11, 11), HOUR_CHECK_OUT);
+        Date in = DateUtils.setHourAndMinToDate(setAllDate("2018-11-8"), HOUR_CHECK_IN);
+        Date out = DateUtils.setHourAndMinToDate(setAllDate("2018-11-11"), HOUR_CHECK_OUT);
         createBookingDto.setCheckIn(in);
         createBookingDto.setCheckOut(out);
         createBookingDto.setNumberOfGuests(2);
@@ -214,8 +214,8 @@ public class BookingServiceUnitTest {
     @Test
     public void createBooking() throws Exception {
         CreateBookingDto createBookingDto = new CreateBookingDto();
-        Date in = DateUtils.setHourAndMinToDate(new Date(2018, 11, 8), HOUR_CHECK_IN);
-        Date out = DateUtils.setHourAndMinToDate(new Date(2018, 11, 11), HOUR_CHECK_OUT);
+        Date in = DateUtils.setHourAndMinToDate(setAllDate("2018-11-8"), HOUR_CHECK_IN);
+        Date out = DateUtils.setHourAndMinToDate(setAllDate("2018-11-11"), HOUR_CHECK_OUT);
         createBookingDto.setCheckIn(in);
         createBookingDto.setCheckOut(out);
         createBookingDto.setNumberOfGuests(2);
@@ -293,9 +293,8 @@ public class BookingServiceUnitTest {
         //Booking
         Booking booking = new Booking();
         booking.setId(1L);
-        Date in = setAllDate("2019-11-11-14-00-00");
-        Date out = setAllDate("2019-11-15-12-00-00");
-        out.setHours(12);
+        Date in = DateUtils.setHourAndMinToDate(setAllDate("2019-11-11"), 14 );
+        Date out = DateUtils.setHourAndMinToDate(setAllDate("2019-11-15"), 12 );
         booking.setCheckIn(in);
         booking.setCheckOut(out);
         booking.setTotalPrice(new BigDecimal(100));
@@ -307,7 +306,7 @@ public class BookingServiceUnitTest {
 
     public Date setAllDate(String stringDate) {
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             date = sdf.parse(stringDate);
         } catch (ParseException e) {
