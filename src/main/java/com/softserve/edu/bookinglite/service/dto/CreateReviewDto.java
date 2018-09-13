@@ -1,9 +1,12 @@
 package com.softserve.edu.bookinglite.service.dto;
 
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class CreateReviewDto {
+    @NotNull
     private String message;
+    @NotNull
     private Float rating;
 
     public String getMessage() {

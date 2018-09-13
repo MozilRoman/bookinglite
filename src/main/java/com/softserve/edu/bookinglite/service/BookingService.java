@@ -25,11 +25,13 @@ import java.util.*;
 @Service
 public class BookingService {
 
-	private final String RESERVED = "Reserved";
-	private final String CANCELED = "Canceled";
-	private final int HOUR_CHECK_IN= 17;
-	private final int HOUR_CHECK_OUT= 15;
+    private final String RESERVED = "Reserved";
+    private final String CANCELED = "Canceled";
+    private final int HOUR_CHECK_IN = 17;
+    private final int HOUR_CHECK_OUT = 15;
     private final String ACTUAL_BOOKINGS = "actualBookings";
+    private final String FUTURE_BOOKINGS = "futureBookings";
+    private final String PAST_BOOKINGS = "pastBookings";
     private final String ARCHIEVE_BOOKINGS = "archieveBookings";
     private final BookingRepository bookingRepository;
     private final BookingStatusRepository bookingStatusRepository;
@@ -97,28 +99,26 @@ public class BookingService {
 	}
 
     @Transactional
-    public List<BookingDto> getAllBookingsByPropertyAndOwnerId(Long idProperty, Long idUserOwner) throws PropertyNotFoundException {
-        propertyRepository.findById(idProperty).orElseThrow(() -> new PropertyNotFoundException(idProperty));
-        List<BookingDto> listBookingDto = new ArrayList<>();
-        bookingRepository.getAllBookingsByPropertyAndOwnerId(idProperty, idUserOwner).forEach(
-                b -> listBookingDto.add(BookingMapper.instance.bookingToBaseBookingDto(b)));
-        return listBookingDto;
-    }
-
-    @Transactional
     public boolean createBookingWithValidation(CreateBookingDto createBookingDto, Long userId, Long apartmentId)
             throws ApartmentNotFoundException, BookingExistingException, BookingInvalidDataException, NumberOfGuestsException {
-        Apartment apartment = validateApartmentAndDate(apartmentId, createBookingDto.getCheckIn(), createBookingDto.getCheckOut());
-        if (createBookingDto.getNumberOfGuests() <= apartment.getNumberOfGuests()
-                && validateApartmentAvailable(apartmentId, createBookingDto.getCheckIn(), createBookingDto.getCheckOut())) {
+        Apartment apartment = validateApartmentExistAndDateIsNotInvalid(apartmentId, createBookingDto.getCheckIn(), createBookingDto.getCheckOut());
+        if (validateBookingGuestsArrivalsToApartmentGuestArrivals(createBookingDto.getNumberOfGuests(), apartment.getNumberOfGuests())
+                && isApartmentAvailable(apartmentId, createBookingDto.getCheckIn(), createBookingDto.getCheckOut())) {
             saveBooking(userId, apartment, createBookingDto);
             return true;
         }
-        throw new NumberOfGuestsException();
+        return false;
+    }
+
+    public boolean validateBookingGuestsArrivalsToApartmentGuestArrivals(int booking_guest, int apartment_guests) throws NumberOfGuestsException {
+        if (apartment_guests < booking_guest) {
+            throw new NumberOfGuestsException();
+        }
+        return true;
     }
 
     @Transactional
-    public Apartment validateApartmentAndDate(Long apartmentId, Date in, Date out) throws ApartmentNotFoundException, BookingInvalidDataException {
+    public Apartment validateApartmentExistAndDateIsNotInvalid(Long apartmentId, Date in, Date out) throws ApartmentNotFoundException, BookingInvalidDataException {
         Apartment apartment = apartmentRepository.findById(apartmentId)
                 .orElseThrow(() -> new ApartmentNotFoundException(apartmentId));
         if (!DateUtils.checkValidationDate(in, out)) {
@@ -128,7 +128,7 @@ public class BookingService {
     }
 
     @Transactional
-    public boolean validateApartmentAvailable(Long apartmentId, Date in, Date out) throws BookingExistingException {
+    public boolean isApartmentAvailable(Long apartmentId, Date in, Date out) throws BookingExistingException {
         if (!bookingRepository.isApartmentBookedWithinDateRange(apartmentId,
                 DateUtils.setHourAndMinToDate(in, HOUR_CHECK_IN),
                 DateUtils.setHourAndMinToDate(out, HOUR_CHECK_OUT))) {
@@ -136,8 +136,8 @@ public class BookingService {
         } else throw new BookingExistingException();
     }
 
-    @Transactional
-    void saveBooking(Long userId, Apartment apartment, CreateBookingDto createBookingDto) {
+
+    private void saveBooking(Long userId, Apartment apartment, CreateBookingDto createBookingDto) {
         Booking booking = new Booking();
         booking.setApartment(apartment);
         User user = new User();
@@ -149,6 +149,27 @@ public class BookingService {
                 createBookingDto.getCheckIn(), createBookingDto.getCheckOut()));
         booking.setBookingStatus(bookingStatusRepository.findByName(RESERVED));
         bookingRepository.save(booking);
+    }
+
+    @Transactional
+    public Page<BookingDto> getPageBookingsByOwner(Long idProperty, Long idUserOwner, String filterBooking, int page, int size) {
+        Date date = new Date();
+        Page<BookingDto> pageBookings = null;
+        switch (filterBooking) {
+            case (ACTUAL_BOOKINGS):
+                pageBookings = BookingMapper.instance.toPageBookingDto(
+                        bookingRepository.getActiveBookingsByPropertyAndOwnerId(idProperty, idUserOwner, date, PageRequest.of(page, size)));
+                break;
+            case (PAST_BOOKINGS):
+                pageBookings = BookingMapper.instance.toPageBookingDto(
+                        bookingRepository.getPastBookingsByPropertyAndOwnerId(idProperty, idUserOwner, date, PageRequest.of(page, size)));
+                break;
+            case (FUTURE_BOOKINGS):
+                pageBookings = BookingMapper.instance.toPageBookingDto(
+                        bookingRepository.getFutureBookingsByPropertyAndOwnerId(idProperty, idUserOwner, date, PageRequest.of(page, size)));
+                break;
+        }
+        return pageBookings;
     }
 
 }
