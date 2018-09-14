@@ -60,10 +60,8 @@ public class BookingService {
 
 	@Transactional
 	public Page<BookingDto> findPageAllBookingsDtoByUserId(Long userId, int page, int size, String filterBookingsByDates) {
-		Page <BookingDto> pageBookings = null;
-		Date nowFullDate = new Date();
-		Date nowShortDate =  DateUtils.setHourAndMinToDate(
-				new Date(nowFullDate.getYear(), nowFullDate.getMonth(), nowFullDate.getDay()), nowFullDate.getHours());
+		Page <BookingDto> pageBookings = null;		
+		Date nowShortDate= DateUtils.getDateAndTimeWithoutSeconds();
 		if (ACTUAL_BOOKINGS.equals(filterBookingsByDates)) {			
 			pageBookings= BookingMapper.instance.toPageBookingDto(
 					bookingRepository.getPageActualBookingsByUserId(userId, nowShortDate, PageRequest.of(page, size)));

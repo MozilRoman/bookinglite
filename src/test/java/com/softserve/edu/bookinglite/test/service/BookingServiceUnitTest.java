@@ -3,8 +3,6 @@ package com.softserve.edu.bookinglite.test.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.softserve.edu.bookinglite.exception.*;
@@ -47,14 +45,10 @@ public class BookingServiceUnitTest {
     private final int PAGE_AND_SIZE = 1;
     private final int HOUR_CHECK_IN = 17;
     private final int HOUR_CHECK_OUT = 15;
-    private final Date NOW_FULL_DATE = new Date();
-    private final Date NOW_SHORT_DATE = DateUtils.setHourAndMinToDate(new Date(
-    		NOW_FULL_DATE.getYear(), NOW_FULL_DATE.getMonth(),NOW_FULL_DATE.getDay()), NOW_FULL_DATE.getHours());
+    private final Date NOW_SHORT_DATE = DateUtils.getDateAndTimeWithoutSeconds();
     private final String ALL_BOOKINGS = "allBookings";
     private final String ACTUAL_BOOKINGS = "actualBookings";
     private final String ARCHIEVE_BOOKINGS = "archieveBookings";
-    private final String FUTURE_BOOKINGS = "futureBookings";
-    private final String PAST_BOOKINGS = "pastBookings";
 
     @Mock
     private BookingRepository bookingRepository;
@@ -117,8 +111,8 @@ public class BookingServiceUnitTest {
     @Test(expected = BookingCancelException.class)
     public void cancelBookingWrongDateTest() throws BookingNotFoundException, BookingCancelException {
         Booking booking = getBookingInstance();
-        booking.setCheckIn(setAllDate("2018-01-11-14-00-00"));
-        booking.setCheckOut(setAllDate("2018-01-12-12-00-00"));
+        booking.setCheckIn(DateUtils.setAllDate("2018-01-11-14-00-00"));
+        booking.setCheckOut(DateUtils.setAllDate("2018-01-12-12-00-00"));
         Mockito.when(bookingRepository.findBookingById(ID, ID)).thenReturn(booking);
         bookingService.cancelBooking(ID, ID);
     }
@@ -156,8 +150,8 @@ public class BookingServiceUnitTest {
     @Test
     public void findPageAllBookingsDtoByUserIdArchieveBookings()  {
     	Booking booking = getBookingInstance();
-    	booking.setCheckIn(setAllDate("2017-01-11-14-00-00"));
-        booking.setCheckOut(setAllDate("2017-01-12-12-00-00"));
+    	booking.setCheckIn(DateUtils.setAllDate("2017-01-11-14-00-00"));
+        booking.setCheckOut(DateUtils.setAllDate("2017-01-12-12-00-00"));
     	List<Booking> bookingsList = new ArrayList<>();
     	bookingsList.add(booking);
     	List<BookingDto> bookingsDtoList = new ArrayList<>();
@@ -198,8 +192,8 @@ public class BookingServiceUnitTest {
     @Test(expected = NumberOfGuestsException.class)
     public void createBookingInvalidNumberOfGuestsTest() throws BookingInvalidDataException, ApartmentNotFoundException, BookingExistingException, NumberOfGuestsException {
         CreateBookingDto createBookingDto = new CreateBookingDto();
-        createBookingDto.setCheckIn(setAllDate("2019-05-01-14-00-00"));
-        createBookingDto.setCheckOut(setAllDate("2019-05-02-12-00-00"));
+        createBookingDto.setCheckIn(DateUtils.setAllDate("2019-05-01-14-00-00"));
+        createBookingDto.setCheckOut(DateUtils.setAllDate("2019-05-02-12-00-00"));
         createBookingDto.setNumberOfGuests(4);
         Booking booking = getBookingInstance();
         Mockito.when(apartmentRepository.findById(ID)).thenReturn(Optional.of(booking.getApartment()));
@@ -208,8 +202,8 @@ public class BookingServiceUnitTest {
 
     @Test(expected = ApartmentNotFoundException.class)
     public void createBookingInvalidApartmentTest() throws BookingInvalidDataException, ApartmentNotFoundException, BookingExistingException {
-        Date in = setAllDate("2020-11-11-14-00-00");
-        Date out = setAllDate("2020-11-15-12-00-00");
+        Date in = DateUtils.setAllDate("2020-11-11-14-00-00");
+        Date out = DateUtils.setAllDate("2020-11-15-12-00-00");
         Mockito.when(apartmentRepository.findById(ID)).thenReturn(Optional.empty());
        bookingService.validateApartmentExistAndDateIsNotInvalid(ID, in, out);
     }
@@ -217,8 +211,8 @@ public class BookingServiceUnitTest {
     @Test(expected = BookingExistingException.class)
     public void createBookingInvalidGetBookingByCheckTest() throws BookingInvalidDataException, ApartmentNotFoundException, BookingExistingException, NumberOfGuestsException {
         CreateBookingDto createBookingDto = new CreateBookingDto();
-        Date in = DateUtils.setHourAndMinToDate(new Date(2018, 11, 8), HOUR_CHECK_IN);
-        Date out = DateUtils.setHourAndMinToDate(new Date(2018, 11, 11), HOUR_CHECK_OUT);
+        Date in = DateUtils.setHourAndMinToDate(DateUtils.setAllDate("2018-11-8"), HOUR_CHECK_IN);
+        Date out = DateUtils.setHourAndMinToDate(DateUtils.setAllDate("2018-11-11"), HOUR_CHECK_OUT);
         createBookingDto.setCheckIn(in);
         createBookingDto.setCheckOut(out);
         createBookingDto.setNumberOfGuests(2);
@@ -231,8 +225,8 @@ public class BookingServiceUnitTest {
     @Test
     public void createBookingTest() throws Exception {
         CreateBookingDto createBookingDto = new CreateBookingDto();
-        Date in = DateUtils.setHourAndMinToDate(new Date(2018, 11, 8), HOUR_CHECK_IN);
-        Date out = DateUtils.setHourAndMinToDate(new Date(2018, 11, 11), HOUR_CHECK_OUT);
+        Date in = DateUtils.setHourAndMinToDate(DateUtils.setAllDate("2018-11-8"), HOUR_CHECK_IN);
+        Date out = DateUtils.setHourAndMinToDate(DateUtils.setAllDate("2018-11-11"), HOUR_CHECK_OUT);
         createBookingDto.setCheckIn(in);
         createBookingDto.setCheckOut(out);
         createBookingDto.setNumberOfGuests(2);
@@ -310,9 +304,8 @@ public class BookingServiceUnitTest {
         //Booking
         Booking booking = new Booking();
         booking.setId(1L);
-        Date in = setAllDate("2019-11-11-14-00-00");
-        Date out = setAllDate("2019-11-15-12-00-00");
-        out.setHours(12);
+        Date in = DateUtils.setHourAndMinToDate(DateUtils.setAllDate("2019-11-11"), 14 );
+        Date out = DateUtils.setHourAndMinToDate(DateUtils.setAllDate("2019-11-15"), 12 );
         booking.setCheckIn(in);
         booking.setCheckOut(out);
         booking.setTotalPrice(new BigDecimal(100));
@@ -320,29 +313,23 @@ public class BookingServiceUnitTest {
         booking.setBookingStatus(bookingStatus);
         booking.setUser(user);
         return booking;
-    }
+    }   
+    
 
-    public Date setAllDate(String stringDate) {
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
-        try {
-            date = sdf.parse(stringDate);
-        } catch (ParseException e) {
-            System.out.println("Unparseable using " + sdf);
-        }
-        return date;
+
+    public Date getPastDayByDays(int minusDays){
+    	final Calendar cal = Calendar.getInstance();
+    	cal.add(Calendar.DATE, -minusDays);
+    	return cal.getTime();
     }
-public Date getPastDayByDays(int minus_days){
-    final Calendar cal = Calendar.getInstance();
-    cal.add(Calendar.DATE, -minus_days);
-    return cal.getTime();
-}
-    public Date getFutureDayByDays(int plus_days){
-        final Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, +plus_days);
-        return cal.getTime();
+    
+    public Date getFutureDayByDays(int plusDays){
+    	final Calendar cal = Calendar.getInstance();
+    	cal.add(Calendar.DATE, +plusDays);
+    	return cal.getTime();
     }
+    
     public Date getTodayDate(){
-        return  Calendar.getInstance().getTime();
+    	return  Calendar.getInstance().getTime();
     }
 }
