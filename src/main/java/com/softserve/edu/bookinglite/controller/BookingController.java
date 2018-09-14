@@ -38,15 +38,19 @@ public class BookingController {
     public Page<BookingDto> findPageAllBookingsDtoByUserId(Principal principal,
                                                            @RequestParam("getPageNumber") int pageNumber,
                                                            @RequestParam("getPageSize") int pageSize,
-                                                           @RequestParam("filterBookingsByDates") String filterBookingsByDates) {    	
+                                                           @RequestParam("filterBookingsByDates") String filterBookingsByDates) {
         Long userId = Long.parseLong(principal.getName());
         return bookingService.findPageAllBookingsDtoByUserId(userId, pageNumber, pageSize, filterBookingsByDates);
     }
 
-    @GetMapping(value = "/guestArrivals/{propertyId}")
-    public List<BookingDto> getAllBookingsDtoByOwnerId(@PathVariable Long propertyId, Principal principal) throws PropertyNotFoundException {
+    @GetMapping(value = "myproperties/{propertyId}/guestArrivals")
+    public Page<BookingDto> getPageAllBookingsDtoByOwnerId(@PathVariable("propertyId") Long propertyId,
+                                                           @RequestParam("filterBooking") String filterBooking,
+                                                           @RequestParam("page") int page,
+                                                           @RequestParam("size") int size,
+                                                           Principal principal) throws PropertyNotFoundException {
         Long userId = Long.parseLong(principal.getName());
-        return bookingService.getAllBookingsByPropertyAndOwnerId(propertyId, userId);
+        return bookingService.getPageBookingsByOwner(propertyId, userId, filterBooking, page, size);
     }
 
     @PostMapping(value = "/booking/{apartmentId}")

@@ -166,11 +166,24 @@ public class BookingServiceUnitTest {
         assertThat(pageBookingDto.getContent().get(INDEX)).isEqualTo(pageBookingExpected.getContent().get(INDEX));
     }
 
+    /*@Test
+    public void findPageAllBookingsDtoByOwnerIdPastBookingsTest()  {
+        Page<Booking> bookings = Mockito.mock(Page.class);
+        Page<Booking> pageBooking = new PageImpl(bookingsList);
+        Page<BookingDto> pageBookingDto = new PageImpl(bookingsDtoList );
+        Mockito.when(bookingRepository.getPastBookingsByPropertyAndOwnerId(ID,ID, nowDate,
+                PageRequest.of(PAGE_AND_SIZE, PAGE_AND_SIZE)))
+                .thenReturn(PageRequest.of(5,5));
+        Page<BookingDto> pageBookingExpected= bookingService.getPageBookingsByOwner(
+               ID, ID, PAST_BOOKINGS, PAGE_AND_SIZE, PAGE_AND_SIZE);
+        assertThat(pageBookingDto.getContent().size()).isEqualTo(pageBookingExpected.getContent().size() );
+    }*/
+
     @Test(expected = BookingInvalidDataException.class)
-    public void createBookingInvalidData() throws BookingInvalidDataException, ApartmentNotFoundException, BookingExistingException, NumberOfGuestsException {
+    public void createBookingInvalidDataTest() throws BookingInvalidDataException, ApartmentNotFoundException, BookingExistingException, NumberOfGuestsException {
         CreateBookingDto createBookingDto = new CreateBookingDto();
-        createBookingDto.setCheckIn(DateUtils.setAllDate("2018-05-01-14-00-00"));
-        createBookingDto.setCheckOut(DateUtils.setAllDate("2018-01-01-12-00-00"));
+        createBookingDto.setCheckIn(getFutureDayByDays(2));
+        createBookingDto.setCheckOut(getPastDayByDays(3));
         Booking booking = getBookingInstance();
         Mockito.when(apartmentRepository.findById(ID)).thenReturn(Optional.of(booking.getApartment()));
         bookingService.createBookingWithValidation(createBookingDto, 1l, ID);
@@ -192,7 +205,7 @@ public class BookingServiceUnitTest {
         Date in = DateUtils.setAllDate("2020-11-11-14-00-00");
         Date out = DateUtils.setAllDate("2020-11-15-12-00-00");
         Mockito.when(apartmentRepository.findById(ID)).thenReturn(Optional.empty());
-       bookingService.validateApartmentAndDate(ID, in, out);
+       bookingService.validateApartmentExistAndDateIsNotInvalid(ID, in, out);
     }
 
     @Test(expected = BookingExistingException.class)
@@ -210,7 +223,7 @@ public class BookingServiceUnitTest {
     }
 
     @Test
-    public void createBooking() throws Exception {
+    public void createBookingTest() throws Exception {
         CreateBookingDto createBookingDto = new CreateBookingDto();
         Date in = DateUtils.setHourAndMinToDate(DateUtils.setAllDate("2018-11-8"), HOUR_CHECK_IN);
         Date out = DateUtils.setHourAndMinToDate(DateUtils.setAllDate("2018-11-11"), HOUR_CHECK_OUT);
@@ -301,4 +314,20 @@ public class BookingServiceUnitTest {
         booking.setUser(user);
         return booking;
     }   
+    
+
+
+    public Date getPastDayByDays(int minus_days){
+    	final Calendar cal = Calendar.getInstance();
+    	cal.add(Calendar.DATE, -minus_days);
+    	return cal.getTime();
+    }
+    public Date getFutureDayByDays(int plus_days){
+    	final Calendar cal = Calendar.getInstance();
+    	cal.add(Calendar.DATE, +plus_days);
+    	return cal.getTime();
+    }
+    public Date getTodayDate(){
+    	return  Calendar.getInstance().getTime();
+    }
 }

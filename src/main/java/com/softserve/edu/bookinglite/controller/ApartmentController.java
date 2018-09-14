@@ -71,4 +71,10 @@ public class ApartmentController {
 	public List<Amenity> getAmenities() {
 		return apartmentService.findAmenities();
 	}
+
+	@GetMapping("/apartment/{id}")
+	public ApartmentDto getApartmentDtoById(@PathVariable("id") Long apartmentId)
+			throws ApartmentNotFoundException {
+		return apartmentService.findApartmentDtoById(apartmentId);
+	}
 }
