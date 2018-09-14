@@ -1,6 +1,7 @@
 package com.softserve.edu.bookinglite.util;
 
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,6 +11,17 @@ public class DateUtils {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         // return sdf.format(new Date(date.getYear()-1900,date.getMonth()-1,date.getDate()));
         return new Date();
+    }
+    
+    public static Date setAllDate(String stringDate) {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            date = sdf.parse(stringDate);
+        } catch (ParseException e) {
+            System.out.println("Unparseable using " + sdf);
+        }
+        return date;
     }
 
     public static Date setHourAndMinToDate(Date date, int hour) {
