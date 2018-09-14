@@ -317,16 +317,18 @@ public class BookingServiceUnitTest {
     
 
 
-    public Date getPastDayByDays(int minus_days){
+    public Date getPastDayByDays(int minusDays){
     	final Calendar cal = Calendar.getInstance();
-    	cal.add(Calendar.DATE, -minus_days);
+    	cal.add(Calendar.DATE, -minusDays);
     	return cal.getTime();
     }
-    public Date getFutureDayByDays(int plus_days){
+    
+    public Date getFutureDayByDays(int plusDays){
     	final Calendar cal = Calendar.getInstance();
-    	cal.add(Calendar.DATE, +plus_days);
+    	cal.add(Calendar.DATE, +plusDays);
     	return cal.getTime();
     }
+    
     public Date getTodayDate(){
     	return  Calendar.getInstance().getTime();
     }
