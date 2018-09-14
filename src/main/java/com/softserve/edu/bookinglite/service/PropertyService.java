@@ -129,12 +129,33 @@ public class PropertyService {
 				propertyDtos.add(PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(p)));
 		return propertyDtos;
 	}
-	 
-	@Transactional
-	public Page<Property> findPropertyByPage(int page, int size) {
-		return propertyRepository.findAll(PageRequest.of(page, size));
+	
+	////
+	@Transactional//
+	public Page<PropertyDto> searchPropertiesByPage(SearchDto searchDto, int page, int size) {//
+		Page <PropertyDto> pagePropertyDto = null;
+		pagePropertyDto= PropertyMapper.instance.toPagePropertyDto(propertyRepository.searchPropertiesByPage(searchDto.getNumberOfGuests(), searchDto.getCityId(),
+				searchDto.getCountryId(),searchDto.getCheckIn(), searchDto.getCheckOut(),
+				 PageRequest.of(page, size)));
+		return pagePropertyDto;
 	}
 
+	@Transactional//
+	public Page<PropertyDto> advanceSearchPropertiesByPage(AdvanceSearchDto advanceSearchDto, int page, int size) {//
+		Page <PropertyDto> pagePropertyDto = null;
+		pagePropertyDto= PropertyMapper.instance.toPagePropertyDto(propertyRepository.advanceSearchPropertiesByPage(
+				advanceSearchDto.getNumberOfGuests(),
+				advanceSearchDto.getCityId(), 
+				advanceSearchDto.getCountryId(),
+				advanceSearchDto.getCheckIn(),
+				advanceSearchDto.getCheckOut(),
+				advanceSearchDto.getAmenitiesId(),
+				advanceSearchDto.getFacilitiesId(),
+				advanceSearchDto.getPriceFromUser(),
+				PageRequest.of(page, size)));
+		return pagePropertyDto;
+	}
+	
 	@Transactional
 	public List<PropertyDto> getAllPropertyByOwner(Long ownerId) {
 		List<PropertyDto> propertyDtos = new ArrayList<>();

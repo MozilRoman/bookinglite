@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
 
 import com.softserve.edu.bookinglite.entity.Address;
 import com.softserve.edu.bookinglite.entity.Apartment;
@@ -64,5 +65,8 @@ public interface PropertyMapper {
     Address map(Address address);
     default UserDto map(User user){
         return UserMapper.instance.UserToBaseUserDto(user);
+    }
+    default Page<PropertyDto> toPagePropertyDto(Page<Property> page){//
+    	return page.map(this::propertyToBasePropertyDtoWithApartmentAddressUser);
     }
 }

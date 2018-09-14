@@ -2,7 +2,6 @@ package com.softserve.edu.bookinglite.controller;
 
 import java.math.BigDecimal;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -117,20 +116,46 @@ public class PropertyController {
 	        advanceSearchDto.setAmenitiesId(amenityIds);	        
 	        return propertyService.advanceSearchProperty(advanceSearchDto);
 	    }
-
-	@GetMapping("/property/pages")
-	public List<PropertyDto> getPropertiesByPage(
-			@RequestParam("getPageNumber") int getPageNumber,
-			@RequestParam("getPageSize") int getPageSize){
-		List<PropertyDto> dtos = new ArrayList<>();
-		Page<Property> page = propertyService.findPropertyByPage(getPageNumber,getPageSize);
-		for(Property property : page.getContent()) {
-			PropertyDto propertyDto = PropertyMapper.instance
-					.propertyToBasePropertyDto(property);
-			dtos.add(propertyDto);
+	 
+	 @GetMapping("/property/searchpage")//
+		public Page<PropertyDto> searchPropertiesByPage(@RequestParam("getPageNumber") int pageNumber,
+													@RequestParam("getPageSize") int pageSize,
+	            									@RequestParam("checkIn")@DateTimeFormat (pattern="yyyy-MM-dd") Date checkIn,
+	            									@RequestParam("checkOut")@DateTimeFormat (pattern="yyyy-MM-dd")  Date checkOut,
+	            									@RequestParam("numberOfGuests") Integer numberOfGuests,
+	            									@RequestParam("cityId") Long cityId,
+	            									@RequestParam("countryId") Long countryId){
+			SearchDto searchDto = new SearchDto();
+			searchDto.setCheckIn(checkIn);
+			searchDto.setCheckOut(checkOut);
+			searchDto.setCityId(cityId);
+			searchDto.setCountryId(countryId);
+			searchDto.setNumberOfGuests(numberOfGuests);
+			return propertyService.searchPropertiesByPage(searchDto, pageNumber, pageSize);
 		}
-		return dtos;
-	}
+
+	@GetMapping("/property/advancesearchbypage")//
+			public Page<PropertyDto> searchPropertiesByPage(@RequestParam("getPageNumber") int pageNumber,
+														@RequestParam("getPageSize") int pageSize,
+		            									@RequestParam("checkIn")@DateTimeFormat (pattern="yyyy-MM-dd") Date checkIn,
+		            									@RequestParam("checkOut")@DateTimeFormat (pattern="yyyy-MM-dd")  Date checkOut,
+		            									@RequestParam("numberOfGuests") Integer numberOfGuests,
+		            									@RequestParam("cityId") Long cityId,
+		            									@RequestParam("countryId") Long countryId,
+		            									@RequestParam("price") BigDecimal price,
+		            									@RequestParam("facilityIds") List<Long> facilityIds,
+		            									@RequestParam("amenityIds") List<Long> amenityIds) {
+			 AdvanceSearchDto advanceSearchDto = new AdvanceSearchDto();
+		        advanceSearchDto.setCheckIn(checkIn);
+		        advanceSearchDto.setCheckOut(checkOut);
+		        advanceSearchDto.setCityId(cityId);
+		        advanceSearchDto.setCountryId(countryId);
+		        advanceSearchDto.setNumberOfGuests(numberOfGuests);
+		        advanceSearchDto.setPriceFromUser(price);
+		        advanceSearchDto.setFacilitiesId(facilityIds);
+		        advanceSearchDto.setAmenitiesId(amenityIds);
+				return propertyService.advanceSearchPropertiesByPage(advanceSearchDto, pageNumber, pageSize);
+			}
 	
 	@GetMapping("/myproperties")
 	public List<PropertyDto> getAllPropetiesByOwnerId(Principal principal){

@@ -2,7 +2,9 @@ package com.softserve.edu.bookinglite.test.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +16,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import com.softserve.edu.bookinglite.entity.Address;
 import com.softserve.edu.bookinglite.entity.City;
@@ -26,9 +31,12 @@ import com.softserve.edu.bookinglite.exception.PropertyConfirmOwnerException;
 import com.softserve.edu.bookinglite.exception.PropertyNotFoundException;
 import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.service.PropertyService;
+import com.softserve.edu.bookinglite.service.dto.AdvanceSearchDto;
 import com.softserve.edu.bookinglite.service.dto.CreatePropertyDto;
 import com.softserve.edu.bookinglite.service.dto.PropertyDto;
+import com.softserve.edu.bookinglite.service.dto.SearchDto;
 import com.softserve.edu.bookinglite.service.mapper.PropertyMapper;
+import com.softserve.edu.bookinglite.util.DateUtils;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PropertyServiceTest {
@@ -172,6 +180,68 @@ public class PropertyServiceTest {
 		//Act
 		propertyService.updateProperty(actualPropertyDto, ID, ownerId);
 	}
+	
+	@Test
+    public void searchPropertiesByPage()  {
+		SearchDto searchDto = new SearchDto();
+		searchDto.setCheckIn(DateUtils.setAllDate("2017-12-11"));
+		searchDto.setCheckOut(DateUtils.setAllDate("2017-12-11"));
+		searchDto.setCityId(1L);
+		searchDto.setCountryId(1L);
+		searchDto.setNumberOfGuests(2);
+		
+    	List<Property> propertList = new ArrayList<>();
+    	propertList.add(getPropertyInstance());
+    	List<PropertyDto> propertyDtoList = new ArrayList<>();
+    	propertyDtoList.add(PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(
+    			getPropertyInstance()));
+        Page<Property> pageProperty = new PageImpl(propertList);    	
+        Page<PropertyDto> pagePropertyDto = new PageImpl(propertyDtoList );
+        
+        Mockito.when(propertyRepository.searchPropertiesByPage(searchDto.getNumberOfGuests(), searchDto.getCityId(),
+				searchDto.getCountryId(),searchDto.getCheckIn(), searchDto.getCheckOut(), PageRequest.of(1, 1)))
+        .thenReturn(pageProperty);                        		        
+        Page<PropertyDto> pagePropertyExpected= propertyService.searchPropertiesByPage(searchDto, 1, 1);        
+        assertThat(pagePropertyDto.getContent().get(INDEX)).isEqualTo(pagePropertyExpected.getContent().get(INDEX));
+    }
+
+
+	
+	@Test
+    public void advanceSearchPropertiesByPage()  {
+		List <Long> listFacilitiesAndAmenities = new ArrayList<>();
+		listFacilitiesAndAmenities.add(1L);
+		 AdvanceSearchDto advanceSearchDto = new AdvanceSearchDto();
+	        advanceSearchDto.setCheckIn(DateUtils.setAllDate("2017-12-11"));
+	        advanceSearchDto.setCheckOut(DateUtils.setAllDate("2017-12-12"));
+	        advanceSearchDto.setCityId(1L);
+	        advanceSearchDto.setCountryId(1L);
+	        advanceSearchDto.setNumberOfGuests(2);
+	        advanceSearchDto.setPriceFromUser(new BigDecimal(25.68));
+	        advanceSearchDto.setFacilitiesId(listFacilitiesAndAmenities);
+	        advanceSearchDto.setAmenitiesId(listFacilitiesAndAmenities);
+		
+    	List<Property> propertList = new ArrayList<>();
+    	propertList.add(getPropertyInstance());
+    	List<PropertyDto> propertyDtoList = new ArrayList<>();
+    	propertyDtoList.add(PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(
+    			getPropertyInstance()));
+        Page<Property> pageProperty = new PageImpl(propertList);    	
+        Page<PropertyDto> pagePropertyDto = new PageImpl(propertyDtoList );
+        
+        Mockito.when(propertyRepository.advanceSearchPropertiesByPage(advanceSearchDto.getNumberOfGuests(),
+				advanceSearchDto.getCityId(), 
+				advanceSearchDto.getCountryId(),
+				advanceSearchDto.getCheckIn(),
+				advanceSearchDto.getCheckOut(),
+				advanceSearchDto.getAmenitiesId(),
+				advanceSearchDto.getFacilitiesId(),
+				advanceSearchDto.getPriceFromUser(),
+				PageRequest.of(1, 1)))
+        	.thenReturn(pageProperty);                        		        
+        Page<PropertyDto> pagePropertyExpected= propertyService.advanceSearchPropertiesByPage(advanceSearchDto, 1, 1);        
+        assertThat(pagePropertyDto.getContent().get(INDEX)).isEqualTo(pagePropertyExpected.getContent().get(INDEX));
+    }
 	
 	private Property getPropertyInstance() {
 		// Country
