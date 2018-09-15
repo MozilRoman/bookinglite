@@ -13,7 +13,7 @@ public class AdvanceSearchDto {
     private Date checkIn;
     private Date checkOut;
     @NotNull
-    private Integer numberOfGuests;
+    private int numberOfGuests;
 
     private BigDecimal priceFromUser;
     private List<Long> facilitiesId;

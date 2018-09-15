@@ -104,20 +104,18 @@ public class PropertyService {
 	}
 
 	@Transactional
-	public List<PropertyDto> searchProperty(SearchDto searchDto) {
-		List<PropertyDto> propertyDtos = new ArrayList<>();
-		propertyRepository
-				.searchProperties(searchDto.getNumberOfGuests(), searchDto.getCityId(), searchDto.getCountryId(),
-						searchDto.getCheckIn(), searchDto.getCheckOut())
-				.forEach(p -> propertyDtos
-						.add(PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(p)));
-		return propertyDtos;
+	public Page<PropertyDto> searchProperties(SearchDto searchDto, int page, int size) {
+		Page <PropertyDto> pagePropertyDto = null;
+		pagePropertyDto= PropertyMapper.instance.toPagePropertyDto(propertyRepository.searchProperties(searchDto.getNumberOfGuests(), searchDto.getCityId(),
+				searchDto.getCountryId(),searchDto.getCheckIn(), searchDto.getCheckOut(),
+				 PageRequest.of(page, size)));
+		return pagePropertyDto;
 	}
 
-	//ADVANCE SEARCH
-	public List<PropertyDto> advanceSearchProperty(AdvanceSearchDto advanceSearchDto) {
-		List<PropertyDto> propertyDtos = new ArrayList<>();
-		propertyRepository.advanceSearchProperties(
+	@Transactional
+	public Page<PropertyDto> advanceSearchProperties(AdvanceSearchDto advanceSearchDto, int page, int size) {
+		Page <PropertyDto> pagePropertyDto = null;
+		pagePropertyDto= PropertyMapper.instance.toPagePropertyDto(propertyRepository.advanceSearchProperties(
 				advanceSearchDto.getNumberOfGuests(),
 				advanceSearchDto.getCityId(), 
 				advanceSearchDto.getCountryId(),
@@ -125,16 +123,11 @@ public class PropertyService {
 				advanceSearchDto.getCheckOut(),
 				advanceSearchDto.getAmenitiesId(),
 				advanceSearchDto.getFacilitiesId(),
-				advanceSearchDto.getPriceFromUser()).forEach(p -> 
-				propertyDtos.add(PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(p)));
-		return propertyDtos;
+				advanceSearchDto.getPriceFromUser(),
+				PageRequest.of(page, size)));
+		return pagePropertyDto;
 	}
-	 
-	@Transactional
-	public Page<Property> findPropertyByPage(int page, int size) {
-		return propertyRepository.findAll(PageRequest.of(page, size));
-	}
-
+	
 	@Transactional
 	public List<PropertyDto> getAllPropertyByOwner(Long ownerId) {
 		List<PropertyDto> propertyDtos = new ArrayList<>();

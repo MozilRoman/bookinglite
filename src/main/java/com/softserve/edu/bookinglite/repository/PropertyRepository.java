@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -38,12 +40,14 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
 			+ "WHERE ap.numberOfGuests >= ?1 "
 			+ "AND ((ct.id = ?2 AND cn.id = ?3)) "
 			+ "AND ap.id NOT IN ("
-			+ "SELECT DISTINCT book FROM Booking book WHERE NOT ( "
+			+ "SELECT DISTINCT book.apartment.id FROM Booking book WHERE NOT ( "
 			+ "(?4 < book.checkIn AND ?5 < book.checkIn) OR"
 			+ "(?4 > book.checkOut AND ?5 > book.checkOut)))")
-	public List<Property> searchProperties(int numOfGuests,Long cityId, Long countryId, Date checkIn, Date checkOut);
-	
-	@Query("SELECT DISTINCT p  FROM Property p "
+	public Page<Property> searchProperties(int numOfGuests,Long cityId, Long countryId, Date checkIn,
+			Date checkOut,Pageable pageable);
+
+
+@Query("SELECT DISTINCT p  FROM Property p "
 			+ "INNER JOIN Apartment ap ON ap.property.id = p.id "
 			+ "INNER JOIN Address addr ON p.address.id = addr.id "
 			+ "INNER JOIN City ct ON addr.city.id = ct.id "
@@ -56,12 +60,12 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
 			+ "AND (ap.price <= ?8) "
 			+ "AND ((ct.id = ?2 AND cn.id = ?3)) "
 			+ "AND ap.id NOT IN ("
-			+ "SELECT DISTINCT book FROM Booking book WHERE NOT ( "
+			+ "SELECT DISTINCT book.apartment.id FROM Booking book WHERE NOT ( "
 			+ "(?4 < book.checkIn AND ?5 < book.checkIn) OR"
 			+ "(?4 > book.checkOut AND ?5 > book.checkOut)))")
-	public List<Property> advanceSearchProperties(int numOfGuests, 
+	public Page<Property> advanceSearchProperties(int numOfGuests, 
 			Long cityId, Long countryId, Date checkIn, Date checkOut,
-			List<Long> amenityIds, List<Long> facilityIds, BigDecimal price);
+			List<Long> amenityIds, List<Long> facilityIds, BigDecimal price, Pageable pageable);
 	
 	List<Property> getAllByUserId(Long idOwnerUser);
 }
