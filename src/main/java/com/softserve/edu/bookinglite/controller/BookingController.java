@@ -36,8 +36,8 @@ public class BookingController {
 
     @GetMapping("/bookings")
     public Page<BookingDto> findPageAllBookingsDtoByUserId(Principal principal,
-                                                           @RequestParam("getPageNumber") int pageNumber,
-                                                           @RequestParam("getPageSize") int pageSize,
+                                                           @RequestParam("pageNumber") int pageNumber,
+                                                           @RequestParam("pageSize") int pageSize,
                                                            @RequestParam("filterBookingsByDates") String filterBookingsByDates) {
         Long userId = Long.parseLong(principal.getName());
         return bookingService.findPageAllBookingsDtoByUserId(userId, pageNumber, pageSize, filterBookingsByDates);

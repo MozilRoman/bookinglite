@@ -81,45 +81,45 @@ public class PropertyController {
 		}
 	}
 	
-	@GetMapping("/property/search")
-	public List<PropertyDto> searchProperty(@RequestParam("checkIn") @DateTimeFormat (pattern="yyyy-MM-dd") Date checkIn,
-            									@RequestParam("checkOut") @DateTimeFormat (pattern="yyyy-MM-dd") Date checkOut,
-            									@RequestParam("numberOfGuests") Integer numberOfGuests,
-            									@RequestParam("cityId") Long cityId,
-            									@RequestParam("countryId") Long countryId){
-		SearchDto searchDto = new SearchDto();
-		searchDto.setCheckIn(checkIn);
-		searchDto.setCheckOut(checkOut);
-		searchDto.setCityId(cityId);
-		searchDto.setCountryId(countryId);
-		searchDto.setNumberOfGuests(numberOfGuests);
-		return propertyService.searchProperty(searchDto);
-	}
-	
-	 @GetMapping("/property/advancesearch")
-	    public List<PropertyDto> globalSearch(@RequestParam("checkIn") @DateTimeFormat (pattern="yyyy-MM-dd") Date checkIn,
-	                                          @RequestParam("checkOut") @DateTimeFormat (pattern="yyyy-MM-dd") Date checkOut,
-	                                          @RequestParam("numberOfGuests") Integer numberOfGuests,
-	                                          @RequestParam("cityId") Long cityId,
-	                                          @RequestParam("countryId") Long countryId,
-	                                          @RequestParam("price") BigDecimal price,
-	                                          @RequestParam("facilityIds") List<Long> facilityIds,
-	                                          @RequestParam("amenityIds") List<Long> amenityIds) {
-	        AdvanceSearchDto advanceSearchDto = new AdvanceSearchDto();
-	        advanceSearchDto.setCheckIn(checkIn);
-	        advanceSearchDto.setCheckOut(checkOut);
-	        advanceSearchDto.setCityId(cityId);
-	        advanceSearchDto.setCountryId(countryId);
-	        advanceSearchDto.setNumberOfGuests(numberOfGuests);
-	        advanceSearchDto.setPriceFromUser(price);
-	        advanceSearchDto.setFacilitiesId(facilityIds);
-	        advanceSearchDto.setAmenitiesId(amenityIds);	        
-	        return propertyService.advanceSearchProperty(advanceSearchDto);
-	    }
+//	@GetMapping("/property/search")
+//	public List<PropertyDto> searchProperty(@RequestParam("checkIn") @DateTimeFormat (pattern="yyyy-MM-dd") Date checkIn,
+//            									@RequestParam("checkOut") @DateTimeFormat (pattern="yyyy-MM-dd") Date checkOut,
+//            									@RequestParam("numberOfGuests") Integer numberOfGuests,
+//            									@RequestParam("cityId") Long cityId,
+//            									@RequestParam("countryId") Long countryId){
+//		SearchDto searchDto = new SearchDto();
+//		searchDto.setCheckIn(checkIn);
+//		searchDto.setCheckOut(checkOut);
+//		searchDto.setCityId(cityId);
+//		searchDto.setCountryId(countryId);
+//		searchDto.setNumberOfGuests(numberOfGuests);
+//		return propertyService.searchProperty(searchDto);
+//	}
+//	
+//	 @GetMapping("/property/advancesearch")
+//	    public List<PropertyDto> globalSearch(@RequestParam("checkIn") @DateTimeFormat (pattern="yyyy-MM-dd") Date checkIn,
+//	                                          @RequestParam("checkOut") @DateTimeFormat (pattern="yyyy-MM-dd") Date checkOut,
+//	                                          @RequestParam("numberOfGuests") Integer numberOfGuests,
+//	                                          @RequestParam("cityId") Long cityId,
+//	                                          @RequestParam("countryId") Long countryId,
+//	                                          @RequestParam("price") BigDecimal price,
+//	                                          @RequestParam("facilityIds") List<Long> facilityIds,
+//	                                          @RequestParam("amenityIds") List<Long> amenityIds) {
+//	        AdvanceSearchDto advanceSearchDto = new AdvanceSearchDto();
+//	        advanceSearchDto.setCheckIn(checkIn);
+//	        advanceSearchDto.setCheckOut(checkOut);
+//	        advanceSearchDto.setCityId(cityId);
+//	        advanceSearchDto.setCountryId(countryId);
+//	        advanceSearchDto.setNumberOfGuests(numberOfGuests);
+//	        advanceSearchDto.setPriceFromUser(price);
+//	        advanceSearchDto.setFacilitiesId(facilityIds);
+//	        advanceSearchDto.setAmenitiesId(amenityIds);	        
+//	        return propertyService.advanceSearchProperty(advanceSearchDto);
+//	    }
 	 
-	 @GetMapping("/property/searchpage")//
-		public Page<PropertyDto> searchPropertiesByPage(@RequestParam("getPageNumber") int pageNumber,
-													@RequestParam("getPageSize") int pageSize,
+	 @GetMapping("/property/search")//
+		public Page<PropertyDto> searchPropertiesByPage(@RequestParam("pageNumber") int pageNumber,
+													@RequestParam("pageSize") int pageSize,
 	            									@RequestParam("checkIn")@DateTimeFormat (pattern="yyyy-MM-dd") Date checkIn,
 	            									@RequestParam("checkOut")@DateTimeFormat (pattern="yyyy-MM-dd")  Date checkOut,
 	            									@RequestParam("numberOfGuests") Integer numberOfGuests,
@@ -134,9 +134,9 @@ public class PropertyController {
 			return propertyService.searchPropertiesByPage(searchDto, pageNumber, pageSize);
 		}
 
-	@GetMapping("/property/advancesearchbypage")//
-			public Page<PropertyDto> searchPropertiesByPage(@RequestParam("getPageNumber") int pageNumber,
-														@RequestParam("getPageSize") int pageSize,
+	@GetMapping("/property/advancesearch")//
+			public Page<PropertyDto> searchPropertiesByPage(@RequestParam("pageNumber") int pageNumber,
+														@RequestParam("pageSize") int pageSize,
 		            									@RequestParam("checkIn")@DateTimeFormat (pattern="yyyy-MM-dd") Date checkIn,
 		            									@RequestParam("checkOut")@DateTimeFormat (pattern="yyyy-MM-dd")  Date checkOut,
 		            									@RequestParam("numberOfGuests") Integer numberOfGuests,
