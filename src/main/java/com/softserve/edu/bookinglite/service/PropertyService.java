@@ -104,7 +104,7 @@ public class PropertyService {
 	}
 
 	@Transactional
-	public Page<PropertyDto> searchProperties(SearchDto searchDto, int page, int size) {//
+	public Page<PropertyDto> searchProperties(SearchDto searchDto, int page, int size) {
 		Page <PropertyDto> pagePropertyDto = null;
 		pagePropertyDto= PropertyMapper.instance.toPagePropertyDto(propertyRepository.searchProperties(searchDto.getNumberOfGuests(), searchDto.getCityId(),
 				searchDto.getCountryId(),searchDto.getCheckIn(), searchDto.getCheckOut(),
@@ -113,7 +113,7 @@ public class PropertyService {
 	}
 
 	@Transactional
-	public Page<PropertyDto> advanceSearchProperties(AdvanceSearchDto advanceSearchDto, int page, int size) {//
+	public Page<PropertyDto> advanceSearchProperties(AdvanceSearchDto advanceSearchDto, int page, int size) {
 		Page <PropertyDto> pagePropertyDto = null;
 		pagePropertyDto= PropertyMapper.instance.toPagePropertyDto(propertyRepository.advanceSearchProperties(
 				advanceSearchDto.getNumberOfGuests(),
