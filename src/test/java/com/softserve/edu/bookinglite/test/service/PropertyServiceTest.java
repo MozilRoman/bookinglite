@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -198,10 +197,10 @@ public class PropertyServiceTest {
         Page<Property> pageProperty = new PageImpl(propertList);    	
         Page<PropertyDto> pagePropertyDto = new PageImpl(propertyDtoList );
         
-        Mockito.when(propertyRepository.searchPropertiesByPage(searchDto.getNumberOfGuests(), searchDto.getCityId(),
+        Mockito.when(propertyRepository.searchProperties(searchDto.getNumberOfGuests(), searchDto.getCityId(),
 				searchDto.getCountryId(),searchDto.getCheckIn(), searchDto.getCheckOut(), PageRequest.of(1, 1)))
         .thenReturn(pageProperty);                        		        
-        Page<PropertyDto> pagePropertyExpected= propertyService.searchPropertiesByPage(searchDto, 1, 1);        
+        Page<PropertyDto> pagePropertyExpected= propertyService.searchProperties(searchDto, 1, 1);        
         assertThat(pagePropertyDto.getContent().get(INDEX)).isEqualTo(pagePropertyExpected.getContent().get(INDEX));
     }
 
@@ -229,7 +228,7 @@ public class PropertyServiceTest {
         Page<Property> pageProperty = new PageImpl(propertList);    	
         Page<PropertyDto> pagePropertyDto = new PageImpl(propertyDtoList );
         
-        Mockito.when(propertyRepository.advanceSearchPropertiesByPage(advanceSearchDto.getNumberOfGuests(),
+        Mockito.when(propertyRepository.advanceSearchProperties(advanceSearchDto.getNumberOfGuests(),
 				advanceSearchDto.getCityId(), 
 				advanceSearchDto.getCountryId(),
 				advanceSearchDto.getCheckIn(),
@@ -239,7 +238,7 @@ public class PropertyServiceTest {
 				advanceSearchDto.getPriceFromUser(),
 				PageRequest.of(1, 1)))
         	.thenReturn(pageProperty);                        		        
-        Page<PropertyDto> pagePropertyExpected= propertyService.advanceSearchPropertiesByPage(advanceSearchDto, 1, 1);        
+        Page<PropertyDto> pagePropertyExpected= propertyService.advanceSearchProperties(advanceSearchDto, 1, 1);        
         assertThat(pagePropertyDto.getContent().get(INDEX)).isEqualTo(pagePropertyExpected.getContent().get(INDEX));
     }
 	

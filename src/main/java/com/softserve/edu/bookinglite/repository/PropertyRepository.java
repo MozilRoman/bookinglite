@@ -43,42 +43,7 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
 			+ "SELECT DISTINCT book FROM Booking book WHERE NOT ( "
 			+ "(?4 < book.checkIn AND ?5 < book.checkIn) OR"
 			+ "(?4 > book.checkOut AND ?5 > book.checkOut)))")
-	public List<Property> searchProperties(int numOfGuests,Long cityId, Long countryId, Date checkIn, Date checkOut);
-	
-	@Query("SELECT DISTINCT p  FROM Property p "
-			+ "INNER JOIN Apartment ap ON ap.property.id = p.id "
-			+ "INNER JOIN Address addr ON p.address.id = addr.id "
-			+ "INNER JOIN City ct ON addr.city.id = ct.id "
-			+ "INNER JOIN Country cn ON ct.country.id = cn.id "
-			+ "INNER JOIN Amenity amen on ap.id = amen.id "
-			+ "INNER JOIN Facility fac on p.id = fac.id "
-			+ "WHERE ap.numberOfGuests >= ?1 "
-			+ "AND (amen.id IN (?6)) "
-			+ "AND (fac.id IN (?7))"
-			+ "AND (ap.price <= ?8) "
-			+ "AND ((ct.id = ?2 AND cn.id = ?3)) "
-			+ "AND ap.id NOT IN ("
-			+ "SELECT DISTINCT book FROM Booking book WHERE NOT ( "
-			+ "(?4 < book.checkIn AND ?5 < book.checkIn) OR"
-			+ "(?4 > book.checkOut AND ?5 > book.checkOut)))")
-	public List<Property> advanceSearchProperties(int numOfGuests, 
-			Long cityId, Long countryId, Date checkIn, Date checkOut,
-			List<Long> amenityIds, List<Long> facilityIds, BigDecimal price);
-	
-	/////
-	
-	@Query("SELECT DISTINCT p  FROM Property p "
-			+ "INNER JOIN Apartment ap ON ap.property.id = p.id "
-			+ "INNER JOIN Address addr ON p.address.id = addr.id "
-			+ "INNER JOIN City ct ON addr.city.id = ct.id "
-			+ "INNER JOIN Country cn ON ct.country.id = cn.id "
-			+ "WHERE ap.numberOfGuests >= ?1 "
-			+ "AND ((ct.id = ?2 AND cn.id = ?3)) "
-			+ "AND ap.id NOT IN ("
-			+ "SELECT DISTINCT book FROM Booking book WHERE NOT ( "
-			+ "(?4 < book.checkIn AND ?5 < book.checkIn) OR"
-			+ "(?4 > book.checkOut AND ?5 > book.checkOut)))")
-	public Page<Property> searchPropertiesByPage(int numOfGuests,Long cityId, Long countryId, Date checkIn,
+	public Page<Property> searchProperties(int numOfGuests,Long cityId, Long countryId, Date checkIn,
 			Date checkOut,Pageable pageable);//
 
 
@@ -98,7 +63,7 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
 			+ "SELECT DISTINCT book FROM Booking book WHERE NOT ( "
 			+ "(?4 < book.checkIn AND ?5 < book.checkIn) OR"
 			+ "(?4 > book.checkOut AND ?5 > book.checkOut)))")
-	public Page<Property> advanceSearchPropertiesByPage(int numOfGuests, 
+	public Page<Property> advanceSearchProperties(int numOfGuests, 
 			Long cityId, Long countryId, Date checkIn, Date checkOut,
 			List<Long> amenityIds, List<Long> facilityIds, BigDecimal price, Pageable pageable);
 	

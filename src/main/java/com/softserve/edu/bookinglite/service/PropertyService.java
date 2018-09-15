@@ -104,46 +104,18 @@ public class PropertyService {
 	}
 
 	@Transactional
-	public List<PropertyDto> searchProperty(SearchDto searchDto) {
-		List<PropertyDto> propertyDtos = new ArrayList<>();
-		propertyRepository
-				.searchProperties(searchDto.getNumberOfGuests(), searchDto.getCityId(), searchDto.getCountryId(),
-						searchDto.getCheckIn(), searchDto.getCheckOut())
-				.forEach(p -> propertyDtos
-						.add(PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(p)));
-		return propertyDtos;
-	}
-
-	//ADVANCE SEARCH
-	public List<PropertyDto> advanceSearchProperty(AdvanceSearchDto advanceSearchDto) {
-		List<PropertyDto> propertyDtos = new ArrayList<>();
-		propertyRepository.advanceSearchProperties(
-				advanceSearchDto.getNumberOfGuests(),
-				advanceSearchDto.getCityId(), 
-				advanceSearchDto.getCountryId(),
-				advanceSearchDto.getCheckIn(),
-				advanceSearchDto.getCheckOut(),
-				advanceSearchDto.getAmenitiesId(),
-				advanceSearchDto.getFacilitiesId(),
-				advanceSearchDto.getPriceFromUser()).forEach(p -> 
-				propertyDtos.add(PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(p)));
-		return propertyDtos;
-	}
-	
-	////
-	@Transactional//
-	public Page<PropertyDto> searchPropertiesByPage(SearchDto searchDto, int page, int size) {//
+	public Page<PropertyDto> searchProperties(SearchDto searchDto, int page, int size) {//
 		Page <PropertyDto> pagePropertyDto = null;
-		pagePropertyDto= PropertyMapper.instance.toPagePropertyDto(propertyRepository.searchPropertiesByPage(searchDto.getNumberOfGuests(), searchDto.getCityId(),
+		pagePropertyDto= PropertyMapper.instance.toPagePropertyDto(propertyRepository.searchProperties(searchDto.getNumberOfGuests(), searchDto.getCityId(),
 				searchDto.getCountryId(),searchDto.getCheckIn(), searchDto.getCheckOut(),
 				 PageRequest.of(page, size)));
 		return pagePropertyDto;
 	}
 
-	@Transactional//
-	public Page<PropertyDto> advanceSearchPropertiesByPage(AdvanceSearchDto advanceSearchDto, int page, int size) {//
+	@Transactional
+	public Page<PropertyDto> advanceSearchProperties(AdvanceSearchDto advanceSearchDto, int page, int size) {//
 		Page <PropertyDto> pagePropertyDto = null;
-		pagePropertyDto= PropertyMapper.instance.toPagePropertyDto(propertyRepository.advanceSearchPropertiesByPage(
+		pagePropertyDto= PropertyMapper.instance.toPagePropertyDto(propertyRepository.advanceSearchProperties(
 				advanceSearchDto.getNumberOfGuests(),
 				advanceSearchDto.getCityId(), 
 				advanceSearchDto.getCountryId(),
