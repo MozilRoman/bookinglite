@@ -8,7 +8,6 @@ import com.softserve.edu.bookinglite.exception.*;
 import com.softserve.edu.bookinglite.repository.ApartmentRepository;
 import com.softserve.edu.bookinglite.repository.BookingRepository;
 import com.softserve.edu.bookinglite.repository.BookingStatusRepository;
-import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
 import com.softserve.edu.bookinglite.service.dto.CreateBookingDto;
 import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
@@ -37,19 +36,16 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final BookingStatusRepository bookingStatusRepository;
     private final ApartmentRepository apartmentRepository;
-    private final PropertyRepository propertyRepository;
 
 	
 	@Autowired
 	   public BookingService(BookingRepository bookingRepository,
 	                         BookingStatusRepository bookingStatusRepository,
-	                         ApartmentRepository apartmentRepository,
-	                         PropertyRepository propertyRepository
+	                         ApartmentRepository apartmentRepository
 	   ) {
 	       this.bookingRepository = bookingRepository;
 	       this.bookingStatusRepository = bookingStatusRepository;
 	       this.apartmentRepository = apartmentRepository;
-	       this.propertyRepository = propertyRepository;
 	   }
 
 	@Transactional
