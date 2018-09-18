@@ -20,10 +20,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     public Page<Booking> getPageAllBookingsByUserId(Long idUser, Pageable pageable);
     
     @Query("Select b from Booking b where user.id= ?1 and b.checkOut >?2 ORDER BY b.checkIn desc")
-    public Page<Booking> getPageActualBookingsByUserId(Long idUser, Date nowDate, Pageable pageable);
+    public Page<Booking> getPageCurrentBookingsByUserId(Long idUser, Date nowDate, Pageable pageable);
     
     @Query("Select b from Booking b where user.id= ?1 and b.checkOut <?2 ORDER BY b.checkIn desc")
-    public Page<Booking> getPageArchieveBookingsByUserId(Long idUser, Date nowDate, Pageable pageable);
+    public Page<Booking> getPageArchievedBookingsByUserId(Long idUser, Date nowDate, Pageable pageable);
     
     //if booking exist it will return true
     @Query("select CASE WHEN COUNT(b.id) > 0 THEN TRUE ELSE FALSE END  from Booking b " +

@@ -8,7 +8,6 @@ import com.softserve.edu.bookinglite.exception.*;
 import com.softserve.edu.bookinglite.repository.ApartmentRepository;
 import com.softserve.edu.bookinglite.repository.BookingRepository;
 import com.softserve.edu.bookinglite.repository.BookingStatusRepository;
-import com.softserve.edu.bookinglite.repository.PropertyRepository;
 import com.softserve.edu.bookinglite.service.dto.BookingDto;
 import com.softserve.edu.bookinglite.service.dto.CreateBookingDto;
 import com.softserve.edu.bookinglite.service.mapper.BookingMapper;
@@ -32,23 +31,21 @@ public class BookingService {
     private final String ACTUAL_BOOKINGS = "actualBookings";
     private final String FUTURE_BOOKINGS = "futureBookings";
     private final String PAST_BOOKINGS = "pastBookings";
-    private final String ARCHIEVE_BOOKINGS = "archieveBookings";
+    private final String CURRENT_BOOKINGS = "currentBookings";
+    private final String ARCHIEVED_BOOKINGS = "archievedBookings";
     private final BookingRepository bookingRepository;
     private final BookingStatusRepository bookingStatusRepository;
     private final ApartmentRepository apartmentRepository;
-    private final PropertyRepository propertyRepository;
 
 	
 	@Autowired
 	   public BookingService(BookingRepository bookingRepository,
 	                         BookingStatusRepository bookingStatusRepository,
-	                         ApartmentRepository apartmentRepository,
-	                         PropertyRepository propertyRepository
+	                         ApartmentRepository apartmentRepository
 	   ) {
 	       this.bookingRepository = bookingRepository;
 	       this.bookingStatusRepository = bookingStatusRepository;
 	       this.apartmentRepository = apartmentRepository;
-	       this.propertyRepository = propertyRepository;
 	   }
 
 	@Transactional
@@ -62,13 +59,13 @@ public class BookingService {
 	public Page<BookingDto> findPageAllBookingsDtoByUserId(Long userId, int page, int size, String filterBookingsByDates) {
 		Page <BookingDto> pageBookings = null;		
 		Date nowShortDate= DateUtils.getDateAndTimeWithoutSeconds();
-		if (ACTUAL_BOOKINGS.equals(filterBookingsByDates)) {			
+		if (CURRENT_BOOKINGS.equals(filterBookingsByDates)) {			
 			pageBookings= BookingMapper.instance.toPageBookingDto(
-					bookingRepository.getPageActualBookingsByUserId(userId, nowShortDate, PageRequest.of(page, size)));
+					bookingRepository.getPageCurrentBookingsByUserId(userId, nowShortDate, PageRequest.of(page, size)));
 		} 
-		else if(ARCHIEVE_BOOKINGS.equals(filterBookingsByDates)) {
+		else if(ARCHIEVED_BOOKINGS.equals(filterBookingsByDates)) {
 			pageBookings= BookingMapper.instance.toPageBookingDto(
-					bookingRepository.getPageArchieveBookingsByUserId(userId, nowShortDate, PageRequest.of(page, size)));
+					bookingRepository.getPageArchievedBookingsByUserId(userId, nowShortDate, PageRequest.of(page, size)));
 		} else {
 			pageBookings= BookingMapper.instance.toPageBookingDto(
 					bookingRepository.getPageAllBookingsByUserId(userId, PageRequest.of(page, size) ));

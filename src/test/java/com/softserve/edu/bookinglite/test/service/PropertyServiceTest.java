@@ -194,8 +194,8 @@ public class PropertyServiceTest {
     	List<PropertyDto> propertyDtoList = new ArrayList<>();
     	propertyDtoList.add(PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(
     			getPropertyInstance()));
-        Page<Property> pageProperty = new PageImpl(propertList);    	
-        Page<PropertyDto> pagePropertyDto = new PageImpl(propertyDtoList );
+        Page<Property> pageProperty = new PageImpl<>(propertList);    	
+        Page<PropertyDto> pagePropertyDto = new PageImpl<>(propertyDtoList );
         
         Mockito.when(propertyRepository.searchProperties(searchDto.getNumberOfGuests(), searchDto.getCityId(),
 				searchDto.getCountryId(),searchDto.getCheckIn(), searchDto.getCheckOut(), PageRequest.of(1, 1)))
@@ -225,8 +225,8 @@ public class PropertyServiceTest {
     	List<PropertyDto> propertyDtoList = new ArrayList<>();
     	propertyDtoList.add(PropertyMapper.instance.propertyToBasePropertyDtoWithApartmentAddressUser(
     			getPropertyInstance()));
-        Page<Property> pageProperty = new PageImpl(propertList);    	
-        Page<PropertyDto> pagePropertyDto = new PageImpl(propertyDtoList );
+        Page<Property> pageProperty = new PageImpl<>(propertList);    	
+        Page<PropertyDto> pagePropertyDto = new PageImpl<>(propertyDtoList );
         
         Mockito.when(propertyRepository.advanceSearchProperties(advanceSearchDto.getNumberOfGuests(),
 				advanceSearchDto.getCityId(), 
