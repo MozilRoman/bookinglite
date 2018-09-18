@@ -166,19 +166,6 @@ public class BookingServiceUnitTest {
         assertThat(pageBookingDto.getContent().get(INDEX)).isEqualTo(pageBookingExpected.getContent().get(INDEX));
     }
 
-    /*@Test
-    public void findPageAllBookingsDtoByOwnerIdPastBookingsTest()  {
-        Page<Booking> bookings = Mockito.mock(Page.class);
-        Page<Booking> pageBooking = new PageImpl(bookingsList);
-        Page<BookingDto> pageBookingDto = new PageImpl(bookingsDtoList );
-        Mockito.when(bookingRepository.getPastBookingsByPropertyAndOwnerId(ID,ID, nowDate,
-                PageRequest.of(PAGE_AND_SIZE, PAGE_AND_SIZE)))
-                .thenReturn(PageRequest.of(5,5));
-        Page<BookingDto> pageBookingExpected= bookingService.getPageBookingsByOwner(
-               ID, ID, PAST_BOOKINGS, PAGE_AND_SIZE, PAGE_AND_SIZE);
-        assertThat(pageBookingDto.getContent().size()).isEqualTo(pageBookingExpected.getContent().size() );
-    }*/
-
     @Test(expected = BookingInvalidDataException.class)
     public void createBookingInvalidDataTest() throws BookingInvalidDataException, ApartmentNotFoundException, BookingExistingException, NumberOfGuestsException {
         CreateBookingDto createBookingDto = new CreateBookingDto();

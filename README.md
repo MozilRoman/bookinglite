@@ -1,4 +1,3 @@
 # bookinglite
 # Site for booking any apartments
-#First 
-second
+#Bookinglite is the single page application. The main objective of the project is to implement a solution that will allow tourists to book apartments in any corner of the Earth. The idea of project was to create open-source alternative of booking.com. Users have the opportunity to sort the hotels according to their needs, view reviews, ratings, and leave a review to the hotel that they have booked. Users with the Owner role have the ability to manage their properties, browse the lists of bookings and visitors. Web application was built from scratch using of modern technologies.
